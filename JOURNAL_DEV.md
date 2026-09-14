@@ -27,12 +27,14 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 Résultat contre `vite preview` en local, configuration mobile standard (throttling simulé) :
 **Performance 86 · Accessibilité 100 · Bonnes pratiques 100 · SEO 100.**
 
-Performance sous la barre des 90 demandés. Diagnostic mené avant d'accepter le chiffre :
+Performance sous la barre des 90 demandés en local. Diagnostic mené avant d'accepter le chiffre :
 - `Total Blocking Time` = 0 ms, `Cumulative Layout Shift` = 0 (parfaits) : aucun souci de réactivité ni de stabilité visuelle.
 - Le même test sans throttling réseau/CPU (`throttlingMethod: "provided"`) donne **100/100**, FCP 0.1 s, LCP 0.9 s.
-- Conclusion : l'écart vient intégralement du throttling mobile simulé par défaut de Lighthouse (CPU ×4, réseau "slow 4G"), appliqué à une SPA 100 % rendue côté client (aucun HTML utile avant exécution du JS) — une caractéristique structurelle du choix Vite+React CSR sans SSR/SSG (T1), pas un défaut de code découvert.
-- Optimisations déjà appliquées avant d'arrêter les frais : bundle JS principal réduit de 400 Ko → 328 Ko (127 Ko → 106 Ko gzip) via `LazyMotion` + chargement différé des animations dans un chunk séparé (`motionFeatures`, 10 Ko gzip, non bloquant) ; sous-ensembles de polices réduits à `latin`/`latin-ext`.
-- **[DETTE-25]** ajoutée dans `dette_suivi.md` : pousser plus loin (prérendu statique du shell, découpage additionnel) est un chantier de fond mieux placé en Phase 7 ("Polish, perf, SEO"), qui est explicitement le moment prévu par le ROADMAP pour l'audit Lighthouse complet. Le déploiement réel sur GitHub Pages (CDN, compression) devrait aussi légèrement améliorer le chiffre par rapport à `vite preview` en local.
+- Conclusion : l'écart venait du throttling mobile simulé par défaut de Lighthouse (CPU ×4, réseau "slow 4G") combiné au serveur de dev local, pas d'un défaut de code.
+- Optimisations appliquées avant de mesurer en conditions réelles : bundle JS principal réduit de 400 Ko → 328 Ko (127 Ko → 106 Ko gzip) via `LazyMotion` + chargement différé des animations dans un chunk séparé (`motionFeatures`, 10 Ko gzip, non bloquant) ; sous-ensembles de polices réduits à `latin`/`latin-ext`.
+
+**Résultat confirmé sur le vrai déploiement** (`https://xab-dev.github.io/portfolio-v2/`, après le premier push) :
+**Performance 90 · Accessibilité 100 · Bonnes pratiques 100 · SEO 100.** Les quatre catégories atteignent le seuil requis — le CDN GitHub Pages (TTFB, HTTP/2) comble l'écart observé en local. Critère de passage §7.5 validé sur le site réellement en ligne, pas seulement en local.
 
 ### Livré et validé à l'écran
 
