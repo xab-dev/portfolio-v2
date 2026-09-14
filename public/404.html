@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirection…</title>
+    <script>
+      // GitHub Pages ne gère pas les routes côté client : on renvoie vers la racine
+      // du site en conservant un éventuel hash de deep link (#section).
+      window.location.replace("/portfolio-v2/" + window.location.hash);
+    </script>
+  </head>
+  <body>
+    <p>Redirection vers <a href="/portfolio-v2/">le portfolio</a>…</p>
+  </body>
+</html>
