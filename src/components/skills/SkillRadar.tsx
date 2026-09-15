@@ -89,7 +89,7 @@ function RadarTooltip({
   const roundedLevel = Math.round(point.average) as 1 | 2 | 3 | 4 | 5;
 
   return (
-    <div className="rounded-lg border border-border-glass bg-bg-panel px-3 py-2 text-sm text-text-primary backdrop-blur-xl">
+    <div className="rounded-lg border border-border-glass bg-bg-panel px-3 py-2 text-sm text-text-primary backdrop-blur-xl lite:bg-bg-deep/95 lite:backdrop-blur-none">
       <p className="font-medium">{point.family}</p>
       <p className="text-text-muted">
         {point.average}/5 — {LEVEL_LABELS[roundedLevel]}

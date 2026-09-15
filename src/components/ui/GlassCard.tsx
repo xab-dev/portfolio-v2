@@ -58,7 +58,7 @@ export function GlassCard({ children, className, glow, tilt = false }: GlassCard
         glow ? { boxShadow: glowShadow[glow], transition: { duration: 0.3 } } : undefined
       }
       className={cn(
-        "rounded-card border border-border-glass bg-bg-panel backdrop-blur-xl",
+        "rounded-card border border-border-glass bg-bg-panel backdrop-blur-xl lite:bg-bg-deep/95 lite:backdrop-blur-none",
         "p-6",
         className,
       )}

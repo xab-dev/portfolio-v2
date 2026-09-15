@@ -29,7 +29,7 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
             key={family}
             className={cn(
               "rounded-card border border-border-glass bg-bg-panel p-4 transition-shadow duration-base",
-              isFamilyActive && "shadow-glow-blue",
+              isFamilyActive && "shadow-glow-blue lite:border-neon-blue/40",
             )}
             onMouseEnter={() => onFamilyHover(family)}
             onMouseLeave={() => onFamilyHover(null)}
@@ -61,7 +61,7 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
                       {skill.name}
                     </button>
                     {isHovered ? (
-                      <div className="absolute left-0 top-full z-10 mt-2 w-64 rounded-lg border border-border-glass bg-bg-panel p-3 text-xs text-text-muted backdrop-blur-xl">
+                      <div className="absolute left-0 top-full z-10 mt-2 w-64 rounded-lg border border-border-glass bg-bg-panel p-3 text-xs text-text-muted backdrop-blur-xl lite:bg-bg-deep/95 lite:backdrop-blur-none">
                         <p className="font-medium text-text-primary">
                           Niveau {skill.level}/5 — {LEVEL_LABELS[skill.level]}
                         </p>

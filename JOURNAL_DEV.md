@@ -4,6 +4,103 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (suite) — Phase 6b : Mode allégé tactile — mise en œuvre et vérification (§7.1-§7.4)
+
+Suite directe de l'entrée d'inventaire ci-dessous (même session). Implémentation faite, critère maître §7.1 validé, mode allégé vérifié par `getComputedStyle`. **Session arrêtée à l'ARRÊT XAV §7.6** (mesure terrain sur le Galaxy A04, hors de portée de l'agent) — Phase 6b non close, en attente du retour de Xav.
+
+### Décisions prises et pourquoi
+
+- **Mécanisme par effet (consigne §6 : un seul par effet)** :
+  - **Verre dépoli → fond dense** : variante Tailwind `lite:` (pas de token `--glass-blur`/`--glass-alpha`) sur chaque usage de `backdrop-blur-xl`/`backdrop-blur-sm` (`lite:backdrop-blur-none` + `lite:bg-bg-deep/95` ou `lite:bg-black/90`). Un token unique aurait forcé la même valeur de flou par défaut sur des primitives qui n'ont pas le même rayon aujourd'hui (`xl` = 24px sur la plupart, `sm` = 4px sur l'overlay de `Modal`) — l'utiliser aurait changé le rendu PC. La variante, elle, ne s'applique jamais sous `data-perf="full"` (vérifié par construction : `html[data-perf="lite"] &`).
+  - **Glows → bordures accentuées** : token (`--glow-blue/violet/emerald` → `none` sous `html[data-perf="lite"]`, dans `tokens.css`). Un seul point de vérité qui neutralise à la fois les classes `shadow-glow-*` et les `boxShadow: "var(--glow-*)"` inline de `motion` (`GlassCard.tsx` au survol, `NeonButton.tsx` au survol) — aucune de ces deux consommations n'a eu besoin d'être modifiée. Bordure accentuée de compensation déjà présente gratuitement pour l'avatar Hero (`border-neon-violet/40` déjà dans le JSX existant) ; ajoutée explicitement pour la carte de famille active des compétences (`lite:border-neon-blue/40` dans `SkillBadges.tsx`, seul cas où elle manquait).
+  - **Ambiance** : token `--ambient-opacity` (1 → 0 en lite), consommé par `body::before` (`globals.css`). Le grain de bruit (`body::after`) n'est pas concerné — pas nommé par la spec (§3.3 : "halos radiaux"), coût négligeable (SVG statique, jamais animé).
+- **Halo du Hero (`HeroGlow`) modifié malgré son absence de la liste de fichiers indicative de la spec (§5)** : le texte de la spec (§3.3) nomme explicitement "les halos radiaux du fond de page **et du Hero**". Neutraliser seulement le token d'ambiance de fond aurait laissé tourner la boucle `animate` infinie (8 s, `repeat: Infinity`) du Hero — exactement le genre de recomposite continu que la phase vise à supprimer. Ajout de `useLiteMode()` dans `Hero.tsx` : en lite, `animate={{opacity: 0}}` fixe, sans transition, la boucle n'est jamais lancée (pas seulement masquée par opacité). Décision visuelle : opacité 0 plutôt qu'un dégradé linéaire statique de repli — vérifié à l'écran (375/500 px) que le fond ne paraît pas trop nu (l'anneau `border-neon-violet/40` de l'avatar et la hiérarchie de texte suffisent).
+- **Frise (`Timeline.tsx`) scindée en deux composants** (`ProgressLineFull` / `ProgressLineLite`) plutôt qu'une branche conditionnelle dans un seul composant : `useScroll` de `motion` s'abonne au scroll dès qu'il est appelé, **indépendamment** de l'usage de sa valeur de retour dans le style — une simple branche `if` autour du style aurait laissé l'écouteur de scroll actif même en lite, ne réglant rien. Deux composants, deux jeux de hooks, choix figé au montage (`data-perf` ne change jamais à chaud, §4) : `useScroll` n'est *appelé* que si `liteMode === "full"`. En lite, `IntersectionObserver` (une fois, `disconnect()` après déclenchement) + transition CSS `scale-y-0 → scale-y-100` sur un `<div>` simple (pas de `m.div`).
+- **`SkillRadar.tsx` (`isAnimationActive={false}`) et le tilt 3D de `GlassCard` non modifiés** : déjà conformes à l'état actuel du code avant toute intervention (voir inventaire ci-dessous, points 5 et 9) — les retoucher aurait été soit sans effet, soit un risque de régression sur le mode complet (activer l'animation du radar seulement en `full` aurait changé le mode complet, interdit par §3 : "Strictement rien ne change").
+- **`SectionShell` non modifié** : conservé explicitement par la spec (§3.5) sauf preuve contraire par la mesure terrain — pas de preuve à ce stade, donc pas de changement.
+- **2 tests au-delà des 4 prescrits** (`liteMode.test.ts`, 6 cas au total) : les 4 cas de la spec (override lite, override full, coarse, fine/absent) plus 2 cas d'edge case déjà écrits dans le texte de la spec (§4 : override mémorisé en `sessionStorage`, valeur `?perf=` inconnue ignorée) — même fonction, couverture cohérente avec le texte de la spec plutôt qu'un ajout hors sujet.
+
+### Méthodologie de vérification du critère maître §7.1 (pixel-identique PC)
+
+Captures `vite preview` à la taille de fenêtre stable obtenue dans cette session pour une demande 1280×900 (**1264×749 réels** — écart constant dû au chrome du navigateur, cohérent avec les phases précédentes qui documentaient déjà "Desktop ~1264 px" ; confirmé strictement stable tant que je ne rappelle pas `resize_window`, ce qui a permis la comparaison). Procédure : `git stash -u` → build → captures des 7 sections ("avant", commit de référence) → `git stash pop` → build → captures des 7 sections ("après", même fenêtre, aucun redimensionnement entre les deux) — comparaison pixel par pixel (script `compare.js`, `sharp`, seuil de tolérance 3/255 par canal pour absorber le bruit de compression JPEG des captures) plutôt qu'un ajout de dépendance (`pixelmatch`) : `sharp` est déjà une devDependency du projet.
+
+**Résultat** : Simulateur, Playground, Projets, Compétences → **0 pixel différent / 946 736** (0,0000 %). Contact → 0 après une reprise propre (la première capture batch avait attrapé une frame de l'animation d'entrée `whileInView` de `SectionShell` pas encore stabilisée malgré l'attente de 1 s ; revérifié avec 2 s d'attente sur un rechargement frais, identique au pixel près à l'avant). Hero → 4 185/946 736 px (0,44 %), **entièrement dans la zone d'animation en cours** explicitement exclue par §7.1 : le halo `HeroGlow` tournait déjà en boucle infinie *avant* la Phase 6b (mesuré : 4 157 px de bruit naturel entre deux captures consécutives du Hero **sans aucun changement de code**, soit le même ordre de grandeur) — pas une régression introduite par cette phase. Jouer → 202 px hors zone après exclusion du cadre de l'iframe (0,02 %), dont le curseur de souris superposé par l'outil de capture lui-même (visible en cluster isolé au-dessus du cadre) ; les 5 927 px restants sont *dans* le cadre de l'iframe haTD, contenu tiers embarqué qui joue son cold-open de façon autonome (RAF propre au jeu) — hors de portée du rendu du portfolio, explicitement une "zone d'animation en cours".
+
+### Livré et validé à l'écran
+
+- **§7.1 (critère maître)** : voir ci-dessus — validé, aucune régression de rendu PC hors zones d'animation explicitement exclues par la spec.
+- **§7.2 (mode allégé vérifiable par `getComputedStyle`)** : `?perf=lite` testé à 1264 px et à ~500 px (375 px non atteignable avec les outils de cette session — limite déjà documentée aux Phases 1/4/5, qui touche ici aussi la largeur *desktop*, cf. note plus bas). Header, `GlassCard` (agent de poche) et le panneau tooltip du radar : `backdropFilter: "none"`, `backgroundColor: "rgba(11, 15, 25, 0.95)"`, `boxShadow: "none"` aux deux largeurs — conforme.
+- **§7.3 (lisibilité en lite)** : header sticky vérifié lisible (texte "Xav" + icône menu nettement contrastés) au-dessus de 3 positions de défilement (Projets, une zone de marge entre sections, Jouer) à ~500 px, malgru l'absence de flou — le fond dense (`alpha 0.95`) suffit.
+- **Frise en lite** : vérifié par lecture directe du DOM (`getComputedStyle`) que `ProgressLineLite` est bien monté (pas de `m.div`), que la classe `scale-y-100` est posée après le déclenchement de l'`IntersectionObserver`, et que `transform` vaut la matrice identité — le mécanisme scroll-continu (`useScroll`) n'est jamais invoqué dans cette branche.
+- **`npm run lint` / `npm run test` (37 tests, dont les 6 nouveaux de `liteMode.test.ts`) / `npm run build`** verts après le `git stash pop` (état final, pas seulement pendant le développement).
+- **Edge case §4 (cumul reduced-motion + lite)** : vérifié par lecture du code plutôt qu'à l'écran (pas d'outil d'émulation `prefers-reduced-motion` dans cette session, limite déjà documentée aux phases précédentes) — dans `Hero.tsx` et `Timeline.tsx`, la branche `isLite`/`liteMode === "lite"` est évaluée en premier et ne réactive jamais un état que `reducedMotion` aurait coupé (ex. `ProgressLineLite` avec `reducedMotion=true` démarre `drawn=true` sans jamais poser d'observateur).
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- **§7.5 (Lighthouse mobile sur le déploiement)** : nécessite le site poussé et en ligne — non exécutable localement de façon représentative (déjà noté en Phase 0 : l'écart local/prod vient du throttling de `vite preview`). À vérifier une fois déployé ; le mode allégé ne devrait que l'améliorer ou le laisser inchangé (aucun octet de JS/CSS supplémentaire significatif — le script inline ajoute ~1 Ko à `index.html`).
+- **Largeur mobile plancher toujours ~500 px avec les outils de cette session** (375 px non atteignable), comme documenté aux Phases 1/4/5. Nouveau cette session : la largeur *desktop* demandée (1280 px) n'est elle non plus jamais obtenue à l'identique (1264 px réels, écart constant du chrome navigateur) — sans conséquence sur le critère maître puisque la comparaison avant/après s'est faite à fenêtre rigoureusement stable (aucun redimensionnement entre les deux captures).
+- **Optimisation du mode complet, réglage utilisateur, détection de puissance d'appareil** : hors scope explicite (§8), inchangé, prévu Phase 7 si pertinent.
+
+### Dette ajoutée / mise à jour
+
+- Ligne DETTE-30 ajoutée à `dette_suivi.md` §C (patch de la spec 08, reporté ci-dessous) : implémentation faite, **statut ⏸ en attente de la mesure terrain de Xav** (ARRÊT XAV ci-dessous), pas encore cochée ☑.
+
+### [ARRÊT XAV] — critère §7.6 de la spec 08
+
+Le critère §7.6 ("le défilement doit être **nettement** plus fluide en `lite`") ne peut être mesuré que sur l'appareil réel qui a signalé le problème (Galaxy A04, Firefox Android) — hors de portée de cet agent. Tout le reste de la Phase 6b est fait et vérifié (§7.1 à §7.4 ci-dessus) ; §7.5 (Lighthouse) attend le déploiement.
+
+**Ce qu'il reste à faire, concrètement** : ouvrir `https://xab-dev.github.io/portfolio-v2/?perf=lite` puis `?perf=full` sur le Galaxy A04 (après déploiement de cette phase) et comparer la fluidité du défilement au ressenti. Si le gain est net → Phase 6b close, dette DETTE-30 cochée. Si le gain est faible → **ne pas empiler d'autres allègements à l'aveugle** (consigne explicite de la spec) : revenir avec un profil de performance Firefox Android (`about:debugging` en USB) pour identifier ce qui domine encore le budget d'image.
+
+Rien n'a été poussé ni committé à ce stade (consigne implicite : le critère maître devait être validé avant tout envoi, et le critère §7.6 reste ouvert).
+
+---
+
+## 2026-09-15 (suite) — Phase 6b : Mode allégé tactile — inventaire §6 (avant tout changement)
+
+Session ouverte sur `specs/08_mode-allege-tactile.md` (DETTE-30, retour terrain Xav : Galaxy A04/Firefox Android, défilement saccadé uniforme). Consigne §6 : lister l'inventaire des règles coûteuses **avant d'écrire une ligne de code**. Inventaire ci-dessous, établi par grep exhaustif sur `src/` (`backdrop-blur|backdrop-filter|shadow-\[|boxShadow|mix-blend|blur-|animate-|useScroll|scaleY|filter:`) puis lecture de chaque fichier trouvé.
+
+### Inventaire des règles coûteuses
+
+**1. `backdrop-filter` (`backdrop-blur-*`)** — la plus fréquente, et la plus probable cause racine du ticket (seul effet actif *en permanence pendant le défilement*, pas seulement au montage) :
+- `Navbar.tsx:47` — header **sticky**, `backdrop-blur-xl` : repeint à chaque frame de scroll tant que la page défile, sur toutes les sections. Cible prioritaire.
+- `Navbar.tsx:98` — panneau menu mobile plein écran, `backdrop-blur-xl` (ponctuel, ouverture menu).
+- `GlassCard.tsx:61` — `backdrop-blur-xl` sur toutes les cartes verre (agent, projets, compétences, contact...).
+- `Modal.tsx:64` (overlay, `backdrop-blur-sm`) et `Modal.tsx:84` (dialogue, `backdrop-blur-xl`).
+- `Timeline.tsx:54` — chaque carte de jalon de la frise, `backdrop-blur-xl` (cumulé avec le point 4 ci-dessous, sur la même section).
+- `SkillRadar.tsx:92` et `SkillBadges.tsx:64` — tooltips, `backdrop-blur-xl` (déclenchement ponctuel au survol/tap, secondaire).
+- `TeaserOverlay.tsx:155` — bouton Fermer de l'overlay teaser mobile, `backdrop-blur-xl` : **rendu réellement sur le chemin tactile** (contrairement au point suivant), à traiter.
+- `Play.tsx:63` et `Play.tsx:76` — cadre iframe desktop + bouton plein écran, `backdrop-blur-xl` : **hors périmètre réel** — ce bloc ne s'affiche que dans la branche `!isTouch` (voir `useCoarsePointer` local au fichier), donc jamais rendu sous `pointer: coarse`. Laissé tel quel (aucun gain possible, `lite:` n'y changerait rien).
+
+**2. `box-shadow` à grand rayon de flou (glows)** — `--glow-blue/violet/emerald` = `0 0 40px rgba(...)` (`tokens.css`) :
+- Statiques, actifs en permanence dès affichage (pas seulement au survol) : `Hero.tsx:34` médaillon avatar (`shadow-glow-violet`), `Timeline.tsx:50` point de jalon (`shadow-glow-blue`), `SkillBadges.tsx:32` badge de famille active (`shadow-glow-blue`). Ce sont ces trois-là qui comptent pour le budget GPU en continu.
+- Déclenchés au survol via `whileHover` de `motion` (style inline JS, pas du CSS statique) : `GlassCard.tsx:58`, `NeonButton.tsx:34`. Ne se déclenchent normalement pas sur un vrai appareil tactile (pas d'évènement hover réel) — la spec le confirme (§3.2 : "les glows au survol n'ont de toute façon pas de sens au tactile"). Une règle CSS `lite:` ne peut de toute façon pas les neutraliser (ce n'est pas du CSS statique) : laissés tels quels, documenté comme non-cible.
+
+**3. Halos d'ambiance (`radial-gradient`)** :
+- `globals.css` `body::before` (3 radial-gradients) et `body::after` (bruit SVG `feTurbulence`) : tous deux en `position: fixed`, jamais animés, mais un élément `fixed` reste épinglé à un calque de composition pendant tout le scroll — coût de compositing continu même sans changement de pixels.
+- `Hero.tsx` `HeroGlow` : radial-gradient animé en boucle infinie (`opacity: [0.15, 0.25, 0.15]`, 8 s, `repeat: Infinity`), actif dès que la section Hero est montée, **indépendamment de `prefers-reduced-motion`** au-delà de l'amplitude (reduced-motion fige l'opacité à 0.2 mais l'élément reste, aucune boucle `animate` n'est lancée dans ce cas — vérifié : la prop `animate` vaut `{opacity: 0.2}`, une valeur fixe, pas une boucle). Cumul avec le scroll (recomposite en même temps que le défilement) sur la première section vue.
+
+**4. Frise (`Timeline.tsx`, Phase 5)** : `useScroll({ target: containerRef, offset: [...] })` réévalue `scrollYProgress` à *chaque évènement de scroll* tant que la section est dans la fenêtre d'observation, piloté vers un `scaleY` sur un `<div>` à dégradé — combiné aux `backdrop-blur-xl` de chaque carte de jalon (point 1) dans la même zone : c'est exactement le scénario du §3.4 de la spec.
+
+**5. Recharts radar (`SkillRadar.tsx:132`)** : `isAnimationActive={false}` **déjà présent dans le code actuel**, inconditionnellement. L'item §3.6 de la spec est donc déjà satisfait sans changement — documenté ici pour ne pas le retraiter par erreur.
+
+**6. `mix-blend-mode`** : aucune occurrence dans `src/` (grep négatif). Rien à traiter.
+
+**7. `filter:` CSS générique** (hors `backdrop-filter`/`box-shadow` déjà listés) : la seule occurrence est le `feTurbulence` interne au bruit SVG du point 3, déjà couvert. Rien d'autre.
+
+**8. `SectionShell` (entrée au scroll, `whileInView`)** : animation `transform/opacity` unique par section (pas répétée au scroll). Conservée par consigne explicite de la spec (§3.5, "sauf si la mesure §7 montre qu'elle contribue") — non modifiée dans cette passe, pas dans le périmètre de l'inventaire à corriger.
+
+**9. Tilt 3D `GlassCard`** : déjà désactivé au tactile depuis la Phase 0 (`isTouchDevice()` dans `GlassCard.tsx`). Rien à changer (§3.7).
+
+### Périmètre retenu pour la suite de la Phase 6b
+
+D'après cet inventaire, les changements portent sur : header sticky, `GlassCard`, `Modal`, overlay teaser mobile (point 1) ; les trois glows statiques permanents (point 2) ; les halos de fond + `HeroGlow` (point 3, opacité seulement — la boucle d'animation infinie elle-même n'est pas un "effet de rendu" au sens de la spec mais sera réexaminée si elle contribue à la mesure terrain) ; la frise en `IntersectionObserver` au lieu de `useScroll` (point 4). Aucun changement sur les points 5, 6, 7, 8, 9 (déjà conformes ou hors périmètre).
+
+Mécanisme retenu (consigne §6 : un seul par effet) : **tokens CSS** (`--glass-blur`, `--glow-shadow`, `--ambient-opacity`) redéfinis sous `html[data-perf="lite"]` dans `tokens.css`, consommés par les classes existantes sans dupliquer de logique dans les composants, sauf quand une valeur est en dur dans une classe Tailwind non pilotable par variable (ex. `backdrop-blur-xl` littéral) — dans ce cas, variante `lite:` Tailwind, jamais les deux pour le même effet.
+
+Aucun changement de code effectué avant cette entrée. Implémentation à suivre dans la même session, journalisée séparément.
+
+---
+
 ## 2026-09-15 (suite) — Session dédiée : mail + 404 haTD
 
 Session à portée volontairement restreinte (consigne de Xav : ne toucher que le mail et les 404 de haTD, rien d'autre).

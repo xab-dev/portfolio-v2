@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -35,5 +36,11 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Mode allégé tactile (Phase 6b, spec 08 §2) : `lite:` ne s'applique jamais
+    // sous `data-perf="full"` — le PC reste protégé par construction.
+    plugin(({ addVariant }) => {
+      addVariant("lite", 'html[data-perf="lite"] &');
+    }),
+  ],
 } satisfies Config;

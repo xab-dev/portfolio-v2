@@ -9,6 +9,33 @@
       content="Xavier Joseph Bou — Consultant outils et solutions IA : conception de workflows, outils et usages IA adaptés aux besoins réels."
     />
     <title>Xavier Joseph Bou — Consultant outils et solutions IA</title>
+    <script>
+      // Pose data-perf avant le premier rendu (Phase 6b, spec 08 §2) pour éviter
+      // un flash "complet → allégé". Réimplémente volontairement une version
+      // minimale de la logique de src/lib/perf/liteMode.ts (testée par ailleurs) :
+      // ce script doit rester sans dépendance et s'exécuter avant le chargement
+      // de tout module.
+      (function () {
+        try {
+          var urlValue = new URLSearchParams(location.search).get("perf");
+          var mode;
+          if (urlValue === "lite" || urlValue === "full") {
+            mode = urlValue;
+            sessionStorage.setItem("perf", mode);
+          } else {
+            var stored = sessionStorage.getItem("perf");
+            if (stored === "lite" || stored === "full") {
+              mode = stored;
+            } else {
+              mode = window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "lite" : "full";
+            }
+          }
+          document.documentElement.setAttribute("data-perf", mode);
+        } catch (e) {
+          document.documentElement.setAttribute("data-perf", "full");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

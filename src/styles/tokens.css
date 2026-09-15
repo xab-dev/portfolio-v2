@@ -26,4 +26,22 @@
   --dur-fast: 150ms;
   --dur-base: 300ms;
   --dur-slow: 600ms;
+
+  /* Ambiance (halos radiaux du fond de page / du Hero) */
+  --ambient-opacity: 1;
+}
+
+/* Mode allégé tactile (Phase 6b, spec 08) — jamais actif sous pointeur fin
+   (§1 du module : gardé par [data-perf="lite"], posé uniquement sous
+   `pointer: coarse` ou surcharge explicite `?perf=lite`). Neutralise les
+   glows (`--glow-*`, consommés à la fois par les classes `shadow-glow-*` et
+   par les `boxShadow: "var(--glow-*)"` inline de `motion`) et les halos
+   d'ambiance ; le verre dépoli (`backdrop-blur`) est coupé au cas par cas via
+   la variante Tailwind `lite:` (valeurs différentes selon la primitive —
+   xl/sm —, un token unique aurait changé le rendu PC par défaut). */
+html[data-perf="lite"] {
+  --glow-blue: none;
+  --glow-violet: none;
+  --glow-emerald: none;
+  --ambient-opacity: 0;
 }

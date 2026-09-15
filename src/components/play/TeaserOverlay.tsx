@@ -152,7 +152,7 @@ export function TeaserOverlay({ open, onClose, url, teaserMs }: TeaserOverlayPro
               type="button"
               onClick={requestClose}
               aria-label="Fermer l'aperçu"
-              className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-bg-deep/90 text-text-primary shadow-lg backdrop-blur-xl"
+              className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-bg-deep/90 text-text-primary shadow-lg backdrop-blur-xl lite:backdrop-blur-none"
             >
               <X size={22} aria-hidden="true" />
             </button>

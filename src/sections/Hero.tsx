@@ -5,13 +5,27 @@ import { NeonButton } from "../components/ui/NeonButton";
 import { AgentPanel } from "../components/agent/AgentPanel";
 import { assetUrl } from "../lib/assetUrl";
 import { fadeUp, fadeUpReduced, useReducedMotionSafe } from "../lib/motion";
+import { useLiteMode } from "../lib/perf/useLiteMode";
 
 const titleContainer: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.04 } },
 };
 
+/**
+ * Halo d'ambiance du Hero (§3.3, hors de la liste de fichiers indicative de
+ * la spec 08 mais explicitement nommé par son texte : "les halos radiaux du
+ * fond de page et du Hero"). En lite : opacité 0 (décision visuelle simple —
+ * pas de dégradé linéaire statique de repli, le fond de page reste défini
+ * par les halos de `globals.css`, eux aussi coupés en lite — vérifié à
+ * l'écran, pas d'aplat trop nu). Boucle `animate` (8 s, `repeat: Infinity`)
+ * entièrement évitée en lite, pas seulement masquée par opacité : c'est le
+ * recompositing continu, pas juste sa visibilité, qui coûtait cher.
+ */
 function HeroGlow({ reducedMotion }: { reducedMotion: boolean }) {
+  const liteMode = useLiteMode();
+  const isLite = liteMode === "lite";
+
   return (
     <m.div
       aria-hidden="true"
@@ -20,9 +34,11 @@ function HeroGlow({ reducedMotion }: { reducedMotion: boolean }) {
         background:
           "radial-gradient(38rem 30rem at 20% 15%, rgba(139,92,246,0.35), transparent 60%), radial-gradient(34rem 28rem at 85% 30%, rgba(59,130,246,0.35), transparent 60%)",
       }}
-      initial={{ opacity: 0.15 }}
-      animate={reducedMotion ? { opacity: 0.2 } : { opacity: [0.15, 0.25, 0.15] }}
-      transition={reducedMotion ? undefined : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      initial={{ opacity: isLite ? 0 : 0.15 }}
+      animate={
+        isLite ? { opacity: 0 } : reducedMotion ? { opacity: 0.2 } : { opacity: [0.15, 0.25, 0.15] }
+      }
+      transition={isLite || reducedMotion ? undefined : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
     />
   );
 }

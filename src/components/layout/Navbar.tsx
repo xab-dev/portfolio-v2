@@ -44,7 +44,7 @@ export function Navbar() {
       {/* backdrop-blur crée un containing block pour tout descendant `fixed` (spec CSS) :
           le panneau mobile est donc rendu hors du header, pas comme enfant, pour rester
           positionné par rapport au viewport. */}
-      <header className="sticky top-0 z-40 h-16 border-b border-border-glass bg-bg-deep/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 h-16 border-b border-border-glass bg-bg-deep/70 backdrop-blur-xl lite:bg-bg-deep/95 lite:backdrop-blur-none">
         <nav className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
           <a href="#hero" className="font-display font-semibold text-text-primary">
             {site.shortName}
@@ -95,7 +95,7 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-x-0 top-16 bottom-0 z-30 bg-bg-deep/95 backdrop-blur-xl md:hidden"
+            className="fixed inset-x-0 top-16 bottom-0 z-30 bg-bg-deep/95 backdrop-blur-xl md:hidden lite:backdrop-blur-none"
           >
             <ul className="flex flex-col items-center gap-2 px-6 py-10">
               {navLinks.map((link) => (

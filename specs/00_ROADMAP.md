@@ -1,8 +1,8 @@
 # Portfolio v2 "Premium Tech" — Roadmap + prompt d'exécution autonome
 
-**Version : 0.4.0** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B) puis le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu).
+**Version : 0.5.0** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B), le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu), puis le 2026-09-15 (soir) (Phase 6 close et poussée, Phase 6b ajoutée — spec 08, DETTE-30).
 
-**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. Phases 0, 4, 5, 1 livrées ; phase courante : 6 (spec 07, révisée 12:45).
+**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. **Phases 0, 4, 5, 1, 6 livrées et en ligne** ; phase courante : **6b** (`08_mode-allege-tactile.md`, non commencée), puis 2.
 
 ---
 
@@ -64,7 +64,7 @@
 ---
 
 ## Phase 0 — Socle Vite + design system + squelette navigable
-**Livrée le 2026-09-15.** Détail complet : \01_socle-design-system.md`. Phase à exécuter maintenant : Phase 6 (`07_contact-jouer.md`), qui intègre aussi le retrait de `#kitchen-sink` et le câblage des images `templates`/`1am` (DETTE-14).
+**Livrée le 2026-09-15.** Détail complet : `01_socle-design-system.md`. **Phase à exécuter maintenant : Phase 6b** (`08_mode-allege-tactile.md`) — effets de rendu coûteux coupés sous `pointer: coarse`, rendu PC pixel-identique. Puis Phase 2.
 
 ### Objectif
 Un site vide mais *beau* : les tokens du design, la coquille de page (nav, sections ancrées, footer), les primitives animées réutilisables, le déploiement GitHub Pages à la racine du repo neuf.
@@ -88,14 +88,15 @@ Tout contenu réel. Aucune des 7 sections n'est remplie.
 ## Phases suivantes (esquisse — chacune a déjà son fichier de spec, à relire au moment de l'exécuter)
 
 - **Phase 1 — Hero + Agent de poche** (`02_hero-agent-poche.md`) : accroche, puces de questions, agent scripté avec typing, interface prête pour une API.
-- **Phase 2 — Stack Simulator & ROI** (`03_stack-simulator-roi.md`) : sélection de problématiques → stack recommandée + compteurs *indicatifs* avec formules visibles.
+- **Phase 2 — Stack Simulator & ROI** (`03_stack-simulator-roi.md`) : sélection de problématiques → stack recommandée + compteurs *indicatifs* avec formules visibles. **Prérequis avant lancement** : DETTE-07 tranchée par Xav (fourchettes "temps gagné" et baselines) ; format de `sessionStorage['simulator']` figé dans la spec 03 (la Phase 6 lit `{ selection: string[] }` via `parseSimulatorValue`).
 - **Phase 3 — Prompt Playground** (`04_prompt-playground.md`) : cas d'usage → prompt brut → animation scanner → prompt expert + avant/après. Contenu dérivé des vrais templates de Xav.
 - **Phase 4 — Portfolio dynamique** (`05_portfolio-dynamique.md`) : grille filtrable, survol 3D, modale problème/architecture/métriques avec les projets réels.
 - **Phase 5 — Skills Matrix & Timeline** (`06_skills-timeline.md`) : radar interactif + badges + frise.
-- **Phase 6 — Contact smart + section Jouer** (`\07_contact-jouer.md`) : qualification en 3 clics + iframe haTD (jouable PC, teaser cold-open mobile). Lit `sessionStorage['simulator']` sans dépendre de la Phase 2 (clé absente = parcours direct). Inclut le retrait de `#kitchen-sink` et le câblage des images DETTE-14.
-- **Phase 7 — Polish, perf, SEO** : audit Lighthouse, reduced-motion, SEO/OG/sitemap, mentions légales. Spec à écrire une fois les phases 1-6 livrées.
+- **Phase 6 — Contact smart + section Jouer** (`07_contact-jouer.md`) : qualification en 3 clics + iframe haTD (jouable PC, teaser cold-open mobile). Lit `sessionStorage['simulator']` sans dépendre de la Phase 2 (clé absente = parcours direct). Inclut le retrait de `#kitchen-sink` et le câblage des images DETTE-14. **Livrée le 2026-09-15**, envoi Formspree confirmé en boîte de réception depuis le domaine réel (DETTE-28 close), lien haTD corrigé (DETTE-29 close).
+- **Phase 6b — Mode allégé tactile** (`08_mode-allege-tactile.md`) : `backdrop-filter`, glows et animations asservies au scroll coupés sous `pointer: coarse` via `data-perf` sur `<html>` (surcharge de test `?perf=lite|full`) ; critère maître = rendu PC pixel-identique avant/après. Ouverte suite au test terrain de Xav (Galaxy A04, Firefox Android : défilement saccadé uniforme, DETTE-30).
+- **Phase 7 — Polish, perf, SEO** : audit Lighthouse, reduced-motion, SEO/OG/sitemap, mentions légales, optimisation du mode *complet* (les pistes notées en Phase 6b hors scope). Spec à écrire une fois les phases 1-6b livrées.
 
-Ordre conseillé : 0 → 4 → 5 → 1 → 6 → 2 → 3 → 7. Le Portfolio et les Skills sont le cœur du CV et n'ont *aucune* dépendance de décision ; les modules "inédits" (Simulateur, Playground) viennent après, quand la dette de contenu aura été partiellement résorbée.
+Ordre conseillé : 0 → 4 → 5 → 1 → 6 → **6b** → 2 → 3 → 7. Le Portfolio et les Skills sont le cœur du CV et n'ont *aucune* dépendance de décision ; les modules "inédits" (Simulateur, Playground) viennent après, quand la dette de contenu aura été partiellement résorbée.
 
 ## Rappel pour l'agent en fin de session
 Avant de conclure : documenter explicitement (1) les décisions prises et pourquoi, (2) ce qui est livré et validé *à l'écran*, (3) ce qui reste hors scope et pour quelle phase c'est prévu, (4) toute nouvelle ligne ajoutée à `dette_suivi.md`.

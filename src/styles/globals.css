@@ -54,6 +54,7 @@ body::before {
   inset: 0;
   z-index: -2;
   pointer-events: none;
+  opacity: var(--ambient-opacity);
   background:
     radial-gradient(40rem 30rem at 15% 10%, rgba(59, 130, 246, 0.16), transparent 60%),
     radial-gradient(35rem 28rem at 85% 25%, rgba(139, 92, 246, 0.14), transparent 60%),
