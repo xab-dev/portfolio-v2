@@ -4,6 +4,46 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (suite) — Phase 4 : Portfolio dynamique (Mes Projets)
+
+### Décisions prises et pourquoi
+
+- **Pipeline d'images restructuré** : les originaux (`raw/`) ont été déplacés hors de `public/` vers `images-src/` (nouveau, gitignoré). Cause racine d'un problème trouvé en vérifiant `dist/` : Vite copie **tout** `public/` tel quel dans le build, donc des `raw/*.png` sous `public/images/...` auraient été déployés en clair sur le site, à l'opposé de l'objectif "≤ 200 Ko par image" de la DETTE-14. `npm run images` (script `scripts/process-images.js`, `sharp`) lit maintenant `images-src/projects/<id>/raw/*` et écrit `public/images/projects/<id>/<id>-NN.webp` (1600px max, qualité dégressive jusqu'à ≤ 200 Ko). Dossier `régie-maison` renommé `regie-maison` (id sans accent, cohérent avec les chemins `/images/projects/<id>/`).
+- **`LazyMotion` : `domAnimation` → `domMax`** : la grille de projets a besoin de `layout` + `AnimatePresence mode="popLayout"` pour le réordonnancement animé au filtrage — non supporté par `domAnimation` (le bundle le plus léger, retenu en Phase 0). Chunk asynchrone `motionFeatures` passé de 10 Ko à 24 Ko gzip ; toujours différé, ne bloque pas le rendu initial.
+- **Filtre multi-tags en OR** (un projet apparaît dès qu'il correspond à au moins un tag actif) plutôt qu'en AND : cohérent avec des tags de catégorisation (pas des facettes orthogonales), et garantit qu'accumuler des filtres élargit plutôt que d'aboutir à un résultat vide.
+- **Blocs empilés plutôt qu'à onglets** dans la modale projet (Problème/Architecture/Métriques/Limites) : la spec offrait le choix ; empilé garantit trivialement que "Limites" reste toujours visible sans dépliage, une exigence explicite de la spec.
+- **Vitest ajouté** (`npm run test`) : la spec exige `projects.test.ts` comme livrable et critère de passage #1 ; c'est le premier test unitaire du projet.
+
+### Bug trouvé et corrigé (cause racine)
+
+**Modale illisible sur mobile pour un contenu long.** `Modal.tsx` centrait le dialogue avec `flex items-center` dans un conteneur `fixed inset-0` sans `overflow-y`. Un contenu plus haut que le viewport (le cas de chaque fiche projet) débordait *au-dessus et en dessous* de l'écran sans aucun moyen d'y accéder — bouton fermer et pied de page invisibles et inatteignables au scroll (vérifié : capture identique avant/après une tentative de scroll). Corrigé en séparant le conteneur scrollable (`overflow-y-auto`) du conteneur de centrage (`flex min-h-full`) : le dialogue reste centré quand il tient à l'écran, et devient scrollable dès qu'il dépasse. Correction faite dans la primitive `Modal` (Phase 0) — bénéficie à toutes les modales futures, pas seulement au Portfolio.
+
+### Livré et validé à l'écran
+
+Vérifié via Puppeteer (375 px et 1280 px) contre `vite preview` :
+- Grille 1/2/3 colonnes, 6 projets, filtres multi-sélection (`Tous` par défaut, compteur "N projets" à jour), réordonnancement animé au filtrage (`layout`).
+- Filtre "Jeu" → 1 projet (haTD) ; chaque tag a bien ≥ 1 projet (garanti par `projects.test.ts`, 8 tests verts).
+- Carte → modale au clic *et* au clavier (Tab + Entrée), focus déplacé dans la modale puis restauré sur la carte à la fermeture (Échap).
+- Deep link `#projets/miniciel` ouvre la bonne modale au chargement ; hash invalide (`#projets/nawak`) ignoré silencieusement (pas de modale, pas d'erreur) ; fermeture ramène le hash à `#projets`.
+- Galerie horizontale (haTD : 2 images, miniCiel et Régie Maison : 1 chacun), clic → agrandissement dans la même modale, `loading="lazy"`. Templates/Séquence terrain/1AM sans image : carte et modale valides quand même.
+- Métriques non vérifiées affichées avec le suffixe "(auto-déclaré)" ; projets sans métrique ("Séquence terrain", "Régie Maison", "1AM") affichent le message de repli.
+- `npm run build`, `npm run lint`, `npm run test` verts. Aucune erreur console, aucun débordement horizontal à 375 px.
+
+### Hors scope pour cette itération
+
+Études de cas longues, témoignages clients (hors scope explicite de la spec). Captures d'écran pour templates/terrain/1am (pas encore fournies par Xav — cartes valides sans image en attendant).
+
+### [ARRÊT XAV] — non levé par l'agent
+
+Critère de passage §7.5 de la spec 05 : **relecture des 6 fiches par Xav avant de clore la phase.** Le contenu (`src/content/projects.ts`) est rédigé à partir des sources fournies (`Fiche_Professionnelle_Xav.md`, `Positionnement...md` §6-8, `Sequence_Intervention_Terrain.md`) sans invention de métrique, mais reste à valider par Xav pour exactitude avant de considérer la Phase 4 officiellement close. Tout le reste du critère de passage (tests, filtres, clavier, deep link, tilt/reduced-motion) est vérifié et vert.
+
+### Dette ajoutée / mise à jour
+
+- DETTE-10 (enrichir les fiches projet) : substantiellement traitée dans cette phase (6 fiches rédigées à partir des sources réelles) — reste ouverte jusqu'à la relecture Xav ci-dessus.
+- DETTE-14 (captures d'écran) : pipeline construit et fonctionnel (`npm run images`). Images fournies pour haTD (2), miniCiel (1), Régie Maison (1). Toujours en attente pour templates, terrain, 1AM.
+
+---
+
 ## 2026-09-15 — Phase 0 : Socle Vite + design system + squelette
 
 ### Décisions prises et pourquoi

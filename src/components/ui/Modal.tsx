@@ -61,37 +61,42 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     <AnimatePresence>
       {open ? (
         <m.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
-          <m.div
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-            variants={scaleIn}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onClick={(event) => event.stopPropagation()}
-            className="relative w-full max-w-lg rounded-card border border-border-glass bg-bg-panel p-6 backdrop-blur-xl"
-          >
-            <button
-              type="button"
-              aria-label="Fermer"
-              onClick={onClose}
-              className="absolute right-4 top-4 text-text-muted transition-colors hover:text-text-primary"
+          {/* `min-h-full` (pas `h-full`) : centre le dialogue quand il tient dans
+              l'écran, mais laisse le conteneur scrollable au-dessus grandir et
+              défiler quand le contenu est plus haut que le viewport (mobile). */}
+          <div className="flex min-h-full items-center justify-center p-4">
+            <m.div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title"
+              variants={scaleIn}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-lg rounded-card border border-border-glass bg-bg-panel p-6 backdrop-blur-xl"
             >
-              <X size={20} />
-            </button>
-            <h2 id="modal-title" className="font-display text-xl font-bold text-text-primary">
-              {title}
-            </h2>
-            <div className="mt-4">{children}</div>
-          </m.div>
+              <button
+                type="button"
+                aria-label="Fermer"
+                onClick={onClose}
+                className="absolute right-4 top-4 text-text-muted transition-colors hover:text-text-primary"
+              >
+                <X size={20} />
+              </button>
+              <h2 id="modal-title" className="font-display text-xl font-bold text-text-primary">
+                {title}
+              </h2>
+              <div className="mt-4">{children}</div>
+            </m.div>
+          </div>
         </m.div>
       ) : null}
     </AnimatePresence>,

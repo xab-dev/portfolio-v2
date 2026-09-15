@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Images sources (non compressées, hors de public/ pour ne jamais finir dans
+# le build) : converties en .webp par `npm run images` (DETTE-14, spec 05 §6).
+# Seuls les .webp générés dans public/images/ sont versionnés.
+/images-src/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
