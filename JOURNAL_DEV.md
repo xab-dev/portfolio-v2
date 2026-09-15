@@ -4,6 +4,16 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (suite) — Clôture Phase 6b
+
+Xav a testé `?perf=full` puis `?perf=lite` directement sur le Galaxy A04 (Firefox Android), sur une branche de test (`test-mobile-patch`) poussée pour l'occasion. **Résultat : "Nette amélioration de la fluidité sur smartphone."** Critère §7.6 (ARRÊT XAV) levé.
+
+`test-mobile-patch` fusionnée dans `master` (fast-forward, `bf767c9..fb179de`, aucun conflit — la branche n'avait pas divergé). DETTE-30 passée de ⏸ à ☑ dans `dette_suivi.md` §C. Statut de `specs/00_ROADMAP.md` mis à jour : Phase 6b close, phase courante → Phase 2.
+
+**Phase 6b officiellement close.** Reste ouvert et non bloquant, prévu Phase 7 : §7.5 (Lighthouse mobile sur le déploiement — le mode allégé ne peut que l'améliorer ou le laisser inchangé, à reconfirmer une fois en ligne) et l'optimisation du mode complet (pistes notées en §6/§3 de la spec 08, hors scope explicite de cette phase).
+
+---
+
 ## 2026-09-15 (suite) — Phase 6b : Mode allégé tactile — mise en œuvre et vérification (§7.1-§7.4)
 
 Suite directe de l'entrée d'inventaire ci-dessous (même session). Implémentation faite, critère maître §7.1 validé, mode allégé vérifié par `getComputedStyle`. **Session arrêtée à l'ARRÊT XAV §7.6** (mesure terrain sur le Galaxy A04, hors de portée de l'agent) — Phase 6b non close, en attente du retour de Xav.
