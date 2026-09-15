@@ -48,6 +48,9 @@ export const skills: Skill[] = [
   { family: "Méthode IA", name: "Diagnostic structuré / cause racine", level: 4 },
 
   { family: "LLMs & agents", name: "Claude (Fable 5.1, Opus 5, Sonnet 5) / Claude Code", level: 5, note: "usage quotidien, choix du modèle selon la tâche" },
+  // Niveau 3 posé par l'architecte (DETTE-32, patch 2026-09-15 23:00) : Xav
+  // l'ajuste directement ici s'il le souhaite, comme pour DETTE-15.
+  { family: "LLMs & agents", name: "Autres LLM (ChatGPT, Gemini, Perplexity, Mammouth)", level: 3, note: "usage ciblé : chacun pour ce qu'il fait le mieux" },
   { family: "LLMs & agents", name: "Prompt engineering", level: 4 },
   { family: "LLMs & agents", name: "Architecture d'agents (function calling, MCP, orchestration)", level: 3, note: "compris, peu mis en prod" },
   { family: "LLMs & agents", name: "RAG", level: 1, note: "notions — à creuser quand un projet le demandera" },

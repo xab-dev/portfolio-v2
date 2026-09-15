@@ -1,6 +1,5 @@
 /**
- * [À RELIRE — Xav] Textes V1 rédigés par l'agent (DETTE-09 : direction tranchée
- * le 2026-09-15, relecture différée, non bloquante). Voix = celle de `agent.ts` :
+ * Textes validés par Xav le 2026-09-15 (DETTE-09). Voix = celle de `agent.ts` :
  * direct, sans jargon, jamais de promesse chiffrée. Aucun pourcentage, aucun
  * chiffre client. Les templates cités sont ceux de `docs/TEMPLATES_SPEC.md`
  * (6 templates), sous leurs vrais noms.

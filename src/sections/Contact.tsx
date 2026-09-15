@@ -3,7 +3,12 @@ import { SectionShell } from "../components/ui/SectionShell";
 import { GlassCard } from "../components/ui/GlassCard";
 import { GithubIcon, LinkedinIcon, YoutubeIcon } from "../components/ui/BrandIcons";
 import { ContactForm } from "../components/contact/ContactForm";
-import { availabilityNote, directContact, indicativeRateNote } from "../content/contact";
+import {
+  availabilityNote,
+  directContact,
+  directContactHeading,
+  indicativeRateNote,
+} from "../content/contact";
 import { site } from "../content/site";
 
 const socialLinks = [
@@ -30,7 +35,7 @@ export function Contact() {
         </GlassCard>
 
         <div className="flex flex-col gap-4 border-t border-border-glass pt-6">
-          <p className="text-sm font-medium text-text-primary">Contact direct (préféré)</p>
+          <p className="text-sm font-medium text-text-primary">{directContactHeading}</p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-text-muted">
             <a
               href={`mailto:${directContact.emailPrimary}`}

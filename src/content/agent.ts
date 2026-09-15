@@ -16,17 +16,19 @@ export const agentBullets: AgentBullet[] = [
  * Réponses scriptées V1. Texte `roi` validé mot pour mot par Xav (DETTE-05,
  * partiellement réglée — seule cette réponse est passée en relecture finale ;
  * dispo l'est via DETTE-06 ; methode/outils/non-ia restent à relire par Xav).
- * Ne jamais ajouter de pourcentage ni une autre référence au poker ailleurs
- * sur le site (DETTE-17) : ce clin d'œil est unique à cette réponse.
+ * Aucun pourcentage qui puisse passer pour une métrique client (T6) ; le seul
+ * chiffre autorisé est celui du poker dans `roi`, fourni par Xav.
  */
 export const agentReplies: Record<string, string> = {
-  roi: "Je ne vous sortirai pas un chiffre client inventé. Mes projets publiés sont des cas réels documentés (problème → architecture → limites) ; pour votre contexte, le simulateur ci-dessous donne une estimation indicative aux hypothèses affichées, et un vrai chiffrage se fait après diagnostic. Une chose quand même dont je suis sûr : le ROI de l'IA a un potentiel bien plus gros que celui du poker — et je parle en connaissance de cause.",
+  roi: "Je ne vous sortirai pas un chiffre client inventé. Mes projets publiés sont des cas réels documentés (problème → architecture → limites) ; pour votre contexte, le simulateur ci-dessous donne une estimation indicative aux hypothèses affichées, et un vrai chiffrage se fait après diagnostic. Une chose quand même dont je suis sûr : le ROI de l'IA a un potentiel bien plus élevé que celui du poker, où le ROI moyen varie généralement entre 10 % et 30 % pour un joueur régulier gagnant (souvent moins pour les limites > 100 €) — et je parle en connaissance de cause.",
   dispo:
     "Oui, entièrement disponible. Je réponds sous un jour maximum. Je travaille de préférence à distance, mais je me déplace — même loin et sur une longue durée, par exemple pour un audit en immersion — dès qu'un devis est signé.",
   methode:
     "Je travaille avec le cadre 4D : Délégation (je confie l'exécution à l'IA), Description (un cahier des charges clair, pas un prompt vague), Discernment (je choisis l'outil après avoir compris le problème, jamais avant), Diligence (je vérifie tout ce qui sort). En résumé : je délègue l'exécution, jamais la vérification.",
+  // [À RELIRE — Xav] Texte rédigé par l'architecte à partir des mots de Xav
+  // (DETTE-32, patch 2026-09-15 23:00) : non bloquant.
   outils:
-    "Claude au quotidien — Fable 5.1, Opus 5, Sonnet 5 selon la tâche — et Claude Code piloté par des specs écrites ; Python, JS, PowerShell pour le reste. Automatisation (Make, n8n) et RAG : notions pour l'instant, à creuser quand un projet le demandera vraiment. Je choisis l'outil après le problème, jamais avant.",
+    "Claude au quotidien — Fable 5.1, Opus 5, Sonnet 5 selon la tâche — et Claude Code piloté par des specs écrites : c'est mon outil principal, probablement le meilleur dans sa plage d'utilisation. Mais pas le seul : ChatGPT pour les tâches courantes et économiser mes tokens Claude, Gemini pour ce qui touche au web et à Google, Perplexity pour la recherche documentaire, Mammouth comme base centrale entre deux gros projets — et d'autres selon le besoin. Python, JS, PowerShell pour le reste. Automatisation (Make, n8n) et RAG : notions pour l'instant, à creuser quand un projet le demandera vraiment. Je choisis l'outil après le problème, jamais avant.",
   "non-ia":
     "Trois cas où je ne mets pas d'IA : un process encore instable (le prompt changerait à chaque itération, il faut d'abord le stabiliser) ; une donnée sensible sans cadre de confidentialité clair (je n'y touche pas sans garde-fou) ; une tâche déjà plus rapide à la main qu'à cadrer pour un agent (la déléguer serait juste pour la forme).",
 };
@@ -44,6 +46,6 @@ export const agentKeywords: Record<string, string[]> = {
   roi: ["roi", "rentab", "retour sur investissement", "chiffre"],
   dispo: ["dispo", "delai", "reactiv", "quand peux-tu", "planning"],
   methode: ["methode", "travailles", "4d", "process", "demarche"],
-  outils: ["outil", "stack", "techno", "modele", "claude"],
+  outils: ["outil", "stack", "techno", "modele", "claude", "chatgpt", "gemini", "perplexity", "mammouth"],
   "non-ia": ["pas la bonne reponse", "pas ia", "sans ia", "non-ia", "quand l'ia n'est pas", "quand ia n'est pas"],
 };

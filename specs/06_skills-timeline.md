@@ -42,14 +42,14 @@ Radar : un axe par famille, valeur = moyenne des niveaux de la famille (arrondi 
 ```ts
 export type Milestone = { id: string; period: string; title: string; summary: string; kind: 'formation'|'experience'|'projet'|'pivot'; dateKnown: boolean };
 ```
-Entrées V1 (DETTE-17 : le parcours antérieur — études, coaching, Camargue, deux-roues, poker — reste à la discrétion de Xav et **n'est pas affiché** ; la frise V1 ne couvre que la trajectoire IA/dev, dates connues) :
-- Régie Maison — premier projet — `projet` (01/09/2026, `dateKnown:true`)
-- Développement de jeu : haTD prototype → RPG-monde — `projet` (2026)
-- Bibliothèque de templates de spec — `projet` (2026)
-- miniCiel / kit USB (avec SafeFolder) — clé achevée et testée — `projet` (2026)
-- Bilan de compétences France Travail — `formation` (2026)
-- Pivot : consultant indépendant, "Consultant outils et solutions IA" — `pivot` (09/2026)
-- Portfolio v2 — `projet` (09/2026)
+Entrées V1 (DETTE-17 : le parcours antérieur — études, coaching, Camargue, deux-roues, poker — reste à la discrétion de Xav et **n'est pas affiché** ; la frise V1 ne couvre que la trajectoire IA/dev, dates connues). Dates réelles tranchées par Xav le 2026-09-15 23:00 (patch, §A ; DETTE-12 étendue à tous les jalons), ordre chronologique par date de début :
+- haTD → RPG-monde — `projet` (`01/08 – 07/09/2026`, `dateKnown:true`)
+- Régie Maison — premier projet livré — `projet` (`28/08 – 01/09/2026`, `dateKnown:true`)
+- Bilan de compétences France Travail — `formation` (`05/09/2026`, `dateKnown:true`)
+- miniCiel / kit USB (avec SafeFolder) — clé achevée et testée — `projet` (`07/09/2026`, `dateKnown:true`)
+- Pivot : consultant indépendant, "Consultant outils et solutions IA" — `pivot` (`10/09/2026`, `dateKnown:true`)
+- Bibliothèque de templates de spec, en phase de test — `projet` (`Depuis le 14/09/2026`, `dateKnown:true`)
+- Portfolio v2 — `projet` (`15/09/2026`, `dateKnown:true`)
 
 Une frise courte et datée vaut mieux qu'une frise longue et floue. Le composant doit rester prêt à accueillir des jalons antérieurs si Xav en ajoute plus tard.
 

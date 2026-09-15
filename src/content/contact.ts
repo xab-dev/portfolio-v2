@@ -33,6 +33,9 @@ export const indicativeRateNote =
 
 export const gdprConsentLabel = "J'accepte que ces informations servent uniquement à me répondre.";
 
+// Patch 2026-09-15 23:00 §C : sortie du composant Contact.tsx (T8).
+export const directContactHeading = "Contact direct préféré ?";
+
 // DETTE-06 validé.
 export const confirmationDelayNote = "Réponse sous 24 h.";
 

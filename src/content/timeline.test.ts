@@ -3,7 +3,23 @@ import { timeline } from "./timeline";
 
 const FORBIDDEN_PERSONAL_KEYWORDS = ["camargue", "coaching", "poker", "deux-roues"];
 
+// Source de vérité de l'ordre chronologique (patch 2026-09-15 23:00, §A) : pas
+// de parsing de date, liste à mettre à jour à la main quand un jalon s'ajoute.
+const CHRONOLOGICAL_ORDER = [
+  "hatd",
+  "regie-maison",
+  "bilan-competences",
+  "miniciel",
+  "pivot-consultant",
+  "templates",
+  "portfolio-v2",
+];
+
 describe("timeline", () => {
+  it("est dans l'ordre chronologique", () => {
+    expect(timeline.map((milestone) => milestone.id)).toEqual(CHRONOLOGICAL_ORDER);
+  });
+
   it("a des ids uniques", () => {
     const ids = timeline.map((milestone) => milestone.id);
     expect(new Set(ids).size).toBe(ids.length);

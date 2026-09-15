@@ -4,6 +4,53 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 23:00 — Patch de relecture + roadmap post-V1 (`PATCHES_2026-09-15_2300.md`, unités A à G)
+
+Session ouverte après validation de Xav sur Galaxy A04 (`?perf=lite`) et PC plein écran, Playground compris (4 cas) : V1 fonctionnelle complète. Ce patch ne touche aucun composant, sauf pour sortir une chaîne en dur (§C, T8) et ajouter une classe utilitaire déjà existante (§E). Ordre A → B → C → D → E → F → G respecté.
+
+### Décisions prises et pourquoi
+
+- **§A Frise** : `timeline.ts` réordonné selon les 7 dates réelles fournies par Xav (ordre chronologique par date de début : haTD, Régie Maison, Bilan de compétences, miniCiel, Pivot, Templates, Portfolio v2). Summary `regie-maison` : « Premier projet » → **« Premier projet livré »** (exact dans les deux lectures, haTD commence avant mais Régie Maison est livré avant). Summary `templates` complété par « En phase de test. ». Test `timeline.test.ts` : nouveau cas « est dans l'ordre chronologique » comparant les ids à une liste explicite en dur (pas de parsing de date, commentée comme source de vérité à mettre à jour à la main). Spec 06 et DETTE-12 (dette_suivi.md §B) mis à jour pour refléter l'extension à tous les jalons.
+- **§B Agent `roi`** : phrase finale remplacée mot pour mot par le texte de Xav (ROI poker chiffré, 10 %-30 %, > 100 €, espaces insécables réelles U+00A0 avant `%`/`>`/`€` — vérifiées caractère par caractère, pas de simples espaces). Commentaire du bloc mis à jour (T6 : le seul chiffre autorisé est celui du poker). Le test « ne cite jamais le poker en dehors de `roi` » (`ScriptedAgentProvider.test.ts`) n'a pas été touché et reste vert.
+- **§C Contact** : nouvel export `directContactHeading` dans `src/content/contact.ts` (« Contact direct préféré ? », espace insécable avant `?`), `Contact.tsx` ne contient plus la chaîne en dur. Grep de contrôle `préféré\|Contact direct` sur `src/sections` et `src/components` : aucun résultat. Grep large `>[A-ZÉ][^<{]{12,}<` sur `src/sections/*.tsx` (demandé par le patch pour lister, sans corriger, d'autres chaînes en dur) : **aucun résultat** — rien à ajouter comme point Phase 7 sur ce point précis.
+- **§D Agent `outils`** : réponse remplacée par le texte proposé par l'architecte (Claude au quotidien + ChatGPT/Gemini/Perplexity/Mammouth avec leur rôle respectif), marqué `[À RELIRE — Xav]` en commentaire au-dessus de `outils` dans `agent.ts`. Mots-clés de repli `chatgpt`, `gemini`, `perplexity`, `mammouth` ajoutés à `agentKeywords.outils`. Badge ajouté dans `skills.ts` (famille "LLMs & agents", niveau 3, commentaire renvoyant à DETTE-32 comme pour DETTE-15). Nouvelle **DETTE-32** ouverte dans `dette_suivi.md` §B.
+- **§E Scrollbar agent** : classe `scrollbar-subtle` (déjà utilisée par le Playground, `globals.css`) ajoutée au conteneur scrollable d'`AgentPanel.tsx` (celui qui porte le `ResizeObserver` de suivi de bas). Aucune mention « à appliquer en Phase 7 » ne figurait dans le ROADMAP lui-même (seulement dans ce journal, Phase 3, laissé tel quel comme historique) — rien à retirer côté ROADMAP au-delà de ne pas la reporter dans la nouvelle Phase 7 (§G).
+- **§F Clôture de dette** : DETTE-09 ☑ (texte exact fourni par le patch). Marqueur `[À RELIRE — Xav]` en tête de `playground.ts` remplacé par « Textes validés par Xav le 2026-09-15 ».
+- **§G ROADMAP** : version 0.7.0 → **0.8.0**, statut mis à jour (V1 complète et validée, patch 23:00 appliqué, phase courante 7). Ligne « Phase 7 » de l'esquisse remplacée par la version étendue (Mentions légales, SEO/OG/JSON-LD, domaine en statu quo, DETTE-31, largeur Playground, `prefers-reduced-motion`, image OG sobre en attendant le skin perso) ; Phases 8 (Export CV PDF), 9 (FAQ « Comment ce site a été créé ? »), 10 (version anglaise) ajoutées telles que dictées par Xav, plus la liste post-V1 non planifié. Ordre imposé (patch 23:00 → 7 → 8 → 9 → 10) et mention « Design et animations : figés » ajoutés à la suite de l'ordre conseillé V1 existant (non réécrit).
+
+### Livré et validé à l'écran
+
+L'extension Claude in Chrome n'était pas connectée dans cette session (comme en Phase 0, cf. plus bas) : vérification faite par un petit script Node pilotant Chrome headless en local via le Chrome DevTools Protocol (clics réels sur les puces de l'agent, lecture du DOM rendu, captures d'écran), contre `vite preview` (le port 4174 était déjà occupé par un `preview` résiduel d'une session précédente — servait bien le build à jour après `npm run build`).
+- **Frise (§A.3)** : les 7 jalons avec leurs nouvelles périodes (`01/08 – 07/09/2026`, `28/08 – 01/09/2026`, `Depuis le 14/09/2026`, etc.) tiennent dans leur carte sans débordement, vérifié à 1280 px, ~500 px, et sous `?perf=lite` aux deux largeurs (captures comparées).
+- **Agent `roi` (§B.3)** : réponse complète (595 caractères) lue dans le DOM après un vrai clic sur la puce, comparée caractère pour caractère au texte source — identique, espaces insécables comprises. Tient dans le panneau avec le suivi de bas (`ResizeObserver`) actif, scrollbar visible et discrète, vérifié à 1280 px et ~500 px.
+- **Agent `outils` (§D.1/§D.2)** : réponse complète (678 caractères) lue après clic, identique au texte source. Badge « Autres LLM (ChatGPT, Gemini, Perplexity, Mammouth) » vérifié dans la famille "LLMs & agents" à 1280 px et ~500 px, aucun débordement.
+- **Scrollbar agent (§E.2)** : `className` du conteneur confirmé `scrollbar-subtle max-h-72 min-h-[8rem] overflow-y-auto pr-1` en mode complet et `?perf=lite` ; suivi de bas toujours actif pendant la frappe (captures avant/après clic).
+- **Contact (§C)** : « Contact direct préféré ? » affiché au-dessus du numéro et des liens, vérifié à 1280 px et ~500 px.
+- Aucune erreur ni avertissement console relevé (mode complet et `?perf=lite`).
+- `npm run test` (62 tests, +1), `npm run lint` (oxlint), `npm run build` : verts.
+
+### Limites de vérification (documentées, pas masquées)
+
+- Vérification faite par un script Chrome DevTools Protocol maison (pas de dépendance ajoutée au projet, uniquement un outil local jetable dans le répertoire de travail temporaire), en l'absence de l'extension Claude in Chrome — même limite que la Phase 0. La largeur mobile testée (500 px de fenêtre) n'émule pas un vrai appareil tactile ni `prefers-reduced-motion` (limite déjà documentée dans les phases précédentes, inchangée).
+
+### Dette ajoutée / mise à jour
+
+- DETTE-09 : ⏸ → ☑ (`dette_suivi.md` §B).
+- DETTE-12 : mention étendue à tous les jalons ajoutée (`dette_suivi.md` §B, ligne existante conservée).
+- DETTE-32 : nouvelle ligne ouverte (`dette_suivi.md` §B) — relecture de la réponse `outils` et du niveau du badge, non bloquant.
+- `dette_suivi.md` §D : ligne du 2026-09-15 23:00 ajoutée (texte du patch).
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- Relecture de la réponse `outils` et ajustement éventuel du niveau du badge par Xav → DETTE-32, non bloquant.
+- Tout le contenu de la Phase 7 (mentions légales, SEO/OG/sitemap, DETTE-31, largeur Playground, audit `prefers-reduced-motion` avec un vrai outil d'émulation) → spec à écrire.
+
+### Déploiement
+
+Rien commité pour l'instant : journal rédigé avant le commit comme demandé. Un seul commit à suivre, **push différé jusqu'au go de Xav**.
+
+---
+
 ## 2026-09-15 (soir) — Phase 3 : Prompt Playground (spec 04 amendée par `PATCHES_2026-09-15_1930.md` §C)
 
 Session ouverte après les patchs A (remise sur `main`) et B (journal Phase 2, note z-index, ROADMAP 0.7.0) ci-dessous. Ordre imposé par le prompt de lancement et respecté : `src/content/playground.ts` + ses tests (§7.5) **avant** tout composant.

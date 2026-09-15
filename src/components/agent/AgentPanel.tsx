@@ -113,7 +113,11 @@ export function AgentPanel() {
         </div>
       </header>
 
-      <div ref={scrollRef} aria-live="polite" className="max-h-72 min-h-[8rem] overflow-y-auto pr-1">
+      <div
+        ref={scrollRef}
+        aria-live="polite"
+        className="scrollbar-subtle max-h-72 min-h-[8rem] overflow-y-auto pr-1"
+      >
         <div ref={contentRef} className="flex flex-col gap-2">
           {messages.length === 0 ? (
             <p className="text-sm text-text-muted">
