@@ -169,7 +169,8 @@ export const projects: Project[] = [
     tags: ["Automations", "Outils"],
     status: "v1 fonctionnelle",
     year: 2026,
-    problem: "Piloter une TV Sony Bravia et un Google Home depuis une seule interface, sans jongler entre applications.",
+    problem:
+      "Piloter une TV Sony Bravia et un Google Home depuis une seule interface, sans jongler entre applications ni se déplacer jusqu'à l'autre pièce où se trouvent les appareils.",
     architecture: [
       "Interface Python / tkinter, chargement dynamique des modules (chaque appareil est un module indépendant).",
       "Threading pour ne pas bloquer l'interface pendant les appels réseau.",

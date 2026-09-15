@@ -52,7 +52,7 @@ Le tag "RAG/LLM" de la dictée est **retiré** (T11, réponse S2 de Xav : aucun 
    - Métriques : aucune métrique affichée (statut cadrage) — la carte le dit.
 
 5. **Régie Maison** — Automations, Outils · v1 fonctionnelle · 2026 (premier projet, 01/09/2026 — DETTE-12) · émeraude
-   - Problème : piloter TV Sony Bravia + Google Home depuis une interface unique.
+   - Problème : piloter TV Sony Bravia + Google Home depuis une interface unique dans une autre pièce.
    - Architecture : Python, tkinter, chargement dynamique de modules, threading, `config.json` séparé, API Bravia (PSK), pychromecast/gTTS.
    - Limites : usage personnel, pas packagé.
 

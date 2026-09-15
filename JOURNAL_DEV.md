@@ -4,6 +4,42 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (suite) — Phase 5 : Skills Matrix & Timeline
+
+### Décisions prises et pourquoi
+
+- **Recharts chargé dans un chunk séparé (`React.lazy` + `Suspense`)**, pas dans le bundle initial : l'installer directement aurait fait passer le JS principal de 328 Ko à 692 Ko (106 Ko → 213 Ko gzip), menaçant le budget Lighthouse Performance ≥90 acquis en Phase 0 (DETTE-26). Après découpage, le bundle initial reste à 360 Ko (116 Ko gzip) et Recharts (332 Ko / 96 Ko gzip) ne se charge que quand la section Compétences est atteinte. Même logique que le chunk `motionFeatures` de la Phase 0.
+- **DETTE-16 (niveau biostatistique)** : représenté avec la valeur neutre la plus basse de l'échelle (1 = notions) plutôt qu'omis ou inventé à un niveau plus flatteur — cohérent avec la consigne "ne jamais gonfler un niveau". Marqueur `[DETTE-16]` dans la note du skill, à confirmer par Xav (voir ARRÊT XAV ci-dessous). Cette valeur provisoire compte dans la moyenne de la famille "Données" ; sans elle, cette famille n'aurait aucun axe radar.
+- **Radar hover/tap synchronisé** (`activeFamily` levé dans `Skills.tsx`) : survoler un badge illumine sa famille sur les deux composants (axe du radar en gras + carte de famille en glow), et inversement depuis un axe du radar — un seul état partagé, pas de duplication de logique.
+
+### Bug trouvé et corrigé en cours de session (cause racine, pas de contournement)
+
+**Ligne de la frise invisible malgré un calcul de progression correct.** Première implémentation : un `<path>` SVG avec `pathLength` (motion value liée au scroll) passé via `style={{ pathLength }}`. Diagnostic : Framer Motion attend `pathLength` comme **prop directe** du composant (il l'utilise alors pour poser l'attribut SVG `pathLength="1"` et convertir `stroke-dasharray`/`stroke-dashoffset` en fractions 0-1) ; passé dans `style`, cet attribut n'est jamais posé, donc les valeurs de dasharray calculées ("0.56px, 1px") restaient interprétées en unités utilisateur du path (~100 unités de long), produisant un pointillé microscopique invisible. Corrigé une première fois en passant `pathLength` en prop directe — le calcul de progression était alors correct (vérifié via `getComputedStyle`) mais le trait restait invisible à l'écran : cause racine n°2, la combinaison `vector-effect="non-scaling-stroke"` + `preserveAspectRatio="none"` sur un `viewBox` étiré de façon non uniforme (facteur ×4 en largeur, ×10,5 en hauteur) — un cas connu de rendu défaillant sous Chromium. Solution finale : abandon de la technique SVG `pathLength`, remplacée par un simple `<div>` avec dégradé CSS (`bg-gradient-to-b`) et un `scaleY` (motion value, `transform-origin: top`) — plus robuste, aucune dépendance à un comportement SVG non uniforme. Vérifié visuellement après correction : le trait se dessine bien du premier jalon vers le bas au fil du scroll.
+
+### Vérification visuelle réelle (Claude in Chrome, `vite preview`)
+
+- Desktop (~1264 px) : radar à 6 axes lisibles, survol d'un badge ("Cadre 4D...") illumine bien l'axe "Méthode IA" (texte bleu gras) et la carte de la famille (glow) simultanément — synchronisation bidirectionnelle confirmée.
+- Mobile (~504 px, plancher de redimensionnement de l'outil de navigation — 375 px non atteignable avec les outils disponibles cette session) : radar empilé au-dessus des badges, badges qui passent à la ligne proprement, frise en colonne unique avec la ligne à gauche.
+- Frise : la ligne dégradée bleu→violet se dessine progressivement au scroll (vérifié par `getComputedStyle` — `scaleY` passe de 0 à ~0,9 en descendant la page) et s'arrête juste avant le dernier jalon, cohérent avec le réglage `offset: ["start 0.75", "end 0.35"]`.
+- Aucune erreur console sur l'ensemble de la session de vérification.
+- `npm run build`, `npm run lint` (oxlint) et `npm run test` (Vitest, 20 tests dont 8 nouveaux pour `skills.ts`/`timeline.ts`) verts.
+- Non vérifié dans cette session : `prefers-reduced-motion` sur cette nouvelle section (pas d'outil d'émulation de media feature disponible dans la session ; le hook `useReducedMotionSafe` réutilisé est le même que celui déjà vérifié en Phase 0/4).
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- Retrait de la section `#kitchen-sink` → prévu au plus tard fin de Phase 6 (inchangé depuis la Phase 0).
+- `prefers-reduced-motion` sur la frise, à revérifier explicitement en Phase 7 (polish) avec un outil d'émulation.
+
+### [ARRÊT XAV] — critère §7.4 de la spec 06
+
+Avant de clore officiellement la Phase 5, deux points nécessitent ta validation :
+1. **Niveaux de compétences** (DETTE-15) : `src/content/skills.ts` reflète l'auto-évaluation de la dictée initiale, à valider ou ajuster.
+2. **Niveau biostatistique** (DETTE-16) : actuellement fixé à 1 ("notions", valeur neutre non gonflée) à titre provisoire — confirme ce niveau ou indique la valeur réelle.
+
+Rien n'a été committé à ce stade ; en attente de ton retour avant de marquer la Phase 5 close.
+
+---
+
 ## 2026-09-15 (suite) — Phase 4 : Portfolio dynamique (Mes Projets)
 
 ### Décisions prises et pourquoi
