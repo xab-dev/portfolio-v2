@@ -53,16 +53,23 @@ export function ContactForm() {
   const [simulatorSelection, setSimulatorSelection] = useState<string[] | undefined>(undefined);
   const [showSimulatorBanner, setShowSimulatorBanner] = useState(false);
 
-  // Clé absente tant que la Phase 2 n'est pas livrée : dans ce cas `readSimulator()`
-  // renvoie `{ source: "direct" }` et cet effet ne change rien (§3, §7.2 de la spec 07).
+  // Lu au montage (cas d'un rechargement avec la clé déjà posée, §7.2 de la spec 07) puis
+  // re-synchronisé sur `simulator:updated` : le Simulateur (Phase 2) écrit la clé et scrolle
+  // vers Contact sans recharger la page, donc sans re-déclencher ce montage.
   useEffect(() => {
-    const result = readSimulator();
-    if (result.source === "simulator") {
-      setSource("simulator");
-      setSimulatorSelection(result.simulatorSelection);
-      setProjectType(simulatorProjectType);
-      setShowSimulatorBanner(true);
+    function syncFromSimulator() {
+      const result = readSimulator();
+      if (result.source === "simulator") {
+        setSource("simulator");
+        setSimulatorSelection(result.simulatorSelection);
+        setProjectType(simulatorProjectType);
+        setShowSimulatorBanner(true);
+      }
     }
+
+    syncFromSimulator();
+    window.addEventListener("simulator:updated", syncFromSimulator);
+    return () => window.removeEventListener("simulator:updated", syncFromSimulator);
   }, []);
 
   function markTouched(field: TouchedField) {

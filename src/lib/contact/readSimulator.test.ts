@@ -26,4 +26,12 @@ describe("parseSimulatorValue", () => {
       simulatorSelection: [],
     });
   });
+
+  it("tolère la clé `baselines` du format figé par la Phase 2 (patch DETTE-07) sans la lire", () => {
+    const raw = JSON.stringify({ selection: ["support"], baselines: { support: 20 } });
+    expect(parseSimulatorValue(raw)).toEqual({
+      source: "simulator",
+      simulatorSelection: ["support"],
+    });
+  });
 });

@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "motion/react";
 import { useReducedMotionSafe } from "../../lib/motion";
 
 export interface AnimatedCounterProps {
   value: number;
   suffix?: "%" | "h" | "€" | "";
+  /** Décimales affichées (défaut 0). Ex. le compteur "h/sem" du Simulateur veut 1 décimale. */
+  decimals?: number;
   className?: string;
 }
 
@@ -14,13 +16,15 @@ function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-const formatter = new Intl.NumberFormat("fr-FR");
-
-export function AnimatedCounter({ value, suffix = "", className }: AnimatedCounterProps) {
+export function AnimatedCounter({ value, suffix = "", decimals = 0, className }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.4 });
   const reducedMotion = useReducedMotionSafe();
   const [display, setDisplay] = useState(0);
+  const formatter = useMemo(
+    () => new Intl.NumberFormat("fr-FR", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }),
+    [decimals],
+  );
 
   useEffect(() => {
     if (!inView) return;
@@ -32,10 +36,11 @@ export function AnimatedCounter({ value, suffix = "", className }: AnimatedCount
 
     let frame: number;
     const start = performance.now();
+    const factor = 10 ** decimals;
 
     function tick(now: number) {
       const progress = Math.min((now - start) / DURATION_MS, 1);
-      setDisplay(Math.round(value * easeOutCubic(progress)));
+      setDisplay(Math.round(value * easeOutCubic(progress) * factor) / factor);
       if (progress < 1) {
         frame = requestAnimationFrame(tick);
       }
@@ -43,7 +48,7 @@ export function AnimatedCounter({ value, suffix = "", className }: AnimatedCount
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [inView, reducedMotion, value]);
+  }, [inView, reducedMotion, value, decimals]);
 
   return (
     <span ref={ref} className={className}>

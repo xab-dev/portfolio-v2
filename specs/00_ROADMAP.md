@@ -2,7 +2,7 @@
 
 **Version : 0.6.0** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B), le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu), le 2026-09-15 (soir) (Phase 6 close et poussée, Phase 6b ajoutée — spec 08, DETTE-30), puis le 2026-09-15 (nuit) (Phase 6b close — mesure terrain Galaxy A04 validée par Xav).
 
-**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. **Phases 0, 4, 5, 1, 6, 6b livrées et en ligne** ; phase courante : **2** (`03_stack-simulator-roi.md`), sous réserve de DETTE-07 (fourchettes "temps gagné") à trancher par Xav.
+**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. **Phases 0, 4, 5, 1, 6, 6b livrées et en ligne** ; DETTE-07 tranchée ; phase courante : **2** (spec 03, telle qu'amendée par `PATCHES_2026-09-15_1800.md`).
 
 ---
 
@@ -88,13 +88,13 @@ Tout contenu réel. Aucune des 7 sections n'est remplie.
 ## Phases suivantes (esquisse — chacune a déjà son fichier de spec, à relire au moment de l'exécuter)
 
 - **Phase 1 — Hero + Agent de poche** (`02_hero-agent-poche.md`) : accroche, puces de questions, agent scripté avec typing, interface prête pour une API.
-- **Phase 2 — Stack Simulator & ROI** (`03_stack-simulator-roi.md`) : sélection de problématiques → stack recommandée + compteurs *indicatifs* avec formules visibles. **Prérequis avant lancement** : DETTE-07 tranchée par Xav (fourchettes "temps gagné" et baselines) ; format de `sessionStorage['simulator']` figé dans la spec 03 (la Phase 6 lit `{ selection: string[] }` via `parseSimulatorValue`).
+- **Phase 2 — Stack Simulator & ROI** (`03_stack-simulator-roi.md`) : sélection de problématiques → stack recommandée + compteurs *indicatifs* avec formules visibles. **Prérequis** : DETTE-07 tranchée (fourchettes sourcées, baselines curseur, références) ; format `sessionStorage['simulator']` figé : `{ selection, baselines }` (la Phase 6 lit `{ selection: string[] }` via `parseSimulatorValue`, qui tolère la clé `baselines` supplémentaire).
 - **Phase 3 — Prompt Playground** (`04_prompt-playground.md`) : cas d'usage → prompt brut → animation scanner → prompt expert + avant/après. Contenu dérivé des vrais templates de Xav.
 - **Phase 4 — Portfolio dynamique** (`05_portfolio-dynamique.md`) : grille filtrable, survol 3D, modale problème/architecture/métriques avec les projets réels.
 - **Phase 5 — Skills Matrix & Timeline** (`06_skills-timeline.md`) : radar interactif + badges + frise.
 - **Phase 6 — Contact smart + section Jouer** (`07_contact-jouer.md`) : qualification en 3 clics + iframe haTD (jouable PC, teaser cold-open mobile). Lit `sessionStorage['simulator']` sans dépendre de la Phase 2 (clé absente = parcours direct). Inclut le retrait de `#kitchen-sink` et le câblage des images DETTE-14. **Livrée le 2026-09-15**, envoi Formspree confirmé en boîte de réception depuis le domaine réel (DETTE-28 close), lien haTD corrigé (DETTE-29 close).
 - **Phase 6b — Mode allégé tactile** (`08_mode-allege-tactile.md`) : `backdrop-filter`, glows et animations asservies au scroll coupés sous `pointer: coarse` via `data-perf` sur `<html>` (surcharge de test `?perf=lite|full`) ; critère maître = rendu PC pixel-identique avant/après. Ouverte suite au test terrain de Xav (Galaxy A04, Firefox Android : défilement saccadé uniforme, DETTE-30). **Livrée et close le 2026-09-15** : rendu PC pixel-identique vérifié (diff 0 px hors zones d'animation exclues), mesure terrain confirmée par Xav sur le Galaxy A04 ("nette amélioration de la fluidité").
-- **Phase 7 — Polish, perf, SEO** : audit Lighthouse, reduced-motion, SEO/OG/sitemap, mentions légales, optimisation du mode *complet* (les pistes notées en Phase 6b hors scope). Spec à écrire une fois les phases 1-6b livrées.
+- **Phase 7 — Polish, perf, SEO** : audit Lighthouse, reduced-motion, SEO/OG/sitemap, mentions légales, optimisation du mode *complet* (les pistes notées en Phase 6b hors scope), vérification et liens des références (`references.ts`, `verified` → `true`, DETTE-31). Spec à écrire une fois les phases 1-6b livrées.
 
 Ordre conseillé : 0 → 4 → 5 → 1 → 6 → **6b** → 2 → 3 → 7. Le Portfolio et les Skills sont le cœur du CV et n'ont *aucune* dépendance de décision ; les modules "inédits" (Simulateur, Playground) viennent après, quand la dette de contenu aura été partiellement résorbée.
 
