@@ -41,6 +41,10 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 - DETTE-05 partiellement réglée (texte `roi` validé mot pour mot ; `methode`/`outils`/`non-ia`/défaut restent des reformulations à relire par Xav).
 - DETTE-14 mise à jour (images `templates`/`1am` traitées, pas encore câblées).
 
+### Déploiement
+
+Commit unique (clôture Phase 5 + Phase 1) poussé sur `main`. Déploiement GitHub Actions confirmé sur `https://xab-dev.github.io/portfolio-v2/` : Hero + agent de poche vérifiés en ligne (2 colonnes desktop, avatar réel, titre public affiché), section Compétences vérifiée en ligne (radar 6 axes avec les niveaux ajustés par Xav, badges par famille).
+
 ---
 
 ## 2026-09-15 (suite) — Clôture Phase 5
