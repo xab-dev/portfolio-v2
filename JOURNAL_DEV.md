@@ -4,6 +4,18 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (suite) — Session dédiée : mail + 404 haTD
+
+Session à portée volontairement restreinte (consigne de Xav : ne toucher que le mail et les 404 de haTD, rien d'autre).
+
+**DETTE-28 (délivrabilité Formspree) résolue.** Xav a revérifié depuis le vrai domaine déployé (`https://xab-dev.github.io/portfolio-v2/`) : le mail de test arrive désormais normalement en boîte de réception (`xa.bou@laposte.net`), plus classé en Spam. Confirme l'hypothèse posée en clôture de Phase 6 (l'origine `localhost` des premiers tests expliquait le classement en spam côté Formspree).
+
+**Nouvelle DETTE-29 (404 sur le lien haTD) — trouvée et résolue.** Xav a signalé que `https://xab-dev.github.io/cv-portfolio/haTD_V1` fonctionne dans son navigateur. Vérification par `curl` : cette URL (sans `/` final) répond bien `200` (375 Ko, page HTML autonome, aucune référence d'asset externe — tout est inliné dans le fichier), mais **`site.hatdUrl`** (`src/content/site.ts`) et le lien direct de la fiche projet (`src/content/projects.ts`) pointaient vers la même URL **avec un `/` final**, qui répond `404` : le jeu est déployé côté `cv-portfolio` comme un fichier unique `haTD_V1.html` (servi aussi sans extension), pas comme un dossier contenant `index.html`, donc `.../haTD_V1/` ne résout rien. C'est ce `/` final qui causait la 404 documentée en Phase 6 (`JOURNAL_DEV.md`, note "Poids de l'iframe haTD non mesuré") — le jeu était en réalité déployé, seule l'URL utilisée côté portfolio était fautive. Corrigé aux deux endroits (`/` final retiré) ; l'iframe (`Play.tsx`), le lien "Ouvrir dans un nouvel onglet" et le `TeaserOverlay` consomment tous `play.url`/`site.hatdUrl`, donc un seul point de correction dans `site.ts` suffisait à couvrir l'iframe et le teaser, et le lien direct de `projects.ts` a été corrigé séparément (URL dupliquée, pas de import partagé).
+
+`npm run lint` et `npm run test` (31 tests) verts après les deux changements. Aucune autre partie du code touchée dans cette session.
+
+---
+
 ## 2026-09-15 (suite) — Clôture Phase 6
 
 Deux points traités après la livraison initiale de la Phase 6, avant clôture :

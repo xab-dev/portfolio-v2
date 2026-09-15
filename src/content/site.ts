@@ -3,7 +3,7 @@ export const site = {
   shortName: "Xav",
   title: "Consultant outils et solutions IA",
   location: "Tarascon, Provence",
-  hatdUrl: "https://xab-dev.github.io/cv-portfolio/haTD_V1/",
+  hatdUrl: "https://xab-dev.github.io/cv-portfolio/haTD_V1",
   links: {
     github: "https://github.com/xab-dev/portfolio-v2",
     youtube: "https://www.youtube.com/@1_Autre_Monde", // chaîne "Un Autre Monde"

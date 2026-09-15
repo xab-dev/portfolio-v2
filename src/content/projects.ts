@@ -70,7 +70,7 @@ export const projects: Project[] = [
       "Pas encore de build mobile ni desktop packagé.",
       "Absence de dépôt git : mémoire du projet portée par `CLAUDE.md` et les tests, un choix de Diligence à surveiller si le projet grossit.",
     ],
-    links: [{ label: "Jouer à haTD", href: "https://xab-dev.github.io/cv-portfolio/haTD_V1/" }],
+    links: [{ label: "Jouer à haTD", href: "https://xab-dev.github.io/cv-portfolio/haTD_V1" }],
     images: [
       {
         src: "/images/projects/hatd/hatd-01.webp",
