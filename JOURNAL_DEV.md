@@ -4,6 +4,119 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (soir) — Phase 3 : Prompt Playground (spec 04 amendée par `PATCHES_2026-09-15_1930.md` §C)
+
+Session ouverte après les patchs A (remise sur `main`) et B (journal Phase 2, note z-index, ROADMAP 0.7.0) ci-dessous. Ordre imposé par le prompt de lancement et respecté : `src/content/playground.ts` + ses tests (§7.5) **avant** tout composant.
+
+### Décisions prises et pourquoi
+
+- **`docs/TEMPLATES_SPEC.md` mis à jour vers la version à 6 templates.** La copie committée en Phase 0 (`44170cc`) était la version à **5** templates (datée du 2026-09-14 12:49) : le Template 6 (Triage) n'y existait pas, alors que le patch exige que « les templates cités correspondent à la vraie bibliothèque (`TEMPLATES_SPEC.md`), pas à une version imaginée » et que le ROADMAP, `projects.ts` et `skills.ts` parlent tous de 6 templates. La version à 6 templates existe hors repo (`03_Recherche/Prépa_Thèse/TEMPLATES_SPEC.md`, 2026-09-14 13:11, plus récente) : copiée telle quelle, sans réécriture. Sans cela, le cas `long` aurait cité un template absent de la source déclarée de la spec.
+- **`templateNames` avec les noms exacts de la bibliothèque** plutôt que la casse du bloc de types du patch (`'Cahier des Charges Technique'`, `'Roadmap + Specs numérotées'`, `'Notes de Session Brute (Triage)'` au lieu de `'Cahier des charges technique'`, `'Roadmap + specs numérotées'`, `'Notes de session brutes / Triage'`) : le critère §7.4 demande « les vrais noms de la bibliothèque », et le test `long → T6 → T1 + T2` compare le prompt expert à ces noms.
+- **Cas `long` : l'unité « bug » est un défaut visuel à cause connue** (texte du tutoriel trop petit → Micro-Ticket), pas un bug à cause inconnue. Le patch prescrit `T6 → T1 + T2` ; or la règle de la bibliothèque est explicite : cause inconnue → Session Diagnostic (T3), jamais un patch. Pour que le triage soit juste **et** conforme au patch, la dictée mêle un défaut dont Xav dit lui-même la cause (« c'est juste la taille de police je pense »), une fonctionnalité définissable (pause + vitesse → Module Standard) et une idée non mûre (mode histoire → `[OUVERT]`, parking). L'annotation sur « cause connue » explique ce choix au visiteur.
+- **`[Jeu]` plutôt que « haTD » dans le prompt expert du cas `long`** : la dictée est écrite « dans l'esprit » du cas réel de Xav (notes de test de jeu), pas transcrite d'une vraie session — nommer haTD aurait présenté comme réels un tutoriel, un bouton pause et un mode histoire inventés (T6/T7 : rien d'inventé présenté comme un fait). Le nom de Xav apparaît uniquement là où la bibliothèque le prévoit (« ne jamais trancher à ta place »).
+- **Aucun chiffre** : les seuls nombres du contenu sont des mots (« cinq questions », prescrit par le patch ; « zéro octet »). Test dédié : aucun `%` dans aucun champ des 4 cas.
+- **Verdict épinglé hors de la zone scrollable** (`lead` de `PromptPane`, entre l'en-tête et le code) : le panneau expert a une hauteur max avec scroll interne et suit le bas pendant la frappe (`ResizeObserver`, même mécanisme que l'agent de poche) ; dans la zone scrollable, la ligne de verdict — qui doit « apparaître en premier » — sortait de l'écran dès que le prompt dépassait la hauteur visible (vu à l'écran sur la première version). Épinglé, il reste lisible du début à la fin.
+- **Tooltips en portail (`PortalTooltip`, nouvelle primitive `components/ui/`)** plutôt que remontée de `z-index` (les deux options du patch §3) : les panneaux ont `overflow-y: auto`, un tooltip absolu enfant serait **rogné** par le conteneur quelle que soit sa pile — le `z-index` ne peut rien contre un `overflow`. Position `fixed` calculée depuis l'ancre, largeur bornée à la fenêtre, **bascule au-dessus** quand la place manque en bas (deuxième passage avec la hauteur réelle du tooltip après montage), repositionnement sur scroll/resize. Même primitive pour le badge du verdict (`why`) et les annotations (`note`). `SkillBadges` (Phase 5) n'est pas migré : hors scope, son fix `z-20` suffit tant que le tooltip n'est pas dans un conteneur à overflow.
+- **Frappe puis annotations, dans la même grille** : `TypingText` (primitive imposée par la spec, 8 ms/car) n'expose pas de callback par caractère, donc les annotations ne peuvent pas se surligner *pendant* la frappe ; elles apparaissent **en cascade** (stagger 120 ms) une fois la frappe finie, via l'opacité d'une couche `bg-neon-blue/15` (pas de couleur en dur : `motion` n'interpole pas `rgb(var(--x))`). Pendant la frappe, le texte est dans une cellule unique (gouttière vide) ; une fois fini, chaque ligne devient une rangée numérotée — même grille `2rem/1fr`, même interligne, donc aucun saut de mise en page au basculement (vérifié à l'écran).
+- **Mode allégé = bascule instantanée**, exactement comme reduced-motion (`instant = reducedMotion || lite`) : pas de scanner, pas de frappe, pas de flou, pas de cascade. Le flou (`filter: blur`) du texte brut n'est appliqué que pendant les 600 ms de scan en mode complet. Aucun `backdrop-filter` nouveau sans sa variante `lite:` (`PromptPane`, `PortalTooltip`).
+- **Onglet « Résultat après » verrouillé tant que l'agent n'a pas rendu son verdict**, puis sélectionné automatiquement à la fin : afficher la sortie « après » avant le verdict aurait éventé la démonstration ; le visiteur peut revenir sur « avant » à tout moment (flèches clavier gérées, `role=tablist/tab/tabpanel`).
+- **Copier** : uniquement le prompt expert (pas le verdict), masqué si le verdict est un conseil (règle générique = « masqué pour `bizarre` ») ou si `navigator.clipboard.writeText` est indisponible (edge case §4 : bouton masqué plutôt que repli). Retour « Copié ✓ » 1,5 s.
+- **Tous les textes d'interface dans `playgroundUi`** (`playground.ts`), aucune chaîne dans les composants (T8).
+- **Utilitaire `scrollbar-subtle`** (`globals.css`, `@layer utilities`) pour les deux panneaux : la barre de défilement native claire de Chrome sautait aux yeux sur fond sombre (vu à l'écran). Appliqué **seulement** au Playground — l'agent de poche (Phase 1) a le même conteneur scrollable et gagnerait à l'utiliser, noté pour la Phase 7 plutôt que modifié en silence.
+- **8 tests** au lieu des 5 prescrits (§7.5) : les 5 (4 cas, ids uniques, ≤ 25 lignes, `templateRef` ssi `template`, `templateRef ∈ templateNames`) + 3 gardes qui protègent des invariants du rendu et du contenu : chaque ancre d'annotation tient sur **une seule ligne** du prompt expert et n'y apparaît qu'une fois (le surlignage est calculé ligne par ligne) ; aucun `%` (T6) ; `long` cite T6 → T1 + T2 sous leurs vrais noms et `bizarre` = phrase « Aucune sortie LLM » exacte (§7.4).
+
+### Bugs trouvés et corrigés (cause racine, pas de contournement)
+
+- **`TypingText` deux fois plus lent que sa vitesse nominale sur texte long.** Vu à l'écran : après 10 s, ~40 % du prompt expert `long` (≈ 1 000 caractères) était affiché, alors que 8 ms/caractère devait donner 8 s au total. Cause racine : la primitive (Phase 0) comptait **un caractère par tick de `setInterval`** ; dès que le rendu React d'un caractère coûte plus que l'intervalle (texte long dans un `pre` avec grille), les ticks s'espacent et la durée réelle dérive — invisible sur les réponses courtes de l'agent de poche (18 ms/car, quelques centaines de caractères). Corrigé dans la primitive : nombre de caractères calculé depuis le **temps écoulé** (`performance.now()`) dans une boucle `requestAnimationFrame`, plusieurs caractères par image si nécessaire — `speedMs` par caractère est tenu quelle que soit la charge. Revérifié : frappe complète en moins de 9 s (scan + verdict compris). L'agent de poche n'est pas modifié visuellement (même vitesse nominale, désormais exacte) ; ses tests (`ScriptedAgentProvider.test.ts`) ne touchent pas la primitive.
+- **Tooltip jamais visible au tap.** Trouvé par un vrai clic (pas un survol) sur une annotation : `onFocus` ouvrait le tooltip, puis `onClick` le **basculait** → fermé avant d'être vu. Au tactile (pas de survol) c'est le seul chemin d'ouverture, le tooltip n'aurait donc jamais été affiché sur téléphone. Corrigé (annotations et badge du verdict) : le clic **ouvre**, la fermeture vient de `blur`/`mouseleave`/Échap. Revérifié par vrai clic : tooltip ouvert, élément focalisé.
+
+### Livré et validé à l'écran
+
+Vérifié via Claude in Chrome (`vite preview`, port 4174 — le 4173 était occupé par un `preview` résiduel), desktop 1264 px (mode complet) et mode allégé `?perf=lite` ; mobile ~519 px (voir limite plus bas) :
+- **Sélecteur** : 4 puces `Tag` (Court · Moyen · Long · Bizarre), `long` présélectionné ; changement de cas **pendant** l'animation (relance + clic « Prompt bizarre » à 1,2 s) → retour propre à l'état initial (placeholder, bouton « Passer par l'agent », onglet « après » verrouillé, ni scanner ni curseur de frappe dans le DOM) — edge case §4 validé.
+- **Scanner** : présent dans le DOM 250 ms après le clic, ligne à mi-hauteur du **panneau visible** (pas de la hauteur totale du texte — §4 amendé), retirée après 600 ms ; bouton « L'agent lit… » désactivé pendant tout le cycle ; texte brut estompé après scan.
+- **Verdict puis prompt expert** : headline affiché en premier (épinglé), badge `T6 · Notes de Session Brute (Triage)` → tooltip `why` au survol et au clic ; frappe `TypingText` complète en < 9 s ; 4 annotations surlignées en cascade, chacune avec sa note en tooltip (vérifié pour `[OUVERT]` près du bord bas : tooltip **basculé au-dessus**, jamais sous les onglets — exigence du patch §3).
+- **Copier** (cas `court`, vrai clic) : `navigator.clipboard.writeText` résolu (878 caractères), presse-papiers relu = début exact du prompt expert, libellé « Copié ✓ ».
+- **Onglets** : « Résultat avant » seul actif avant verdict ; « Résultat après » sélectionné automatiquement à la fin, contenu = `expertOutput` ; indicateur `layoutId` animé.
+- **Cas `bizarre`** : badge « Conseil » (émeraude), **aucun bouton Copier**, onglet « après » = « Aucune sortie LLM : la bonne réponse ici est une méthode, pas un texte généré. », 4 annotations — critère §7.4 validé. **Cas `court`** : badge `T4 · Cahier des Charges Technique`, 4 annotations. **Cas `long`** : voir ci-dessus, critère §7.4 (T6 → T1 + T2, « Extrait de ma bibliothèque de templates de spec ») validé à l'écran et par test.
+- **Mode allégé** (`?perf=lite`, `data-perf="lite"` confirmé) : 150 ms après le clic, état final atteint (4 annotations, aucun scanner, aucune frappe), panneaux en fond dense sans `backdrop-filter` (`getComputedStyle` : `none`, `rgba(11, 15, 25, 0.95)`).
+- **Mobile ~519 px** (la fenêtre s'est retrouvée à cette largeur en cours de session, sur le build incluant le verdict épinglé, la barre de défilement et le fix `TypingText`) : panneaux empilés, puces sur deux lignes, bouton pleine largeur sous les puces, panneau brut du cas `long` en scroll interne, verdict épinglé lisible, annotations surlignées, onglets sous les panneaux.
+- Aucune erreur console sur l'ensemble de la session. `npm run lint` / `npm run test` (**61 tests**, +8) / `npm run build` verts.
+
+### Limites de vérification (documentées, pas masquées)
+
+- **Largeur mobile** : le redimensionnement à 500 px a été refusé par l'outil en fin de session (fenêtre restée à 1264 px), comme documenté en Phases 1/4/5/6 — les trois derniers changements (clic ouvre le tooltip, `lg:items-start`, re-césure du prompt brut `long`) ont été vérifiés à 1264 px seulement ; `lg:items-start` ne s'applique qu'au desktop, la re-césure ne change que le contenu, et le fix tooltip a été vérifié par vrai clic (le chemin tactile est le même : `focus` + `click`).
+- **`prefers-reduced-motion`** : pas d'émulation disponible (limite inchangée). Par construction, `instant` couvre les deux cas avec le même code, et le chemin `instant` a été vérifié via `?perf=lite`.
+- **§7.2 (« 60 fps sur mobile milieu de gamme émulé »)** : non mesurable ici. Sur un vrai tactile, `data-perf="lite"` supprime scanner, frappe et flou : il n'y a plus d'animation à mesurer ; le mode complet sur PC est le seul à animer. À confirmer sur le Galaxy A04 par Xav si souhaité (même protocole que la Phase 6b), non bloquant.
+- **Cas `moyen`** : vérifié par lecture du DOM (mode allégé, fenêtre 500 px obtenue sur un nouvel onglet en toute fin de session) — badge `T3 · Session Diagnostic`, headline, 4 annotations, bouton Copier présent, onglet « après » = verdict hypothèse B — mais pas de capture visuelle (la section n'était pas encore entrée dans la fenêtre au moment de la capture).
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- **Relecture des textes des 4 cas par Xav** (ARRÊT XAV §7.3, non bloquant par décision du patch) — DETTE-09 ⏸, marqueur `[À RELIRE — Xav]` en tête de `playground.ts`.
+- **Barre de défilement de l'agent de poche** (même conteneur scrollable, même barre claire) : `scrollbar-subtle` prêt à l'emploi, à appliquer en Phase 7.
+- **Retours à la ligne des longues lignes du prompt expert** (60-75 caractères) sur desktop : repli souple d'éditeur, lisible mais moins net que des lignes courtes ; élargir les panneaux ou réduire la fonte est un choix de polish (Phase 7), pas de contenu.
+- `ApiAgentProvider`, saisie libre d'un prompt, génération en direct : hors scope explicite (§8), inchangé.
+
+### Dette ajoutée / mise à jour
+
+- DETTE-09 : ☐ → ⏸ (`dette_suivi.md` §B, texte du patch).
+- `dette_suivi.md` §D : ligne « Phase 3 exécutée » ajoutée. Aucune nouvelle DETTE-xx.
+
+---
+
+## 2026-09-15 19:45 — Remise du dépôt sur `main` (patch A)
+
+**Constat à l'exécution, différent du constat du patch (rédigé à 19:15)** : entre-temps, Xav avait déjà fusionné `master` dans `main` sur GitHub via les PR #2 (`ea0efdf`, Phase 2) et #3 (`05f3bc0`, fix z-index). `origin/main` = `05f3bc0`, `master` en est un ancêtre, `git diff master origin/main` vide. Aucun `merge --ff-only` ni push nécessaire : seule la branche `main` **locale** manquait (créée sur `origin/main`).
+
+**Point 2 (vérifié avant toute suppression, arrêt demandé par Xav)** : action « Deploy to GitHub Pages » verte pour `05f3bc0` sur `main` (16:42 UTC) ; le bundle servi (`assets/index-CmoQFRUf.js`, 405 Ko) contient la chaîne « Étude publiée » (`simulator.ts:25`) → **simulateur en ligne**. Xav a confirmé la suppression (« vu qu'on ne perd rien »).
+
+**Point 3** : `master` et `test-mobile-patch` supprimées en local et sur `origin`. `git branch -a` = `main` + `origin/main` (+ `origin/HEAD → main`, déjà en place). **Point 4** : section « Flux de travail » ajoutée au `README.md` (une seule branche, deux procédures de test Galaxy A04 : réseau local `vite preview --host`, ou branche `test/<sujet>` déployée via *Run workflow*, jamais fusionnée dans l'autre sens).
+
+---
+
+## 2026-09-15 18:40 — Fix : bulles de compétences masquées sous les cartes suivantes (z-index) — *entrée écrite a posteriori (patch B)*
+
+Correctif appliqué par Xav dans `f856c54` (`SkillBadges.tsx`, une ligne), hors session d'agent.
+
+- **Symptôme** : au survol d'un badge, le tooltip de note (ex. « Cadre 4D », « Diagnostic structuré » dans la famille Méthode IA) passait **sous** les badges de la famille suivante (LLMs & agents).
+- **Cause racine** (lue dans le message de commit, pas réinventée) : chaque badge est enveloppé dans un `m.div` Framer Motion qui pose toujours un `transform` inline (`animate={{ scale }}`) → **un contexte d'empilement par badge**. Sans `z-index` explicite, tous les badges se peignent dans l'ordre du DOM ; un tooltip enfant d'un badge antérieur ne peut jamais passer au-dessus d'un badge sœur rendu après.
+- **Correctif** : `className={cn("relative", isHovered && "z-20")}` — le badge survolé/focalisé remonte au-dessus de ses sœurs.
+- **Règle de primitive retenue** (reportée dans `specs/06_skills-timeline.md` §4) : *un élément qui déborde de sa carte (tooltip, menu) doit soit remonter le `z-index` de la carte au survol/focus, soit être rendu en portail.* Appliquée en Phase 3 (portail, parce que les panneaux ont un `overflow` que le `z-index` ne franchit pas).
+
+---
+
+## 2026-09-15 (suite) — Phase 2 : Stack Simulator & ROI — *journal reconstitué a posteriori (patch B), à partir du commit `27d671e`, de `dette_suivi.md` §D et du code*
+
+Cette entrée n'a pas été écrite en fin de session Phase 2 (oubli documenté par le patch 19:30) ; elle est reconstituée le 2026-09-15 19:30 à partir des sources citées, sans rien y ajouter qui n'y figure pas.
+
+### Décisions prises et pourquoi
+
+- **Contenu strictement conforme à `PATCHES_2026-09-15_1800.md`** (DETTE-07 tranchée par Xav) : `references.ts` (4 sources, `verified: false`, aucune URL ajoutée), `simulator.ts` (6 problématiques, fourchettes/baselines/`evidence` du patch, badge « Étude publiée »/« Données éditeurs »/« Non chiffré »). Recommandations génériques (« Claude »), pas de modèle nommé (T5b).
+- **`compute.ts` pur, testé en premier** (25 tests Vitest : sélection vide / un seul / tous, baseline personnalisée, problématique non chiffrée exclue du compteur, dédoublonnage de la stack, sérialisation `sessionStorage`), puis les composants (`ProblemGrid`, `EvidenceBadge`, `RangeSlider`, `RoiCounters`, `StackPanel`).
+- **Écarts de contenu assumés par rapport au bloc de types du patch** : `baseline` rendu **optionnel** dans `Problem` (`formation` n'a pas de curseur, conformément au tableau du patch) ; champ `qualitativeNote` optionnel ajouté pour porter le texte spécifique de `tri` sans le coder en dur dans un composant (T8).
+- **`AnimatedCounter` étendu d'une prop `decimals`** (rétrocompatible, défaut 0) pour le compteur « h/sem » à 1 décimale exigé par §7.6 du patch.
+- **Bouton « Discuter de cette stack »** : écrit `sessionStorage['simulator']` (`{ selection, baselines }`) puis émet `simulator:updated`, écouté par `ContactForm.tsx` (petit ajout à la Phase 6) pour que Contact se pré-remplisse **dans la même session SPA, sans rechargement**. `readSimulator.ts` vérifié tolérant à la clé `baselines` supplémentaire (test ajouté, aucun correctif nécessaire).
+- **Mode allégé** : aucun nouveau `backdrop-filter`/glow, seule `GlassCard` (déjà `lite:`-safe) réutilisée.
+
+### Livré et validé à l'écran
+
+- Vérification visuelle réelle (`vite preview`) : desktop ~1274 px et mobile ~500 px (viewport de l'outil ne descendant pas à 375 px, noté à l'époque), aucune erreur console ; revérifié sous `?perf=lite`.
+- **Critère §7.6 du patch (vérification manuelle du calcul)** : `support` seul, curseur à 15 h/sem → compteur « 2,8h », formule affichée « 2,8 h/sem × 46 sem × 35 €/h » — conforme au calcul attendu (15 × 0,185 = 2,775).
+- Pré-remplissage de Contact vérifié à l'écran (`aria-pressed` sur « Automatisation d'un process » après clic, sans rechargement).
+- `npm run build` / `lint` / `test` verts (53 tests).
+- Commit `27d671e` (Phase 2), puis fix `f856c54` (ci-dessus). Mis en ligne par la remise sur `main` du 19:45.
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- Vérification et liens des références (`references.ts`, `verified → true`) : **DETTE-31**, Phase 7. Titres/venues des 4 références renseignés de mémoire par l'agent (non tous fournis par le patch) — d'où cette dette.
+- Chiffres `saisie` reposant sur des données éditeurs : à remplacer si une étude indépendante sort (DETTE-31).
+
+### Dette ajoutée / mise à jour
+
+- DETTE-07 ☑ (tranchée par Xav, patch 18:00), DETTE-08 (35 €/h) consommée par le curseur, **DETTE-31 ouverte** (§C).
+
+---
+
 ## 2026-09-15 (suite) — Clôture Phase 6b
 
 Xav a testé `?perf=full` puis `?perf=lite` directement sur le Galaxy A04 (Firefox Android), sur une branche de test (`test-mobile-patch`) poussée pour l'occasion. **Résultat : "Nette amélioration de la fluidité sur smartphone."** Critère §7.6 (ARRÊT XAV) levé.

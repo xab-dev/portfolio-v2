@@ -1,8 +1,8 @@
 # Portfolio v2 "Premium Tech" — Roadmap + prompt d'exécution autonome
 
-**Version : 0.6.0** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B), le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu), le 2026-09-15 (soir) (Phase 6 close et poussée, Phase 6b ajoutée — spec 08, DETTE-30), puis le 2026-09-15 (nuit) (Phase 6b close — mesure terrain Galaxy A04 validée par Xav).
+**Version : 0.7.0** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B), le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu), le 2026-09-15 (soir) (Phase 6 close et poussée, Phase 6b ajoutée — spec 08, DETTE-30), le 2026-09-15 (nuit) (Phase 6b close — mesure terrain Galaxy A04 validée par Xav), puis le 2026-09-15 19:30 (Phase 2 close, remise sur `main`, DETTE-09 tranchée — `PATCHES_2026-09-15_1930.md`).
 
-**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. **Phases 0, 4, 5, 1, 6, 6b livrées et en ligne** ; DETTE-07 tranchée ; phase courante : **2** (spec 03, telle qu'amendée par `PATCHES_2026-09-15_1800.md`).
+**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. **Phases 0, 4, 5, 1, 6, 6b, 2 livrées** ; Phase 2 en ligne après remise sur `main` (patch A) ; phase courante : **3** (spec 04, telle qu'amendée par `PATCHES_2026-09-15_1930.md`).
 
 ---
 
@@ -64,7 +64,7 @@
 ---
 
 ## Phase 0 — Socle Vite + design system + squelette navigable
-**Livrée le 2026-09-15.** Détail complet : `01_socle-design-system.md`. **Phase à exécuter maintenant : Phase 2** (`03_stack-simulator-roi.md`) — sous réserve de DETTE-07 (fourchettes "temps gagné") à trancher par Xav au préalable.
+**Livrée le 2026-09-15.** Détail complet : `01_socle-design-system.md`. **Phase à exécuter maintenant : Phase 3** (`04_prompt-playground.md`, amendée par `PATCHES_2026-09-15_1930.md` §C).
 
 ### Objectif
 Un site vide mais *beau* : les tokens du design, la coquille de page (nav, sections ancrées, footer), les primitives animées réutilisables, le déploiement GitHub Pages à la racine du repo neuf.
@@ -88,8 +88,8 @@ Tout contenu réel. Aucune des 7 sections n'est remplie.
 ## Phases suivantes (esquisse — chacune a déjà son fichier de spec, à relire au moment de l'exécuter)
 
 - **Phase 1 — Hero + Agent de poche** (`02_hero-agent-poche.md`) : accroche, puces de questions, agent scripté avec typing, interface prête pour une API.
-- **Phase 2 — Stack Simulator & ROI** (`03_stack-simulator-roi.md`) : sélection de problématiques → stack recommandée + compteurs *indicatifs* avec formules visibles. **Prérequis** : DETTE-07 tranchée (fourchettes sourcées, baselines curseur, références) ; format `sessionStorage['simulator']` figé : `{ selection, baselines }` (la Phase 6 lit `{ selection: string[] }` via `parseSimulatorValue`, qui tolère la clé `baselines` supplémentaire).
-- **Phase 3 — Prompt Playground** (`04_prompt-playground.md`) : cas d'usage → prompt brut → animation scanner → prompt expert + avant/après. Contenu dérivé des vrais templates de Xav.
+- **Phase 2 — Stack Simulator & ROI** (`03_stack-simulator-roi.md`) : sélection de problématiques → stack recommandée + compteurs *indicatifs* avec formules visibles. **Prérequis** : DETTE-07 tranchée (fourchettes sourcées, baselines curseur, références) ; format `sessionStorage['simulator']` figé : `{ selection, baselines }` (la Phase 6 lit `{ selection: string[] }` via `parseSimulatorValue`, qui tolère la clé `baselines` supplémentaire). **Livrée le 2026-09-15** (commit `27d671e`, en ligne après remise sur `main` — patch A du 19:30).
+- **Phase 3 — Prompt Playground** (`04_prompt-playground.md`, amendée par `PATCHES_2026-09-15_1930.md` §C) : quatre tailles d'entrée brute (court, moyen, long, bizarre) → scanner → verdict de l'agent scripté (routage vers un template de la bibliothèque, ou conseil) → prompt expert + avant/après. Contenu dérivé des vrais templates de Xav (DETTE-09 : direction tranchée, relecture des textes différée, non bloquante).
 - **Phase 4 — Portfolio dynamique** (`05_portfolio-dynamique.md`) : grille filtrable, survol 3D, modale problème/architecture/métriques avec les projets réels.
 - **Phase 5 — Skills Matrix & Timeline** (`06_skills-timeline.md`) : radar interactif + badges + frise.
 - **Phase 6 — Contact smart + section Jouer** (`07_contact-jouer.md`) : qualification en 3 clics + iframe haTD (jouable PC, teaser cold-open mobile). Lit `sessionStorage['simulator']` sans dépendre de la Phase 2 (clé absente = parcours direct). Inclut le retrait de `#kitchen-sink` et le câblage des images DETTE-14. **Livrée le 2026-09-15**, envoi Formspree confirmé en boîte de réception depuis le domaine réel (DETTE-28 close), lien haTD corrigé (DETTE-29 close).

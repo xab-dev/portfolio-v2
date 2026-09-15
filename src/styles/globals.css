@@ -88,3 +88,22 @@ h4 {
   outline: 2px solid rgb(var(--neon-blue));
   outline-offset: 2px;
 }
+
+/* Barre de défilement discrète pour les zones à scroll interne sur fond sombre
+   (panneaux du Playground). Firefox : scrollbar-*, WebKit : ::-webkit-scrollbar. */
+@layer utilities {
+  .scrollbar-subtle {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-glass) transparent;
+  }
+  .scrollbar-subtle::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scrollbar-subtle::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-subtle::-webkit-scrollbar-thumb {
+    background: var(--border-glass);
+    border-radius: 9999px;
+  }
+}

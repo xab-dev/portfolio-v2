@@ -21,17 +21,24 @@ export function TypingText({ text, speedMs = 18, className, onDone }: TypingText
     }
 
     setCount(0);
-    let current = 0;
-    const interval = setInterval(() => {
-      current += 1;
-      setCount(current);
-      if (current >= text.length) {
-        clearInterval(interval);
+    // Compté sur le temps écoulé, pas sur les ticks : un setInterval à 8 ms
+    // dérive dès que le rendu d'un caractère coûte plus que l'intervalle
+    // (texte long) et double la durée réelle. Ici `speedMs` par caractère est
+    // tenu quelle que soit la charge, plusieurs caractères par image si besoin.
+    const start = performance.now();
+    let frame = 0;
+    const tick = (now: number) => {
+      const next = Math.min(text.length, Math.floor((now - start) / speedMs));
+      setCount(next);
+      if (next >= text.length) {
         onDone?.();
+        return;
       }
-    }, speedMs);
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
 
-    return () => clearInterval(interval);
+    return () => cancelAnimationFrame(frame);
   }, [text, speedMs, reducedMotion]);
 
   const done = count >= text.length;

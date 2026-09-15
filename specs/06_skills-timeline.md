@@ -64,6 +64,7 @@ Une frise courte et datée vaut mieux qu'une frise longue et floue. Le composant
 - Famille "No-code / automatisation" n'a qu'un skill à 1 : le radar l'affiche tel quel, sans lissage — c'est voulu (honnêteté du positionnement).
 - Recharts sur mobile étroit : radar min 260 px, labels abrégés si < 400 px.
 - Reduced-motion : ligne dessinée d'emblée, pas de stagger.
+- Tooltip de badge chevauchant la carte suivante : la carte survolée/focalisée passe au-dessus de ses sœurs (fix `f856c54`). Règle de primitive : un élément qui déborde de sa carte (tooltip, menu) doit soit remonter le `z-index` de la carte au survol/focus, soit être rendu en portail.
 
 ## 5. Structure des fichiers
 ```

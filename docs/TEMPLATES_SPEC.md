@@ -15,10 +15,13 @@ Ce document définit les templates que j'utilise pour transformer tes dictées/i
 | Un ou plusieurs bugs à *diagnostiquer* (cause pas connue à l'avance), plusieurs sujets liés dans une session | **3. Session Diagnostic** |
 | Un outil/système avec surface de contrôle complète (commandes, formats de données, comportements limites) à spécifier une fois pour toutes | **4. Cahier des Charges Technique** |
 | Un projet multi-semaines/phases, un jeu, une architecture qui n'existe pas encore | **5. Roadmap + Specs numérotées** |
+| Une dictée brute en direct (session de jeu, playtest, flux d'idées) qui mélange plusieurs sujets/natures sans les distinguer — rien n'est encore trié | **6. Notes de Session Brute (Triage)** |
 
 Si le signal est ambigu (ex. "corrige ce bug" sans savoir si la cause est triviale ou pas), je pars du principe le plus prudent : je pose une question courte plutôt que de deviner, ou je choisis Session Diagnostic par défaut dès qu'il y a le moindre doute sur la cause.
 
-Ces 5 templates ne sont pas figés : j'en ajoute, fusionne ou retire si un vrai pattern récurrent apparaît et justifie sa place à long terme — pas pour un cas isolé.
+**Cas particulier du Template 6** : il n'est pas un concurrent des 5 autres, c'est une étape en amont. Dès qu'une dictée contient plusieurs sujets de nature différente sans que tu les aies toi-même séparés (ex. un retour de bug ET une idée de chantier dans le même souffle), je passe par le Triage d'abord — je ne force jamais un mélange hétérogène dans un seul des templates 1 à 5.
+
+Ces 6 templates ne sont pas figés : j'en ajoute, fusionne ou retire si un vrai pattern récurrent apparaît et justifie sa place à long terme — pas pour un cas isolé.
 
 ---
 
@@ -279,6 +282,80 @@ Chaque phase, quand elle devient la phase courante, est détaillée dans son pro
 
 ---
 
+## 6. Notes de Session Brute (Triage)
+
+**Usage** : dictée en direct (souvent pendant une session de jeu/test) qui mélange plusieurs natures de contenu sans les distinguer — symptôme constaté, diagnostic à chaud, idée de solution, idée de chantier sans rapport, point volontairement laissé ouvert. Contrairement aux templates 1 à 5, celui-ci n'est **pas destiné à partir tel quel vers Claude Code** : c'est une étape de tri qui produit ensuite un ou plusieurs fichiers dans les autres formats.
+
+**Ce qui distingue ce template des autres** : les templates 1-5 sont des formats de *sortie* (vers Claude Code). Celui-ci est un format d'*entrée* — il absorbe le désordre d'une dictée réelle, découpe en unités homogènes, et redirige chaque unité vers le bon template. Je le déclenche dès qu'une dictée contient plusieurs sujets de nature différente sans que tu les aies toi-même séparés — je ne force jamais un mélange hétérogène dans un seul des templates 1 à 5.
+
+**Origine de la source** : toujours ta retranscription à froid, même quand le retour vient d'un tiers (ex. ton neveu qui teste) — une seule voix, la tienne, donc pas de séparation "dit par le testeur" / "déduit par toi" en tags distincts. La distinction symptôme/diagnostic/solution suffit à capturer la nuance.
+
+**Les 5 tags possibles pour une unité** :
+- **Symptôme observé** — ce qui a été constaté factuellement en jouant/testant, sans interprétation.
+- **Diagnostic/hypothèse spontanée** — ta déduction à chaud sur la cause. Précieuse mais jamais prise pour acquise, même venant de toi : elle devient une *hypothèse* dans le fichier de sortie, pas un fait établi.
+- **Solution proposée à chaud** — ton idée d'implémentation, si tu en as donné une pendant la dictée.
+- **Idée de chantier** — un sujet qui déborde du symptôme immédiat, sans lien direct (nouvelle direction, nouvelle brique).
+- **[OUVERT]** — mentionné mais volontairement pas tranché ; ne jamais trancher à ta place, juste noter.
+
+```markdown
+# [Projet] — Notes de session brute : [contexte] (AAAA-MM-JJ)
+
+## Dictée source
+[Capture fidèle du dicté, peu importe le désordre — pas de reformulation à ce
+stade, juste un nettoyage minimal de lisibilité.]
+
+## Découpage en unités
+
+### Unité 1 — [titre court]
+- **Nature** : [Symptôme observé / Diagnostic spontané / Solution proposée /
+  Idée de chantier / OUVERT]
+- **Contenu** : [reformulation propre de cette unité seule]
+- **Destination** : [Template 1/2/3/4/5, ou "en attente — pas assez mûr"]
+- **Justification** : [une phrase — pourquoi ce template, ou pourquoi attendre]
+
+### Unité 2 — [titre court]
+[Même structure.]
+
+[...]
+
+## Fichiers à générer suite à ce triage
+- [ ] `[nom-fichier].md` — [Template X] — [résumé d'une ligne]
+- [ ] `[nom-fichier].md` — [Template Y] — [résumé d'une ligne]
+
+## Notes laissées en attente (pas encore un fichier)
+[Unités marquées OUVERT ou pas assez mûres pour un template — à ne pas perdre,
+à relire à la prochaine session avant de décider si elles sont mûres.]
+```
+
+### Exemple de triage (démonstration, dictée réelle de Xav — RPG-monde, 2026-09)
+
+Dictée source (verbatim, deux sujets dans le même souffle) :
+> *« Donc je suis en train de tester la dernière version. […] le premier boss a
+> été très facile […] j'aimerais qu'on en profite [maintenant que la M2 est
+> prête] pour anticiper tous les gros design architecturaux qu'on va y mettre
+> dedans. […] tous les choix de build possible, […] accès au livre […] le bien
+> et le mal, […] la nouvelle maison […] »*
+
+Découpage :
+- **Unité 1 — Boss du premier niveau trop facile**
+  - Nature : Symptôme observé + Solution proposée à chaud (augmenter les
+    dégâts, sans prérequis autre que le temps de jeu).
+  - Destination : **Template 3 (Session Diagnostic)**, pas Micro-Ticket.
+  - Justification : la solution proposée par Xav est plausible mais pas
+    vérifiée contre l'équilibrage réel (courbe de vitalité sur la durée) — un
+    vrai diagnostic doit confirmer que la piste "dégâts" seule suffit avant de
+    patcher, plutôt que d'appliquer la solution à chaud telle quelle.
+- **Unité 2 — Anticiper l'architecture des chantiers M2 (builds, Livre, bien/
+  mal, Maison/stockage)**
+  - Nature : Idée de chantier, volontairement large, non détaillée.
+  - Destination : **Déclencheur de Template 5 (Roadmap)** — pas encore le
+    ROADMAP.md lui-même, une session de cadrage à part pour transformer cette
+    liste en phases avant de produire le document.
+  - Justification : sans lien direct avec le symptôme boss (Unité 1), portée
+    trop large et trop peu tranchée pour un Module Standard unique.
+
+---
+
 ## Notes d'évolution de cette bibliothèque
 
 - Les templates 1, 2, 5 viennent du cadrage initial (conversation Gemini du
@@ -288,8 +365,11 @@ Chaque phase, quand elle devient la phase courante, est détaillée dans son pro
   distincts dans les documents réels du projet — ils ne sont pas interchangeables
   avec 1/2/5 : un diagnostic n'est pas un patch (la cause est inconnue), un
   cahier des charges n'est pas un module (il couvre un système fermé entier).
+- Le template 6 (Notes de Session Brute / Triage) a été ajouté après deux
+  occurrences identifiées par Xav (recherche d'idée + découverte de problème
+  en direct, note de petit défaut à corriger) — rôle différent des 5 autres :
+  c'est un format d'entrée/triage, pas un format de sortie vers Claude Code. Il
+  devient d'autant plus utile que des retours de tiers (playtest du neveu de
+  Xav) vont commencer à arriver, toujours retranscrits à froid par Xav lui-même.
 - Prochain candidat à surveiller, pas encore assez récurrent pour un template
-  dédié : les notes de playtest à chaud (dictées en direct, mélange de
-  corrections triviales et de points volontairement **[OUVERT]** non tranchés) —
-  pour l'instant traitées comme une variante de Session Diagnostic ou de
-  Micro-Ticket multiple selon le contenu.
+  dédié : rien identifié à ce stade.

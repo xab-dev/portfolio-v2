@@ -22,3 +22,14 @@ portfolio-v2/
 > Lis `specs/00_ROADMAP.md` en entier, puis exécute la Phase 0 telle que détaillée dans `specs/01_socle-design-system.md`. Respecte les contraintes de méthode. Arrête-toi au critère de passage et fais-moi un compte-rendu.
 
 Ordre conseillé après la Phase 0 : 05 → 06 → 02 → 07 → 03 → 04 (voir ROADMAP).
+
+## Flux de travail
+
+**Une seule branche de travail : `main`.** Chaque push sur `main` déclenche `.github/workflows/deploy.yml` (build + publication de `dist/` sur GitHub Pages). Aucune autre branche longue durée : `master` et `test-mobile-patch` ont été supprimées le 2026-09-15 (voir `JOURNAL_DEV.md`).
+
+### Tester sur le Galaxy A04 sans toucher au site en ligne
+
+Deux options, la première suffit dans la plupart des cas :
+
+1. **Réseau local** — `npm run build && npx vite preview --host`, puis ouvrir `http://<ip-du-pc>:4173/portfolio-v2/` sur le téléphone (même Wi-Fi). Rien à pousser, le site en ligne n'est pas touché.
+2. **Déploiement temporaire** — créer `test/<sujet>` depuis `main`, pousser, puis onglet *Actions* → "Deploy to GitHub Pages" → *Run workflow* en choisissant la branche `test/<sujet>` (`workflow_dispatch` est déjà présent). Le site en ligne montre la branche de test **jusqu'au prochain push sur `main`** (ou un *Run workflow* sur `main` pour revenir). Après validation : `git checkout main && git merge --ff-only test/<sujet>`, puis supprimer la branche (`git branch -d test/<sujet> && git push origin --delete test/<sujet>`). **Jamais** de merge dans l'autre sens ni de branche longue durée.
