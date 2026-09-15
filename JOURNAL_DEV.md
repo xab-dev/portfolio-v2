@@ -62,6 +62,10 @@ Vérifié via Claude in Chrome (`vite preview`, port 4174 — le 4173 était occ
 - DETTE-09 : ☐ → ⏸ (`dette_suivi.md` §B, texte du patch).
 - `dette_suivi.md` §D : ligne « Phase 3 exécutée » ajoutée. Aucune nouvelle DETTE-xx.
 
+### Déploiement
+
+Commit `3c04c58` poussé sur `main` après le go de Xav (journal rédigé **avant** le commit, comme demandé). Action « Deploy to GitHub Pages » verte ; bundle servi (`assets/index-DCX7BNSX.js`, 430 Ko) contenant « Passer par l'agent » et « Notes de Session Brute (Triage) » → **Phase 3 en ligne et close** (relecture des textes ouverte, DETTE-09 ⏸). Prochaine étape : Phase 7 (spec à écrire).
+
 ---
 
 ## 2026-09-15 19:45 — Remise du dépôt sur `main` (patch A)

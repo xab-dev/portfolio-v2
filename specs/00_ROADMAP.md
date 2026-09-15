@@ -2,7 +2,7 @@
 
 **Version : 0.7.0** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B), le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu), le 2026-09-15 (soir) (Phase 6 close et poussée, Phase 6b ajoutée — spec 08, DETTE-30), le 2026-09-15 (nuit) (Phase 6b close — mesure terrain Galaxy A04 validée par Xav), puis le 2026-09-15 19:30 (Phase 2 close, remise sur `main`, DETTE-09 tranchée — `PATCHES_2026-09-15_1930.md`).
 
-**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. **Phases 0, 4, 5, 1, 6, 6b, 2 livrées** ; Phase 2 en ligne après remise sur `main` (patch A) ; phase courante : **3** (spec 04, telle qu'amendée par `PATCHES_2026-09-15_1930.md`).
+**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. **Phases 0, 4, 5, 1, 6, 6b, 2, 3 livrées et en ligne** (Phase 3 : commit `3c04c58`, DETTE-09 ⏸ relecture différée) ; phase courante : **7** (spec à écrire — polish, perf, SEO, DETTE-31).
 
 ---
 
