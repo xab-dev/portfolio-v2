@@ -105,6 +105,12 @@ export const projects: Project[] = [
       "Pas encore éprouvé chez un client tiers — seulement sur des projets personnels à ce jour.",
       "Calibrés sur du développement réfléchi ; leur usage en intervention terrain sous pression de temps reste à valider (voir le projet Séquence d'intervention terrain).",
     ],
+    images: [
+      {
+        src: "/images/projects/templates/templates-01.webp",
+        alt: "Extrait du document \"Bibliothèque de templates — Architecte Spec.md\" décrivant le principe directeur commun aux templates et comment choisir le bon format",
+      },
+    ],
     accent: "blue",
   },
   {
@@ -160,6 +166,12 @@ export const projects: Project[] = [
       "Le rythme théorique (30 min / 1h) reste à chronométrer en conditions réelles.",
       "Le palier 3 s'appuie explicitement sur le jugement combiné avec l'IA plutôt que sur une expertise technique déjà consolidée — un choix assumé, compensé par la vérification systématique, pas une faiblesse cachée.",
     ],
+    images: [
+      {
+        src: "/images/projects/terrain/terrain-01.webp",
+        alt: "Photo volontairement floutée du poste de travail de Xav (double écran, session de développement) pour ne pas exposer le contenu affiché à l'écran",
+      },
+    ],
     accent: "blue",
   },
   {
@@ -205,6 +217,12 @@ export const projects: Project[] = [
     metrics: [],
     limits: ["Projet de contenu en cadrage : pas encore de contenu publié à ce jour."],
     links: [{ label: "Chaîne YouTube", href: "https://www.youtube.com/@1_Autre_Monde" }],
+    images: [
+      {
+        src: "/images/projects/1am/1am-01.webp",
+        alt: "Page de la chaîne YouTube \"Un Autre Monde\" (@1_Autre_Monde), avec son avatar dessiné à la main",
+      },
+    ],
     accent: "violet",
   },
 ];

@@ -8,7 +8,6 @@ import { Portfolio } from "./sections/Portfolio";
 import { Skills } from "./sections/Skills";
 import { Contact } from "./sections/Contact";
 import { Play } from "./sections/Play";
-import { KitchenSink } from "./sections/KitchenSink";
 
 // Chargées dans un chunk séparé : les primitives animées restent utilisables
 // (statiques le temps du fetch) sans alourdir le bundle initial.
@@ -27,7 +26,6 @@ export default function App() {
           <Skills />
           <Contact />
           <Play />
-          <KitchenSink />
         </main>
         <Footer />
       </div>

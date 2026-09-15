@@ -4,6 +4,87 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (suite) — Clôture Phase 6
+
+Deux points traités après la livraison initiale de la Phase 6, avant clôture :
+
+**DETTE-14 (`terrain`)** : Xav a déposé la source manquante (`images-src/projects/terrain/raw/`). La photo montrait son poste de travail réel — deux écrans avec du code et un onglet mail visibles. Avant de la câbler, confirmation demandée à Xav (le contenu ne correspondait pas au sujet du projet "Séquence d'intervention terrain" et exposait des informations d'écran). Réponse : "Oui mais recadre-la". Floutage fort appliqué à la source (`sharp().blur(45)`, aucun texte lisible dans le résultat) avant le passage dans le pipeline standard (`npm run images`) ; résultat 15 Ko, câblé dans `projects.ts` (`alt` qui décrit honnêtement le floutage volontaire, pas un contenu inventé). Les 6 fiches ont désormais toutes leur image. Vérifié en modale (deep link `#projets/terrain`).
+
+**[ARRÊT XAV] du critère §7.1** : Xav a signalé ne pas recevoir le mail de test malgré une vérification des dossiers spam. Retrouvé côté dashboard Formspree (`xgaegryp/submissions/spam`) : la soumission de test y figure — la requête arrive donc bien jusqu'à Formspree (le mécanisme d'envoi du site fonctionne), c'est le relais par mail qui n'a pas eu lieu, un point du ressort de Formspree/Laposte plutôt que du code du site. Amélioration apportée quand même : `submitContactForm` (`src/lib/contact/submit.ts`) envoie désormais deux champs spéciaux reconnus par Formspree, `_subject` (sujet de mail clair : "Contact portfolio — {type de projet}") et `_replyto` (Reply-To pointé vers l'e-mail du prospect, pour pouvoir répondre directement) — absents jusque-là, le mail seul JSON brut avec sujet générique étant plus susceptible d'être filtré. **DETTE-28** ouverte : les tests de cette session ont tous été faits depuis `localhost`, jamais depuis le domaine réel déployé (`xab-dev.github.io`) — à revérifier une fois en ligne, l'origine non reconnue pouvant expliquer un classement en spam plus agressif de la part de Formspree.
+
+Xav a donné le feu vert ("tu peux continuer") après avoir retrouvé le mail côté dashboard. Critère §7.1 considéré rempli au sens technique — parcours, envoi réel, et repli mailto sont tous vérifiés et fonctionnels ; la délivrabilité finale en production reste à reconfirmer (DETTE-28, non bloquante). `npm run build`/`lint`/`test` verts (31 tests) après les deux changements. **Phase 6 officiellement close.**
+
+---
+
+## 2026-09-15 (suite) — Phase 6 : Contact smart + section Jouer
+
+### Décisions prises et pourquoi
+
+- **`readSimulator.ts` scindé en deux fonctions** : `parseSimulatorValue(raw: string | null)`, une fonction pure qui interprète une chaîne déjà lue (testée sur les 3 cas — absent, invalide, valide — dans `readSimulator.test.ts`, 3 tests), et `readSimulator()`, un wrapper non testé (trivial, un `try/catch` autour de `sessionStorage.getItem`) qui l'appelle. La spec demande "une fonction pure testée" pour "la lecture" ; lire `sessionStorage` est intrinsèquement un effet de bord, donc c'est la logique de décision (le parsing) qui est isolée et testée, pas l'accès storage lui-même — cohérent avec `matchReply` (Phase 1) qui suit le même principe.
+- **Auto-avance du stepper à chaque sélection** (étape 1 : au clic sur un type de projet ; étape 2 : dès que budget *et* délai sont choisis, dans n'importe quel ordre) plutôt qu'un bouton "Suivant" explicite : c'est ce qui rend les "3 clics" du titre de section littéraux (1 clic étape 1, 2 clics étape 2 = 3 clics pour atteindre les coordonnées). "Précédent" reste un bouton explicite à chaque étape suivante, sélections conservées (edge case §4).
+- **Bouton d'envoi désactivé (`disabled`) tant que le formulaire n'est pas valide**, plutôt que toujours cliquable avec affichage d'erreurs au clic : les erreurs par champ s'affichent au `blur` (`touched`), pas seulement à la tentative d'envoi — un utilisateur ne peut donc jamais cliquer "Envoyer" sur un formulaire invalide. Vérifié que le pattern de validation progressive au blur fonctionne bien (voir bug ci-dessous, qui portait sur autre chose).
+- **Honeypot** : champ cascade masqué par `clip:rect(0,0,0,0)` (1×1 px, dans le flux normal) plutôt que `left:-9999px` : ce dernier, combiné au conteneur `transform` du Stepper (AnimatePresence anime `x`), créerait un nouveau *containing block* et un débordement scrollable géant du conteneur transformé — bug potentiel trouvé en revue avant même de tester, corrigé avant livraison.
+- **Repli honeypot silencieux** : si le champ piège est rempli, l'état passe directement à `sent` sans jamais appeler Formspree — pour ne pas indiquer à un bot que sa soumission a été filtrée.
+- **`buildMailtoFallback` utilise `encodeURIComponent`, pas `URLSearchParams`** : `URLSearchParams` encode les espaces en `+` (forme `application/x-www-form-urlencoded`), invalide dans un lien `mailto:` (RFC 6068) — trouvé en écrivant le code, corrigé avant test.
+- **Fullscreen API sur le conteneur de l'iframe** (pas sur l'iframe elle-même), conformément au texte exact de la spec §3 ("bouton Plein écran (Fullscreen API sur le conteneur)") — vérifié fonctionnel dans le vrai navigateur (voir vérification visuelle).
+- **Timer d'auto-fermeture de `TeaserOverlay` en `requestAnimationFrame`** avec accumulation d'un temps écoulé (`elapsedRef`) plutôt qu'un simple `setTimeout` fixe : permet une pause/reprise exacte sur `visibilitychange` (edge case §4) sans perdre ni dupliquer de temps, et anime la barre de progression au même rythme.
+- **Fermeture de l'overlay mobile par historique** (`history.pushState` à l'ouverture, `history.back()` au lieu d'un simple `onClose()` direct pour Fermer/Échap/auto-fermeture, `popstate` écouté pour le bouton retour du navigateur) : un seul mécanisme cohérent pour les 3 déclencheurs de fermeture (bouton, clavier, retour arrière), vérifié dans le vrai navigateur (voir plus bas) — le bouton retour ferme bien l'overlay au lieu de quitter le site.
+- **`useCoarsePointer` réactif** (`matchMedia('(pointer: coarse)').matches` en état initial + écouteur `change`) plutôt qu'une détection figée au montage : cohérent avec `isTouchDevice()` déjà présent dans `GlassCard.tsx` (Phase 0), mais rendu réactif ici car il pilote un choix de rendu structurel (iframe directe vs. carte teaser), pas juste une option d'animation.
+
+### Bug trouvé et corrigé (cause racine)
+
+**`NeonButton` n'avait aucun style visuel pour l'état `disabled`.** Découvert en vérification visuelle réelle : le bouton "Envoyer" du formulaire de contact, désactivé tant que les champs ne sont pas valides, restait visuellement identique (même bleu vif, même curseur) à son état activé — aucun moyen pour l'utilisateur de savoir qu'il ne peut pas encore l'actionner. Cause racine : `Tag.tsx` (Phase 0) a `disabled:cursor-not-allowed disabled:opacity-50` dans ses classes, mais `NeonButton.tsx` (Phase 1, étendu avec la prop `href`) ne les a jamais eues — jamais remarqué avant car aucune section réelle n'avait encore utilisé `NeonButton` dans un état conditionnellement désactivé (Hero : CTA toujours actifs). Corrigé : mêmes classes `disabled:` ajoutées, et les animations `whileHover`/`whileTap` de Framer Motion (qui ignorent l'attribut HTML `disabled`) sont maintenant coupées quand le bouton est désactivé, pour ne pas laisser un bouton visuellement mort "grossir" au survol. Revérifié à l'écran : le bouton "Envoyer" est maintenant clairement estompé tant que le formulaire est invalide.
+
+### Livré et validé à l'écran
+
+Vérifié via Claude in Chrome (`vite preview`), desktop 1280 px et mobile ~500 px (voir note sur la largeur ci-dessous, DETTE ouverte) :
+- **Stepper de contact** : les 3 étapes s'enchaînent au clic (type de projet → budget + délai → coordonnées), barre de progression animée, "Précédent" ramène à l'étape précédente avec les sélections conservées.
+- **Validation des champs** : nom vide, e-mail au format invalide (`pasunemail`) et message trop court (`court`, "20 caractères minimum (5/20)") affichent chacun leur message d'erreur au `blur`, bordure distinctive, `aria-invalid="true"` et `aria-describedby` pointant vers un élément d'erreur existant — vérifié par lecture directe du DOM (§7.3 validé).
+- **Envoi réel** : `POST` vers `https://formspree.io/f/xgaegryp` avec des données de test identifiables ("Test Agent 2", message explicitement marqué comme test) → réponse 2xx → carte de confirmation affichée avec récap des choix ("Automatisation d'un process · 500 – 2 000 € · Ce mois.") et "Réponse sous 24 h." (DETTE-06). **Reste à confirmer par Xav : réception réelle du mail** — voir ARRÊT XAV ci-dessous.
+- **Repli réseau coupé** : `fetch` neutralisé côté page pour simuler une coupure réseau → état `error` affiché ("L'envoi a échoué (réseau indisponible). Vos informations sont conservées."), champs bien conservés, lien `mailto:` de secours généré avec sujet/corps pré-remplis et correctement encodés — vérifié fonctionnel (§7.1, partie "repli mailto vérifié en coupant le réseau").
+- **Pré-remplissage simulateur** : `sessionStorage.setItem('simulator', '{"selection":["support","saisie"]}')` injecté puis rechargement → encart "Depuis le simulateur : Support, Saisie" affiché, étape 1 pré-sélectionnée sur "Automatisation d'un process", modifiable ; valeur JSON invalide → repli propre sur l'état vierge, aucune erreur console. Voir le report explicite du critère §7.2 plus bas.
+- **Section Jouer, PC** : iframe chargée en `loading="lazy"`, cadre verre au ratio 16/9, bouton "Plein écran" fonctionnel (`document.fullscreenElement` confirmé après clic réel), lien de repli "Ouvrir dans un nouvel onglet" toujours présent (edge case iframe bloquée, §4).
+- **Section Jouer, mobile (vérifié avec le chemin tactile forcé temporairement — voir note DETTE ci-dessous)** : carte "Voir l'intro" affichée à la place de l'iframe directe, overlay plein écran avec barre de progression animée, bouton Fermer ≥ 44 px, ligne "Jouable sur ordinateur" avec URL copiable (bouton "Copier" → "Copié !" confirmé) ; les 3 mécanismes de fermeture testés individuellement et fonctionnels : bouton Fermer, touche Échap, bouton retour du navigateur (`navigate: back`) — dans les 3 cas l'overlay se ferme sans quitter le site ; fermeture automatique après le délai configuré confirmée (testée avec un délai raccourci temporairement, voir DETTE).
+- **`#kitchen-sink`** : absent de `dist/` après build (`grep -ri kitchen dist/` sans résultat), absent de la nav, `KitchenSink.tsx` supprimé. Tous les primitives concernées (`NeonButton` avec/sans `href`, `Modal`, `Tag`, `TypingText`, `GlassCard`) restent utilisées par au moins une vraie section ; `AnimatedCounter` gardée sans usage réel, comme prévu pour la Phase 2 (§3 bis).
+- **Images `templates`/`1am`** : câblées dans `projects.ts`, vérifiées à l'écran via deep link (`#projets/templates`, `#projets/1am`) — l'image affichée correspond bien au contenu réel du fichier (capture du document `Bibliothèque de templates — Architecte Spec.md` pour l'une, capture de la page YouTube "Un Autre Monde" pour l'autre ; `alt` réécrit en conséquence pour rester honnête plutôt que générique), `loading="lazy"`, agrandissement au clic fonctionnel dans les deux cas (§7.6 validé).
+- Aucune erreur console nouvelle sur l'ensemble de la session (une seule exception résiduelle, `Permissions check failed`, provient d'une tentative de plein écran déclenchée par script — pas d'un vrai clic — pendant le test, sans rapport avec le code livré).
+- `npm run build`, `npm run lint` (oxlint) et `npm run test` (Vitest, 31 tests dont 3 nouveaux pour `readSimulator.ts`) verts.
+
+### Note méthode : un artefact de clic automatisé, pas un bug applicatif
+
+En testant le stepper via clic à coordonnées fixes, un clic sur "Automatisation d'un process" (étape 1) a occasionnellement abouti à une sélection de budget (étape 2) jamais demandée. Diagnostiqué avant de conclure à un bug : un clic déclenché par l'outil d'automatisation (mousedown/mouseup CDP à coordonnées fixes) peut, si l'interface se re-rend entre les deux phases du clic, voir son `mouseup` atterrir sur un élément différent de son `mousedown`. Reproduit et confirmé comme artefact de test (pas un bug produit) : un `element.click()` JS unique (atomique) sur le même bouton, dans le même état, sélectionne toujours le bon type de projet et ne touche jamais au budget. Un vrai clic humain ne peut pas non plus déclencher ce cas : React ne re-rend qu'*après* la fin du clic, jamais pendant.
+
+### Report explicite — critère §7.2 (pré-remplissage depuis le simulateur)
+
+Conformément à la spec (§3, §7.2) : la Phase 2 (Stack Simulator) n'est pas livrée, `sessionStorage['simulator']` est donc absent en conditions réelles à ce jour. Ce qui est fait et vérifié cette session :
+- `parseSimulatorValue` testée unitairement sur les 3 cas prescrits (absent, invalide, valide) — `readSimulator.test.ts`, 3 tests verts.
+- Vérification manuelle en injectant la clé dans DevTools (`sessionStorage.setItem('simulator', '{"selection":["support","saisie"]}')` puis rechargement) : comportement conforme à l'écran (voir ci-dessus).
+
+**Non fait et non cochable maintenant** : la vérification en conditions réelles (la Phase 2 posant elle-même la clé, avec son format définitif) est explicitement hors de portée tant que la Phase 2 n'existe pas. Le format `{ selection: string[] }` utilisé ici est une supposition raisonnable à confirmer avec la spec 03 au moment de la Phase 2 — si le format définitif diverge, seul `parseSimulatorValue` (et son test) aura besoin d'être ajusté, le reste du stepper n'en dépend pas.
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- Le simulateur lui-même (Phase 2) : non implémenté, non écrit dans `sessionStorage` depuis cette phase (consigne §6).
+- `prefers-reduced-motion` en émulation DevTools : pas d'outil d'émulation de media feature disponible dans cette session (limite déjà documentée en Phases 0/1/4/5) — le hook `useReducedMotionSafe`, déjà vérifié dans les phases précédentes, est réutilisé à l'identique par `Stepper` et `TeaserOverlay` sans modification de sa logique.
+- Mentions légales complètes, SEO/OG avancé, sitemap → Phase 7 (inchangé).
+- Poids de l'iframe haTD non mesuré (dette technique §C, inchangée) : au moment de cette session, `https://xab-dev.github.io/cv-portfolio/haTD_V1/` répond `404` (vérifié par `fetch` direct) — le jeu ne semble pas encore déployé sur ce repo externe. C'est un fait externe hors du périmètre de ce projet (T12 : jeu jamais modifié depuis ce projet, lu par URL absolue seulement) ; le lien de repli "Ouvrir dans un nouvel onglet" et le fait que l'iframe affiche proprement une 404 sans casser la mise en page couvrent ce cas. À signaler à Xav, pas à corriger ici.
+
+### Dette ajoutée / mise à jour
+
+- DETTE-14 : mise à jour — `templates` et `1am` câblés (voir `dette_suivi.md` §B). Ne reste que `terrain` (source non fournie, hors scope).
+- **Nouvelle dette (non bloquante)** : la vérification tactile réelle de la section Jouer (§7.4 : "Mobile émulé (pointeur coarse)") a été faite avec `pointer: coarse` **forcé temporairement dans le code** (`useCoarsePointer() || true`, et `teaserMs` raccourci à 4 s pour ne pas attendre 18 s réels à chaque test), car l'outil de navigateur de cette session ne fournit aucune émulation tactile réelle (`navigator.maxTouchPoints` reste à `0` et `matchMedia('(pointer: coarse)').matches` reste `false` même à 375/500 px de large — limite déjà notée en Phases 1/4/5 pour la largeur, mais c'est la première fois qu'elle bloque aussi le *type de pointeur*). Les deux modifications ont été **entièrement annulées** avant la livraison (`git diff` vérifié propre, hash de build identique avant/après hors ce changement) ; le comportement tactile réel (vrai téléphone ou détection navigateur avec vraie émulation tactile) reste donc à revérifier une fois un outil adéquat disponible, ou directement par Xav sur un appareil réel. Non bloquant : le code de détection (`matchMedia`) est standard et sans ambiguïté, et le comportement a été vérifié fonctionnel à 100 % sous la contrainte forcée.
+- Largeur mobile plancher à ~500 px avec les outils de cette session (375 px non atteignable), comme en Phases 1/4/5 — aucun style à `md:` (768px) breakpoint intermédiaire dans ce projet, donc 500 px reste représentatif du rendu mobile réel.
+
+### [ARRÊT XAV] — critère §7.1 de la spec 07
+
+**Un e-mail de test réel a été envoyé** via le formulaire (POST vers `https://formspree.io/f/xgaegryp`, réponse 2xx confirmée côté navigateur), avec le nom "Test Agent 2" et un message explicitement identifiable comme test, pour vérifier le mécanisme d'envoi. **Je ne peux pas vérifier la réception dans la boîte `xa.bou@laposte.net`** — c'est le seul point que la spec attribue explicitement à Xav (§7.1 : "la confirmation de réception est le seul point que l'agent ne peut pas vérifier seul").
+
+Tout le reste du critère §7.1 est vérifié et vert : parcours complet en 3 clics + saisie, envoi réel techniquement fonctionnel, repli `mailto:` vérifié en coupant le réseau (simulé).
+
+Rien n'a été committé ni poussé à ce stade ; en attente de ta confirmation avant de considérer la Phase 6 officiellement close.
+
+---
+
 ## 2026-09-15 (suite) — Phase 1 : Hero + Agent de poche
 
 ### Décisions prises et pourquoi

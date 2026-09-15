@@ -38,7 +38,7 @@ const motionProps = {
 
 export function NeonButton({ children, variant = "primary", className, href, ...props }: NeonButtonProps) {
   const sharedClassName = cn(
-    "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm transition-colors duration-base",
+    "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm transition-colors duration-base disabled:cursor-not-allowed disabled:opacity-50",
     variantClasses[variant],
     className,
   );
@@ -56,11 +56,13 @@ export function NeonButton({ children, variant = "primary", className, href, ...
     );
   }
 
+  const buttonProps = props as Omit<ButtonHTMLAttributes<HTMLButtonElement>, ConflictingHandlers>;
+
   return (
     <m.button
       className={sharedClassName}
-      {...motionProps}
-      {...(props as Omit<ButtonHTMLAttributes<HTMLButtonElement>, ConflictingHandlers>)}
+      {...(buttonProps.disabled ? undefined : motionProps)}
+      {...buttonProps}
     >
       {children}
     </m.button>

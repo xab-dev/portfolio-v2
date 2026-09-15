@@ -1,8 +1,8 @@
 # Portfolio v2 "Premium Tech" — Roadmap + prompt d'exécution autonome
 
-**Version : 0.3.0** — document vivant. Créé le 2026-09-14 à partir de la dictée de Xav (23:00) ; révisé le 2026-09-14 23:46 (S1-S7) puis le 2026-09-15 (dettes de contenu — voir `dette_suivi.md` §B).
+**Version : 0.4.0** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B) puis le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu).
 
-**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Reste 1 décision ouverte (D4, fourchettes de budget), non bloquante pour la Phase 0. Ce document sert de brief autonome — à donner tel quel à Claude Code pour démarrer la phase courante.
+**Statut** : vision validée sur le périmètre fonctionnel (7 sections) et sur les points de substance. Plus aucune décision ouverte. Phases 0, 4, 5, 1 livrées ; phase courante : 6 (spec 07, révisée 12:45).
 
 ---
 
@@ -46,7 +46,7 @@
 | ~~D1~~ | ~~Où déployer la v2 ?~~ | **Tranché → T9** (repo neuf, racine). |
 | ~~D2~~ | ~~Titre public ?~~ | **Tranché → T10** ("Consultant outils et solutions IA"). |
 | ~~D3~~ | ~~Envoi du formulaire ?~~ | **Tranché** : Formspree, endpoint `https://formspree.io/f/xgaegryp` (DETTE-19) ; repli `mailto:`. |
-| D4 | Fourchettes de budget affichées dans le formulaire ? | Fourchettes neutres proposées en spec 07, à valider — c'est un choix commercial, pas technique. Requis pour la Phase 6 seulement. |
+| ~~D4~~ | ~~Fourchettes de budget affichées dans le formulaire ?~~ | **Tranché** (2026-09-15) : \< 500 €`, `500 – 2 000 €`, `2 000 – 5 000 €`, `> 5 000 €`, `À définir` (DETTE-18). |
 | ~~D5~~ | ~~Durée du teaser mobile ?~~ | **Tranché** : `teaserMs = 18_000` (DETTE-24) ; le bouton Fermer reste visible. |
 
 ---
@@ -64,7 +64,7 @@
 ---
 
 ## Phase 0 — Socle Vite + design system + squelette navigable
-**C'est la phase à exécuter maintenant.** Détail complet : `01_socle-design-system.md`.
+**Livrée le 2026-09-15.** Détail complet : \01_socle-design-system.md`. Phase à exécuter maintenant : Phase 6 (`07_contact-jouer.md`), qui intègre aussi le retrait de `#kitchen-sink` et le câblage des images `templates`/`1am` (DETTE-14).
 
 ### Objectif
 Un site vide mais *beau* : les tokens du design, la coquille de page (nav, sections ancrées, footer), les primitives animées réutilisables, le déploiement GitHub Pages à la racine du repo neuf.
@@ -92,7 +92,7 @@ Tout contenu réel. Aucune des 7 sections n'est remplie.
 - **Phase 3 — Prompt Playground** (`04_prompt-playground.md`) : cas d'usage → prompt brut → animation scanner → prompt expert + avant/après. Contenu dérivé des vrais templates de Xav.
 - **Phase 4 — Portfolio dynamique** (`05_portfolio-dynamique.md`) : grille filtrable, survol 3D, modale problème/architecture/métriques avec les projets réels.
 - **Phase 5 — Skills Matrix & Timeline** (`06_skills-timeline.md`) : radar interactif + badges + frise.
-- **Phase 6 — Contact smart + section Jouer** (`07_contact-jouer.md`) : qualification en 3 clics + iframe haTD (jouable PC, teaser cold-open mobile).
+- **Phase 6 — Contact smart + section Jouer** (`\07_contact-jouer.md`) : qualification en 3 clics + iframe haTD (jouable PC, teaser cold-open mobile). Lit `sessionStorage['simulator']` sans dépendre de la Phase 2 (clé absente = parcours direct). Inclut le retrait de `#kitchen-sink` et le câblage des images DETTE-14.
 - **Phase 7 — Polish, perf, SEO** : audit Lighthouse, reduced-motion, SEO/OG/sitemap, mentions légales. Spec à écrire une fois les phases 1-6 livrées.
 
 Ordre conseillé : 0 → 4 → 5 → 1 → 6 → 2 → 3 → 7. Le Portfolio et les Skills sont le cœur du CV et n'ont *aucune* dépendance de décision ; les modules "inédits" (Simulateur, Playground) viennent après, quand la dette de contenu aura été partiellement résorbée.

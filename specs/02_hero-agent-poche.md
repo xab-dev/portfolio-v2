@@ -29,7 +29,7 @@ export interface AgentProvider {
 // V2 (hors scope) : ApiAgentProvider (POST vers un backend/proxy de Xav) — même interface, zéro changement de composant
 ```
 
-Puces et réponses V1 (texte final à valider par Xav — **[DETTE-05]**) :
+Puces et réponses V1 (**validées par Xav le 2026-09-15 — DETTE-05 close** ; texte de référence = `\src/content/agent.ts`) :
 
 | id | Puce | Réponse scriptée (esprit — reformulable) |
 |---|---|---|
