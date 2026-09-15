@@ -45,7 +45,7 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
                 return (
                   <m.div
                     key={key}
-                    className="relative"
+                    className={cn("relative", isHovered && "z-20")}
                     onMouseEnter={() => setHoveredSkill(key)}
                     onMouseLeave={() => setHoveredSkill(null)}
                     onFocus={() => setHoveredSkill(key)}
