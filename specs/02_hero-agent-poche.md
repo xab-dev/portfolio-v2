@@ -33,7 +33,7 @@ Puces et réponses V1 (texte final à valider par Xav — **[DETTE-05]**) :
 
 | id | Puce | Réponse scriptée (esprit — reformulable) |
 |---|---|---|
-| `roi` | "Quel est le ROI de tes projets ?" | "Honnêtement : je ne vous sortirai pas un chiffre client inventé. Mes projets publiés sont des cas réels documentés (problème → architecture → limites). Pour *votre* contexte, le simulateur juste en dessous donne une estimation indicative — et un vrai chiffrage se fait après diagnostic." *(Optionnel, ton de Xav : "Une certitude quand même : le ROI de l'IA bat celui du poker." — à valider [DETTE-05])* |
+| `roi` | "Quel est le ROI de tes projets ?" | "Je ne vous sortirai pas un chiffre client inventé. Mes projets publiés sont des cas réels documentés (problème → architecture → limites) ; pour votre contexte, le simulateur ci-dessous donne une estimation indicative aux hypothèses affichées, et un vrai chiffrage se fait après diagnostic. Une chose quand même dont je suis sûr : le ROI de l'IA a un potentiel bien plus gros que celui du poker —" |
 | `dispo` | "Es-tu disponible ?" | "Oui, entièrement. Je réponds sous un jour maximum. Je travaille de préférence à distance, mais je me déplace — même loin et sur une longue durée, par exemple pour un audit en immersion — dès qu'un devis est signé." (DETTE-06 validé) |
 | `methode` | "Comment tu travailles avec l'IA ?" | Résumé 4D en 3 phrases + "je délègue l'exécution, jamais la vérification". |
 | `outils` | "Quels outils tu utilises ?" | Claude au quotidien — Fable 5.1, Opus 5, Sonnet 5 selon la tâche — et Claude Code piloté par specs ; Python, JS, PowerShell. Automatisation (Make, n8n) et RAG : notions, à creuser quand un projet le demandera. "Je choisis l'outil après le problème, pas avant." |

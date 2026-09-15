@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, PropsWithChildren } from "react";
 import { m } from "motion/react";
 import { cn } from "../../lib/cn";
 
@@ -12,12 +12,16 @@ type ConflictingHandlers =
   | "onDragStart"
   | "onDragEnd";
 
-export interface NeonButtonProps
-  extends PropsWithChildren,
-    Omit<ButtonHTMLAttributes<HTMLButtonElement>, ConflictingHandlers> {
+type CommonProps = PropsWithChildren<{
   variant?: Variant;
   className?: string;
-}
+}>;
+
+export type NeonButtonProps = CommonProps &
+  (
+    | ({ href: string } & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, ConflictingHandlers | "href">)
+    | ({ href?: undefined } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, ConflictingHandlers>)
+  );
 
 const variantClasses: Record<Variant, string> = {
   primary:
@@ -26,26 +30,37 @@ const variantClasses: Record<Variant, string> = {
     "bg-transparent text-text-primary border border-border-glass hover:border-neon-blue",
 };
 
-export function NeonButton({
-  children,
-  variant = "primary",
-  className,
-  ...props
-}: NeonButtonProps) {
+const motionProps = {
+  whileHover: { scale: 1.03, boxShadow: "var(--glow-blue)" },
+  whileTap: { scale: 0.97 },
+  transition: { duration: 0.15 },
+};
+
+export function NeonButton({ children, variant = "primary", className, href, ...props }: NeonButtonProps) {
+  const sharedClassName = cn(
+    "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm transition-colors duration-base",
+    variantClasses[variant],
+    className,
+  );
+
+  if (href !== undefined) {
+    return (
+      <m.a
+        href={href}
+        className={sharedClassName}
+        {...motionProps}
+        {...(props as Omit<AnchorHTMLAttributes<HTMLAnchorElement>, ConflictingHandlers | "href">)}
+      >
+        {children}
+      </m.a>
+    );
+  }
+
   return (
     <m.button
-      whileHover={{
-        scale: 1.03,
-        boxShadow: "var(--glow-blue)",
-      }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ duration: 0.15 }}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm transition-colors duration-base",
-        variantClasses[variant],
-        className,
-      )}
-      {...props}
+      className={sharedClassName}
+      {...motionProps}
+      {...(props as Omit<ButtonHTMLAttributes<HTMLButtonElement>, ConflictingHandlers>)}
     >
       {children}
     </m.button>

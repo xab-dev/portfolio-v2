@@ -4,6 +4,56 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-15 (suite) — Phase 1 : Hero + Agent de poche
+
+### Décisions prises et pourquoi
+
+- **`hero.eyebrow` dérive de `site.title`/`site.location`** (`Consultant outils et solutions IA · Tarascon, Provence`) plutôt que la valeur générique du brouillon de spec (`"Consultant indépendant · Tarascon, Provence"`) : réponse S5 de Xav (T10, "titre public"), qui doit apparaître dans `<title>`, le footer (déjà fait en Phase 0) *et* le Hero. Dérivé de `site.ts` plutôt que dupliqué en dur (T8).
+- **`NeonButton` étendu avec une prop `href` optionnelle** (union discriminée `{href: string} & Anchor...` vs `{href?: undefined} & Button...`) pour rendre `m.a` au lieu de `m.button` : les deux CTA du Hero sont des ancres de navigation (`#projets`, `#contact`), pas des actions — un vrai lien est plus correct sémantiquement/accessibilité qu'un bouton avec `scrollIntoView` manuel, et évite de dupliquer les classes visuelles de la primitive. Aucun usage existant (`KitchenSink.tsx`) n'est affecté (prop optionnelle).
+- **Pas de champ `followUps` par puce dans `src/content/agent.ts`** malgré le type `AgentReply.followUps` documenté dans la spec : la rangée de puces reste affichée en permanence sous la conversation (jamais masquée après un clic), ce qui satisfait "puces followUps proposées" sans logique de sélection de sous-ensemble à maintenir. Le champ reste dans le type `AgentProvider`/`AgentReply` (`src/lib/agent/AgentProvider.ts`) pour rester fidèle à l'interface prête pour l'API V2, simplement non peuplé par `ScriptedAgentProvider`.
+- **Matching par id de puce prioritaire, puis mots-clés normalisés (accents/casse retirés)** : `matchReply` (fonction pure, `src/lib/agent/ScriptedAgentProvider.ts`) teste d'abord une égalité directe avec un id de puce, sinon parcourt `agentKeywords`. Testé unitairement (`ScriptedAgentProvider.test.ts`, 4 tests) — y compris un test qui garantit qu'aucune réponse autre que `roi` ne contient le mot "poker" (DETTE-17).
+- **Réinitialisation de la conversation** : le lien "Réinitialiser" apparaît dès que l'historique atteint 12 messages et le reste (l'edge case de la spec — "les plus anciens sortent" — fait que le tableau replafonne à 12 en continu une fois plein), plutôt qu'une apparition ponctuelle qui se masquerait ensuite.
+- **Avatar (DETTE-02)** : source déposée par Xav dans `images-src/avatar/raw/` (dessin "silhouette encapuchonnée"). Convention retenue : `images-src/avatar/` est un **pair** de `images-src/projects/`, pas un sous-dossier — voir bug ci-dessous. `scripts/process-images.js` étendu avec `processAvatar()` : recadrage carré centré (`fit: "cover"`) 512×512, budget 100 Ko (vs 1600px/200 Ko pour les images projet), sortie unique `public/images/avatar.webp` (pas de sous-dossier `<id>/`, puisqu'il n'y a qu'un avatar). Résultat : 17 Ko, alpha conservé (le fond transparent du dessin se fond dans le fond sombre du site).
+
+### Bug trouvé et corrigé (cause racine)
+
+**L'avatar avait déjà été traité une première fois avec les mauvaises dimensions, à un mauvais chemin.** En inspectant l'état du repo avant de coder, `public/images/projects/avatar/avatar-01.webp` existait déjà et était **committé** (1600×2110, 123 Ko, jamais référencé par aucun composant). Cause racine : `images-src/avatar/raw/` avait été initialement déposé sous `images-src/projects/avatar/raw/` ; la boucle générique de `process-images.js` (`listProjectDirs()`) traite **tout** sous-dossier de `images-src/projects/` comme une fiche projet, sans liste blanche d'ids connus — elle a donc converti l'avatar avec les réglages "projet" (1600px large, 200 Ko, pas de recadrage carré) lors d'une exécution précédente (Phase 4). Corrigé en deux temps : (1) déplacement du dossier source vers `images-src/avatar/` (pair de `projects/`, hors de sa boucle), (2) `git rm` du fichier erroné et de son dossier. Le pipeline ne risque plus de retraiter un "faux projet" à l'avenir.
+
+**Zone de conversation qui ne suit pas le bas pendant la frappe.** Trouvé en vérification visuelle (Claude in Chrome) : après avoir posé une question dont la réponse dépasse la hauteur visible (`max-h-72`), le nouveau message apparaissait hors champ, sous la barre de défilement interne, sans que rien ne scrolle automatiquement — utilisable seulement en scrollant manuellement dans la petite zone, ce qui n'est pas le comportement attendu d'une interface de chat. Diagnostic : aucun mécanisme de scroll-vers-le-bas n'avait été branché, ni sur l'ajout d'un message ni sur la croissance progressive du texte pendant l'effet `TypingText` (qui ne expose pas de callback par caractère). Corrigé avec un `ResizeObserver` sur le conteneur interne des messages (`contentRef`), qui pousse `scrollTop = scrollHeight` sur le conteneur scrollable (`scrollRef`) à chaque changement de hauteur — capte à la fois les nouveaux messages *et* la frappe caractère par caractère, sans dépendre des internals de `TypingText`.
+
+### Vérification visuelle réelle (Claude in Chrome, `vite preview`)
+
+- Desktop (1280×900) : Hero 2 colonnes (texte/agent), avatar réel affiché dans le médaillon avec halo violet, titre animé mot par mot, eyebrow affiche bien le titre public de Xav. Bullet "ROI" cliquée : message utilisateur ajouté, `TypingText` révèle la réponse **mot pour mot identique** au texte validé par Xav (guillemet compris — "…et je parle en connaissance de cause."), bullets désactivées pendant la frappe puis réactivées à la fin. Bullet "Es-tu disponible ?" testée de même, texte conforme à DETTE-06. Saisie libre "bonjour" → réponse par défaut exacte + puces toujours proposées. Après le fix ci-dessus, le scroll interne suit bien la dernière ligne en cours de frappe.
+- Clavier : ordre de tabulation vérifié via l'arbre d'accessibilité — CTA primaire/secondaire, puis les 5 puces, puis le champ de saisie, puis "Envoyer" (`Tab → puces → champ → envoyer` conforme au critère §7.3).
+- Mobile (375×812) : Hero empilé (avatar → eyebrow → titre → sous-titre → CTA → agent), puces en colonne, champ pleine largeur + bouton envoyer, tout est tapable. Hauteur du Hero jusqu'au début de la section Simulateur ≈ 1,5 écran (critère §7.1), pas de débordement horizontal observé.
+- Non vérifié dans cette session : `prefers-reduced-motion` en émulation DevTools — aucun outil d'émulation de media feature disponible dans la session (même limite que la Phase 5) ; le hook `useReducedMotionSafe` est réutilisé à l'identique (Hero : glow statique + pas de stagger de mots via `fadeUpReduced` ; agent : pas de délai "…", `TypingText` affiche le texte entier d'un coup). Recommandé de le vérifier manuellement dans DevTools (Rendering → Emulate CSS media feature `prefers-reduced-motion`).
+- `npm run build`, `npm run lint` (oxlint) et `npm run test` (Vitest, 28 tests dont 8 nouveaux pour `ScriptedAgentProvider`) verts.
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- `ApiAgentProvider` (V2) : interface (`AgentProvider`, `src/lib/agent/AgentProvider.ts`) prête, implémentation volontairement absente (consigne §6 de la spec) — nécessiterait un proxy/backend pour ne pas exposer de clé (T5). Post-V1, cf. dette technique §C.
+- Câblage de `templates-01.webp`/`1am-01.webp` (générés cette session en relançant `npm run images`) dans `src/content/projects.ts` : appartient à la Phase 4/DETTE-14, pas à la Phase 1. Fichiers présents dans `public/images/projects/`, non référencés.
+- Retrait de `#kitchen-sink`, `prefers-reduced-motion` en émulation DevTools → inchangé depuis les phases précédentes (prévu Phase 7).
+
+### Dette ajoutée / mise à jour
+
+- DETTE-02 résolue (avatar réel traité et branché).
+- DETTE-05 partiellement réglée (texte `roi` validé mot pour mot ; `methode`/`outils`/`non-ia`/défaut restent des reformulations à relire par Xav).
+- DETTE-14 mise à jour (images `templates`/`1am` traitées, pas encore câblées).
+
+---
+
+## 2026-09-15 (suite) — Clôture Phase 5
+
+Xav a ajusté lui-même `src/content/skills.ts` (édition directe, hors agent) : PowerShell 3→4, Vulgarisation/formation 4→3, note de la biostatistique passée de "[DETTE-16] niveau provisoire, à confirmer par Xav" à "hobby passion" (niveau inchangé, 1 = notions). Avant de considérer la Phase 5 close, vérifié :
+- Famille "Données" toujours à ≥1 axe valide sur le radar (un seul skill dans cette famille — biostatistique — donc le radar dépend uniquement de ce niveau ; test dédié dans `skills.test.ts`, toujours vert).
+- `npm run test` (20 tests), `npm run lint`, `npm run build` verts après les changements.
+- Revérification visuelle du radar et des badges (Claude in Chrome, `vite preview`) : desktop 1280×900 et mobile 375×812 — radar à 6 axes lisible, badges alignés avec leur famille, aucune régression visuelle liée aux niveaux modifiés.
+
+DETTE-15 et DETTE-16 résolues (§ARRÊT XAV levé). Phase 5 officiellement close.
+
+---
+
 ## 2026-09-15 (suite) — Phase 5 : Skills Matrix & Timeline
 
 ### Décisions prises et pourquoi

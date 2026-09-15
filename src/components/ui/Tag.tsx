@@ -12,7 +12,7 @@ export function Tag({ active = false, className, children, ...props }: TagProps)
       type="button"
       aria-pressed={active}
       className={cn(
-        "rounded-full border px-4 py-1.5 text-sm transition-colors duration-fast",
+        "rounded-full border px-4 py-1.5 text-sm transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50",
         active
           ? "border-neon-blue bg-neon-blue/15 text-text-primary"
           : "border-border-glass bg-bg-panel text-text-muted hover:text-text-primary",

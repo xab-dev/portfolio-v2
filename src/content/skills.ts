@@ -56,15 +56,15 @@ export const skills: Skill[] = [
 
   { family: "Développement", name: "HTML/JS/CSS (canvas, single-file)", level: 4 },
   { family: "Développement", name: "Python (scripts, tkinter, pygame)", level: 4 },
-  { family: "Développement", name: "PowerShell", level: 3 },
+  { family: "Développement", name: "PowerShell", level: 4 },
   { family: "Développement", name: "Godot / GDScript", level: 2, note: "cible haTD" },
   { family: "Développement", name: "Déploiement / Docker / VPS", level: 1, note: "notions, jamais déployé" },
 
   // [DETTE-16] Niveau en réflexion côté Xav : valeur neutre non gonflée (1 = notions)
   // en attente de confirmation — voir ARRÊT XAV de la Phase 5.
-  { family: "Données", name: "Biostatistique / analyse de données", level: 1, note: "[DETTE-16] niveau provisoire, à confirmer par Xav" },
+  { family: "Données", name: "Biostatistique / analyse de données", level: 1, note: "hobby passion" },
 
-  { family: "Humain", name: "Vulgarisation / formation", level: 4 },
+  { family: "Humain", name: "Vulgarisation / formation", level: 3 },
 ];
 
 // Langues : badge sans niveau chiffré (réponse DETTE-21), jamais inclus dans la
