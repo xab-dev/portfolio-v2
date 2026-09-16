@@ -6,10 +6,12 @@ export interface AgentMessageProps {
   text: string;
   /** Anime le texte lettre par lettre (dernier message agent uniquement). */
   typing?: boolean;
+  /** Vitesse de frappe en ms/caractère (spec 10 §3 : FAQ plus rapide que l'agent). */
+  speedMs?: number;
   onTypingDone?: () => void;
 }
 
-export function AgentMessage({ role, text, typing = false, onTypingDone }: AgentMessageProps) {
+export function AgentMessage({ role, text, typing = false, speedMs, onTypingDone }: AgentMessageProps) {
   const isAgent = role === "agent";
 
   return (
@@ -23,7 +25,7 @@ export function AgentMessage({ role, text, typing = false, onTypingDone }: Agent
         )}
       >
         {isAgent && typing ? (
-          <TypingText text={text} onDone={onTypingDone} />
+          <TypingText text={text} speedMs={speedMs} onDone={onTypingDone} />
         ) : (
           text
         )}

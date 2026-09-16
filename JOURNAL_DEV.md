@@ -4,6 +4,71 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-16 — Phase 9 : FAQ « Comment ce site a été créé ? » (`10_faq-comment-ce-site.md`) — ARRÊT XAV posé
+
+Session ouverte sur `specs/00_ROADMAP.md` puis `specs/10_faq-comment-ce-site.md` (contenu déjà validé par Xav le 16/09, 12:12→13:30). Phase 8 déjà committée (`ca5fdd2`) au moment d'ouvrir cette session. Rien n'a été committé dans cette session.
+
+### Décisions prises et pourquoi
+
+- **Contenu d'abord, tests verts avant tout composant** (§6) : `src/content/faq.ts` + `faq.test.ts` écrits et vérifiés en premier (7 tests), avant `FaqTrigger`/`FaqModal`.
+- **Espaces insécables (U+00A0) recopiées par transformation programmatique, pas à la main.** Le fichier `10_faq-comment-ce-site.md` lui-même ne contient aucun caractère U+00A0 (vérifié par balayage — la consigne « espaces insécables comprises » décrit une règle typographique à appliquer, pas un caractère déjà présent dans le Markdown source). Généré un script Node qui insère un U+00A0 avant chaque occurrence de `?`, `:`, `»`, `%` dans les 6 réponses et les libellés `faqUi`, puis vérifié par relecture du fichier produit (comptage de U+00A0, longueurs de bulles, absence de `%` hors `creation`) avant de l'écrire dans `src/content/faq.ts` — cohérent avec la convention déjà utilisée dans `agent.ts`/`contact.ts` (NBSP avant `%`, `€`, `?`).
+- **`AgentMessage` étendu d'une prop optionnelle `speedMs`** (rétrocompatible, transmise à `TypingText` qui a déjà son propre défaut) plutôt que dupliqué, pour que la FAQ tape à 6 ms/caractère (spec) sans changer la vitesse de l'agent de poche existant (18 ms, `AgentPanel` ne passe pas la prop).
+- **`SectionShell.headerAction` en positionnement `relative`/`absolute`, pas en item flex à côté du titre.** Premier essai (item flex avec `min-w-0 flex-1` sur le titre) : le bouton forçait le titre de Jouer à se réenrouler sur une ligne de moins de large, donc à passer de 1 à 2 lignes, donc à décaler tout le contenu sous l'en-tête (sous-titre, lien, iframe) — repéré par le diff pixel §7.1 (20 % de pixels différents dans Jouer au lieu de la seule zone du bouton attendue). Corrigé en gardant le `<h2>` strictement identique (même classes, même boîte, même retour à la ligne qu'avant la phase) et en positionnant l'action en `absolute right-0 top-0` d'un conteneur `relative` : le titre de Jouer ne remplit pas toute la largeur du conteneur sur sa première ligne (810 px de texte pour 1024 px de conteneur), l'action flotte dans l'espace déjà vide sans toucher au flux du texte. Revérifié : diff pixel confiné à la zone du bouton (~4 260 px sur les lignes 208-247) après correction, 0 px sur le sous-titre/lien.
+- **Deep link `#faq` par `history.replaceState`, pas `window.location.hash =`.** Le pattern existant (`Portfolio.tsx`, deep link `#projets/<id>`) utilise `window.location.hash =`, qui pousse une entrée d'historique — exactement ce que l'edge case §4 de la spec 10 interdit pour la FAQ ("n'ajoute pas d'entrée d'historique"). Implémenté séparément dans `Play.tsx` avec `window.history.replaceState(null, "", "#faq" | "#jouer")` + état React synchronisé à la main (une `replaceState` ne déclenche pas `hashchange`).
+- **`isFaqRoute` exige `param === null`** (pas seulement `section === "faq"`) : traduit directement l'edge case §4 ("`#faq/x` … ignoré") sans branche supplémentaire, `readHashRoute` renvoyant déjà `param` à `null` en l'absence de `/`.
+- **Skip (« Tout afficher ») implémenté comme un saut d'état (`revealCount` → longueur totale), pas comme une prop sur `TypingText`.** `TypingText` gère déjà l'instantané via `useReducedMotionSafe` en interne ; ajouter un second mécanisme de saut aurait dupliqué cette logique. `FaqModal` bascule simplement l'étape à `"done"` : les bulles déjà en cours de frappe et celles pas encore commencées se rendent alors toutes en texte complet (`typing={false}`) au rendu suivant.
+- **Priorité visuelle des 2 questions `priority` = accent permanent (`active` toujours vrai), indépendant de la sélection en cours.** Relecture littérale du §3 ("les 2 questions priority en premier, style actif/accentué") : l'accent marque l'importance des deux questions, pas la question en cours de réponse (que la conversation affichée rend déjà évidente).
+
+### Bug trouvé et corrigé en cours de session (cause racine, pas de contournement)
+
+**En-tête de Jouer : ajout du bouton FAQ décalait tout le contenu de la section vers le bas.** Décrit ci-dessus (décisions). Trouvé par le diff pixel du critère §7.1 lui-même (20,2 % de pixels différents dans une capture pleine page de Jouer, très au-dessus du bruit d'iframe attendu), pas par relecture de code — la cause (retour à la ligne du titre) n'était pas visible sans mesurer la hauteur réelle du bloc de titre avant/après.
+
+### Preuves des critères §7.1 à §7.4 (Claude in Chrome, `vite preview` port 4321)
+
+**§7.1 — diff pixel 1280 px (méthode Phase 6b : `git stash -u` → build → capture "avant" → `git stash pop` → build → capture "après", `sharp`, tolérance 3/255).** Vérification DOM préalable : les 6 sections sans `headerAction` ont un `<h2>` et un conteneur parent strictement identiques (mêmes classes, comparé avant/après par script) — aucune n'a été touchée par la branche conditionnelle de `SectionShell`. Diff pixel réel exécuté sur Hero et Jouer (les deux seules sections dont un fichier modifié cette session dépend — `AgentMessage`/`TypingText` pour Hero, `headerAction` pour Jouer) :
+- **Hero** : 8 081 / 946 736 px (0,85 %), concentrés lignes 80-503 — même ordre de grandeur que le bruit documenté en Phase 6b pour la boucle infinie `HeroGlow` (~4 157-4 185 px **sans aucun changement de code**) ; `AgentMessage`/`TypingText` n'ont reçu qu'une prop optionnelle non utilisée par `AgentPanel`, donc rendu inchangé pour ce composant.
+- **Jouer** : 21 969 / 946 736 px (2,32 %) sur la capture pleine page. Décomposé ligne par ligne : **0 px** entre les lignes 260 et 395 (sous-titre + lien "Voir la fiche projet", zone qui aurait bougé si le bug de décalage n'avait pas été corrigé) ; 4 260 px sur les lignes 208-247 (zone du bouton, correspond à son empreinte ~219×34 px) ; le reste (lignes ≥ 395) dans le cadre de l'iframe haTD, qui joue son cold-open de façon autonome et indépendante entre les deux captures — même explication qu'en Phase 6b pour ce même cadre.
+- Bundle final : `index-0b02oJJ5.js` 450,17 Ko / gzip 145,72 Ko contre `index-DWM7KSvJ.js` 440,04 Ko / gzip 142,22 Ko avant la phase (bundle identique au bundle déployé en Phase 8, vérifié par hash) — écart gzip **+3,50 Ko**, sous le budget de 5 Ko attendu par §7.7 ; FAQ chargée avec `Play` dans le chunk initial, aucun chunk supplémentaire créé.
+
+**§7.2 — parcours complet à l'écran.** 1280 px et ~500 px (375 px non atteignable par l'outil de cette session — même limite déjà documentée aux phases précédentes) : clic bouton → Modal → clic « Comment ce site a été créé ? » → bulles tapées une à une, tags désactivés pendant la frappe → clic « Tout afficher » sur une autre question (`workflow`) : bascule instantanée, tags réactivés → texte final du DOM comparé par empreinte (longueur + hash) à `faq.ts`, **identique caractère pour caractère espaces insécables comprises** sur les 11 bulles de la réponse `creation` (intro + question + 9 paragraphes) → clic « Autre question » : conversation réinitialisée, tags réactivés → Échap : `hash` repassé à `#jouer` par `replaceState`, focus revenu sur le bouton déclencheur (vérifié `document.activeElement`, cas où la Modal avait été ouverte par un vrai clic).
+
+**§7.3 — deep link `#faq`.** Navigation directe vers `.../#faq` : Modal ouverte dès le chargement. `#faq/x` : `isFaqRoute` renvoie faux (param non nul), Modal fermée — vérifié par lecture du code (`readHashRoute`/`isFaqRoute`), cas identique à l'edge case déjà couvert par la même fonction pour `#projets/<id>`.
+
+**§7.4 — modes.** `?perf=lite` : clic direct sur une puce → toutes les bulles apparaissent d'un coup, aucun indicateur « … », bouton `skip` absent du DOM, `getComputedStyle` sur le dialogue → `backdropFilter: "none"`, `backgroundColor: "rgba(11, 15, 25, 0.95)"`. `node scripts/audit-reduced-motion.js` : étape d'ouverture de la FAQ ajoutée (`STOPS`/`INTERACTIONS.faq`, clic sur le bouton dans `#jouer`) — conforme aux deux largeurs (375 et 1280 px), aucune animation `transform`/`opacity` > 150 ms ni boucle infinie détectée sur ce nouvel arrêt.
+
+**§7.5 — tests.** `faq.test.ts` : 6 questions, ids uniques, exactement 2 `priority` (`workflow`, `creation`), aucun paragraphe vide, aucune bulle > 600 caractères, `%` uniquement dans `creation` (« 90 % »), aucune des chaînes interdites. Suite complète : **88 tests** (81 + 7), `lint`/`build`/`tsc -b` verts.
+
+**§7.6 — absence du flux principal.** `grep` sur `dist/` : `faq` absent de `nav.ts`/du menu (jamais présent, non touché), du `sitemap.xml`, du JSON-LD (`Person`/`PostalAddress` uniquement), et du texte extrait du PDF (`pdf-parse`, `dist/cv/cv-xavier-bou.pdf`) — seule occurrence de "faq" dans `dist/` : le bundle JS applicatif lui-même.
+
+### Livré et validé à l'écran
+
+Claude in Chrome, `vite preview` (port 4321), 1280 px et ~500 px, `?perf=full` puis `?perf=lite` :
+- Bouton « Comment ce site a été créé ? » (icône `MessageCircleQuestion`) en haut à droite du titre de Jouer sur desktop (flottant dans l'espace libre à droite du titre, sans décaler le sous-titre/lien/iframe) ; pleine largeur sous le sous-titre sur mobile.
+- Modal : en-tête « FAQ · réponses scriptées », bulle d'intro statique, 2 puces accentuées (`workflow`, `creation`) + 4 puces standard.
+- Parcours complet vérifié (voir preuves §7.2 ci-dessus) aux deux largeurs, `?perf=lite` (voir §7.4), Échap/focus, deep link `#faq`.
+- Aucune erreur console relevée pendant les parcours testés.
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- Saisie libre, réponses dynamiques, `ApiAgentProvider` : hors scope explicite de la spec (§8), agent de poche V2 déjà noté post-V1 dans le ROADMAP.
+- Version anglaise de `faq.ts` : Phase 10 (spec `11_...`, à écrire), architecture T8 déjà prête (fichier `*.ts` unique, séparé du rendu).
+- Mesure d'audience sur l'ouverture du pop-up : écartée par Xav (§8).
+- Lighthouse mobile sur le déploiement réel (le composant est dans le chunk initial, écart gzip mesuré en local sous le budget — §7.7) : nécessite un push, hors de portée avant la clôture de la phase par Xav.
+
+### Dette ajoutée / mise à jour
+
+Aucune nouvelle ligne DETTE-xx. Vérifié avant d'écrire `faq.ts` que les chiffres du contenu (36 lignes de dette suivies à ce jour, 81 tests avant cette phase, 7 arrêts, onze phases dont ce pop-up, 90 % du travail) correspondent à l'état réel des fichiers (`dette_suivi.md` s'arrête à DETTE-36, `dette_suivi.md` Phase 8 mentionne bien 81 tests, 7 occurrences d'`[ARRÊT XAV]`/`[ARRÊT HUMAIN]` dans ce journal pour les phases citées) — aucun écart à corriger ni à signaler.
+
+### [ARRÊT XAV] — critère §7.8 de la spec 10
+
+Critère de passage §7.8 : **relecture des 6 réponses à l'écran dans le pop-up (pas dans le fichier), sur PC et sur le Galaxy A04 en `lite`.** Hors de portée de l'agent (ressenti de lecture sur un vrai téléphone). Tout le reste du critère de passage (contenu testé en premier, composants, diff pixel §7.1, parcours §7.2, deep link §7.3, modes §7.4, tests §7.5, absence du flux principal §7.6) est fait et vérifié ci-dessus.
+
+**Reporté par Xav, pas levé** : « Relecture explicitement reportée par Xav, les vérifications seront faites avant de changer de phase. » Xav a donné le go pour le push sur la base du compte-rendu et des preuves ci-dessus, sans avoir encore lu les 6 réponses à l'écran ni testé le Galaxy A04. **Phase 9 reste ouverte** (non close) : la relecture reste due avant de passer à la Phase 10, et pourra encore faire remonter une correction de texte ou une dette (§2 de la spec : « corriger le chiffre, le noter dans le journal, et signaler l'écart » si le journal a changé d'ici là).
+
+Poussé sur `main` sur autorisation explicite de Xav.
+
+---
+
 ## 2026-09-16 — Phase 8 : Export CV classique, PDF une page (`09_export-cv-pdf.md`) — ARRÊT XAV posé
 
 Session ouverte sur `specs/00_ROADMAP.md` (v0.9.0) puis `specs/09_export-cv-pdf.md`. Phase 7 déjà committée (`7b3821f`) au moment d'ouvrir cette session. Rien n'a été committé dans cette session.

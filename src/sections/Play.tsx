@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Expand } from "lucide-react";
 import { SectionShell } from "../components/ui/SectionShell";
 import { NeonButton } from "../components/ui/NeonButton";
 import { TeaserOverlay } from "../components/play/TeaserOverlay";
+import { FaqTrigger } from "../components/faq/FaqTrigger";
+import { FaqModal } from "../components/faq/FaqModal";
 import { play } from "../content/play";
+import { isFaqRoute, onHashChange, readHashRoute } from "../lib/router/hashRoute";
 
 function useCoarsePointer(): boolean {
   const [coarse, setCoarse] = useState(() =>
@@ -25,6 +28,7 @@ function useCoarsePointer(): boolean {
 export function Play() {
   const isTouch = useCoarsePointer();
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(() => isFaqRoute(readHashRoute()));
   const frameRef = useRef<HTMLDivElement>(null);
 
   function handleFullscreen() {
@@ -37,8 +41,27 @@ export function Play() {
     }
   }
 
+  useEffect(() => onHashChange(() => setFaqOpen(isFaqRoute(readHashRoute()))), []);
+
+  const openFaq = useCallback(() => {
+    window.history.replaceState(null, "", "#faq");
+    setFaqOpen(true);
+  }, []);
+
+  // Pas de `pushState` (edge case §4) : le hash `#faq` est posé/retiré par
+  // `replaceState`, la Modal FAQ n'ajoute aucune entrée d'historique.
+  const closeFaq = useCallback(() => {
+    window.history.replaceState(null, "", "#jouer");
+    setFaqOpen(false);
+  }, []);
+
   return (
-    <SectionShell id="jouer" title={play.title} subtitle={play.intro}>
+    <SectionShell
+      id="jouer"
+      title={play.title}
+      subtitle={play.intro}
+      headerAction={<FaqTrigger onOpen={openFaq} />}
+    >
       <div className="flex flex-col gap-4">
         <a
           href="#projets/hatd"
@@ -96,6 +119,7 @@ export function Play() {
         url={play.url}
         teaserMs={play.teaserMs}
       />
+      <FaqModal open={faqOpen} onClose={closeFaq} />
     </SectionShell>
   );
 }

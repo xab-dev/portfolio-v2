@@ -23,3 +23,10 @@ export const LEGAL_SECTION = "mentions-legales";
 export function isLegalRoute(route: HashRoute): boolean {
   return route.section === LEGAL_SECTION;
 }
+
+/** Deep link `#faq` (spec 10 §3) : un `#faq/x` ou un hash inconnu est ignoré (pas de param toléré). */
+export const FAQ_SECTION = "faq";
+
+export function isFaqRoute(route: HashRoute): boolean {
+  return route.section === FAQ_SECTION && route.param === null;
+}

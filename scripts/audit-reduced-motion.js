@@ -197,6 +197,12 @@ const INTERACTIONS = {
       first("Type de projet")?.click();
     })()
   `,
+  faq: `
+    (function () {
+      const btn = Array.from(document.querySelectorAll('#jouer button')).find((b) => b.textContent?.includes("Comment ce site a été créé"));
+      if (btn) btn.click();
+    })()
+  `,
 };
 
 const STOPS = [
@@ -208,6 +214,7 @@ const STOPS = [
   { id: "competences", label: "Timeline (défilée depuis Compétences)", extraScroll: 700 },
   { id: "contact", label: "Contact stepper", interactKey: "contact" },
   { id: "jouer", label: "Jouer" },
+  { id: "jouer", label: "Jouer — FAQ ouverte (spec 10 §7.4)", interactKey: "faq" },
 ];
 
 async function auditWidth(client, width) {
