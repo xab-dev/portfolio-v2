@@ -17,6 +17,11 @@ dist-ssr
 # Seuls les .webp générés dans public/images/ sont versionnés.
 /images-src/
 
+# CV PDF : artefact de build régénéré par `npm run cv` (prebuild/predev,
+# spec 09 §5, Phase 8). Le dossier reste versionné via .gitkeep pour exister
+# dès le premier `git clone`, mais jamais le PDF lui-même.
+/public/cv/*.pdf
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

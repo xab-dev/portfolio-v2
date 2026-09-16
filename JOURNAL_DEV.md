@@ -4,6 +4,82 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-16 — Phase 8 : Export CV classique, PDF une page (`09_export-cv-pdf.md`) — ARRÊT XAV posé
+
+Session ouverte sur `specs/00_ROADMAP.md` (v0.9.0) puis `specs/09_export-cv-pdf.md`. Phase 7 déjà committée (`7b3821f`) au moment d'ouvrir cette session. Rien n'a été committé dans cette session.
+
+### Décisions prises et pourquoi
+
+- **`buildCvModel.ts` en fonction pure paramétrée** (`CvBuildInput` → `CvModel`), même patron que `compute.ts` en Phase 2 : `scripts/build-cv.tsx` assemble l'entrée réelle depuis `src/content/*.ts`, les tests construisent des fixtures isolées. Modèle et tests écrits et vérifiés verts **avant** la première ligne de `@react-pdf/renderer`, comme demandé (§6).
+- **Numérotation DETTE-35/36 au lieu de DETTE-32/33.** `specs/09_export-cv-pdf.md` (rédigée le 2026-09-16 avant l'exécution de la Phase 7) anticipait `DETTE-32`/`DETTE-33` comme numéros libres pour les dettes CV. Au moment d'exécuter cette Phase 8, la Phase 7 avait déjà pris ces deux numéros pour autre chose (relecture "Autres LLM", bascule `noindex`). Vérifié l'état réel de `dette_suivi.md` avant d'écrire quoi que ce soit (au lieu de recopier aveuglément le patch de la spec) et renuméroté en 35/36 — noté explicitement dans les deux fichiers pour que la collision ne se reproduise pas silencieusement.
+- **`sanitizeForPdf` dans le modèle, pas dans le contenu source** (§4) : un seul glyphe du contenu réel est hors du sous-ensemble `latin`/`latin-ext` de `@fontsource` (vérifié via `node_modules/@fontsource/inter/unicode.json`, qui liste `U+2191`/`U+2193` mais pas `U+2192`) — la flèche « → », présente dans le jalon "haTD → RPG-monde" (`timeline.ts`) et la tagline du projet "terrain" (`projects.ts`). Remplacée par `->` uniquement dans `buildCvModel.ts` ; `timeline.ts`/`projects.ts` restent inchangés.
+- **Troncature de tagline (140 caractères) appliquée systématiquement**, pas seulement en cas de débordement mesuré : sans effet sur le contenu actuel (aucune tagline ne dépasse ~115 caractères après remplacement de la flèche) mais évite une classe entière de débordements futurs sans coût.
+- **Marges resserrées de 14 mm à 12 mm** et interlignage resserré (page, sections, projets, jalons, compétences) : la mise en page initiale à 14 mm/interligne large débordait à 2 pages avec le contenu réel (6 projets, 7 jalons, 6 familles de compétences avec notes). Levier §4-1 de la spec ("resserrer marges/interligne dans les bornes") appliqué avant de toucher au contenu — jamais de métrique retirée, jamais de tagline tronquée en pratique (le contenu réel tient sous 140 caractères).
+- **`pdf-lib` pour le comptage de pages, `tsx` pour exécuter les scripts TS/TSX hors Vite** : conforme à la liste de dépendances de la spec §5. `pdf-parse` installé **sans le committer** (`npm install --no-save`, vérifié : ni `package.json` ni `package-lock.json` modifiés) pour vérifier le texte extrait pendant la session — voir plus bas pourquoi `pdftotext` seul ne suffisait pas.
+
+### Bugs trouvés et corrigés (cause racine avant patch)
+
+1. **Le `fetch` natif de Node ne lit pas les chemins de fichiers locaux.** Premier réflexe (comme la doc react-pdf le suggère pour le web) : passer le chemin du fichier `.woff` tel quel à `Font.register`. Ça semblait fonctionner (aucune erreur à l'enregistrement), mais `Font.load` échouait au premier rendu avec `fetch failed`. Cause racine identifiée en lisant `@react-pdf/font/lib/index.js` : `FontSource._load()` n'appelle `fetch` que si la source est une URL `http(s)` (`is-url`) ou une data URL ; sinon elle appelle `fontkit.open(src)`, qui lit directement le système de fichiers. Le chemin local fonctionne donc **tel quel**, sans `file://` — c'est le fait de deviner (plutôt que de lire la source) qui avait fait perdre du temps. Vérifié par un rendu minimal isolé avant d'intégrer dans `fonts.ts`.
+2. **En-tête du CV : nom et titre superposés.** Reproduit d'abord en isolant deux `<Text>` seuls (aucun problème), puis identifié dans le document complet : la `page` du `StyleSheet` fixe `lineHeight: 1.22` (un ratio sans unité) ; ce ratio semble se résoudre une fois contre la taille de police de la page (9,5 pt → ~11,6 pt) et cette valeur **déjà résolue** est ensuite héritée telle quelle par les `<Text>` enfants au lieu d'être recalculée pour leur propre `fontSize` — un `<Text>` à 17 pt (nom, police d'affichage) héritait donc d'une hauteur de ligne de ~11,6 pt, bien inférieure à sa propre taille, d'où le chevauchement avec la ligne suivante. Corrigé en redéclarant explicitement `lineHeight` sur chaque style dont la taille de police diffère nettement de la base de page (en-tête, pied de page). Comportement de `@react-pdf/renderer` non documenté trouvé cette session, pas un bug du code applicatif au sens strict — mais le contournement (toujours redéclarer `lineHeight` à côté d'un `fontSize` différent) est désormais appliqué dans `CvDocument.tsx`.
+3. **Pied de page : les deux lignes se chevauchaient.** `flexDirection: "row"` + `justifyContent: "space-between"` sans largeur contrainte sur des `<Text>` de longueur très inégale (note + URL complète à gauche, statut + date à droite) : le texte de gauche débordait sur celui de droite au lieu de passer à la ligne. Corrigé en passant le pied de page en deux lignes empilées (`flexDirection: "column"`), plus lisible qu'une contrainte de largeur fragile.
+4. **`pdftotext` (poppler/xpdf) tronque les caractères accentués en `�` à l'extraction.** Découvert en vérifiant le critère §7.1 ("texte sélectionnable") : `pdftotext` sur le PDF rendu donnait `Cl� USB` au lieu de `Clé USB`. Vérifié que ce n'est **pas un défaut du PDF** avant de chercher à le corriger : `pdf-parse` (moteur `pdf.js`) et la propre lecture de PDF de l'agent extraient les mêmes caractères correctement (`é`, `è`, `à`, `ç`, `€`, tirets, apostrophes typographiques tous corrects), et un rendu isolé confirme visuellement les bons glyphes. Diagnostic : `pdftotext` ne sait pas exploiter la table `ToUnicode` telle que générée par `@react-pdf/renderer`/`fontkit` pour des polices `.woff` embarquées de cette façon — limite de l'outil, pas du fichier. Utilisé `pdftotext` uniquement pour confirmer des chaînes ASCII (la flèche remplacée `->`, les marqueurs de test), et `pdf-parse`/lecture PDF de l'agent pour les chaînes accentuées.
+
+### Preuves des critères §7.1 à §7.4
+
+**§7.1 — 1 page, A4, poids, texte sélectionnable, métadonnées.** `npm run cv` : `public/cv/cv-xavier-bou.pdf — 1 page, 31.9 Ko, ~420 ms`. Vérifié via `pdf-lib` : `Pages: 1`, `Size: { width: 595.28, height: 841.89 }` (A4 à 72 dpi), `Title: "Xavier Joseph Bou — Consultant outils et solutions IA"`, `Author: "Xavier Joseph Bou"`, `Subject: "CV — Consultant outils et solutions IA"`, `Keywords: "IA, consultant, automatisation, Tarascon"`, `Language: "fr-FR"`. Poids 31,9 Ko ≪ budget 200 Ko. Texte sélectionnable confirmé par `pdf-parse` (extraction fidèle, accents compris).
+
+**§7.2 — Test de non-divergence.** `hero.subtitle` modifié temporairement (ajout de `" TEST-NONDIVERGENCE-A7f3."`) et `timeline.ts` (jalon "Portfolio v2" → "Portfolio v2 TEST-NONDIVERGENCE-B9k1"), `npm run cv` relancé, extraits retrouvés via `pdftotext` :
+```
+L'IA n'a de valeur que si elle résout un vrai problème. [...] et je dis aussi quand l'IA n'est pas le bon outil. TEST-NONDIVERGENCE-A7f3.
+Portfolio v2 TEST-NONDIVERGENCE-B9k1 Construction du portfolio/CV interactif, piloté par specs et livré phase par phase.
+```
+Les deux modifications annulées immédiatement après (`git diff --stat` vérifié vide sur les deux fichiers), CV régénéré à l'état réel (31,9 Ko, 1 page).
+
+**§7.3 — Aucune fuite.** Extraction complète du PDF final passée au crible : aucune occurrence de "LinkedIn" (lien vide, DETTE-04), de `phenomenxx@gmail.com` (`emailSecondary`), de "25 €"/tarif, de "(neveu)" (métrique haTD non vérifiée), de "[À CONFIRMER]" ni de "[DETTE" — confirmé par `grep` sur le texte extrait (0 correspondance sur les deux recherches).
+
+**§7.4 — Débordement forcé.** `projects.ts` dupliqué temporairement (12 "projets", ids suffixés `-dup`), `npm run cv` puis `npm run build` :
+```
+❌ CV PDF : 2 pages générées, 1 attendue (A4, spec 09 §3).
+Le build échoue volontairement plutôt que de livrer un CV de plusieurs pages.
+Réduire dans cet ordre (spec 09 §4 — ne jamais retirer un projet, une compétence ou un jalon) :
+  1) resserrer marges/interligne dans CvDocument.tsx (bornes : marges 14 mm, corps 9-9,5 pt) ;
+  2) vérifier la troncature des taglines projet à 140 caractères (buildCvModel.ts, truncateTagline) ;
+  3) limiter les métriques vérifiées à 2 par projet (buildCvModel.ts, buildProject).
+```
+Code de sortie 1 dans les deux cas (`npm run cv` seul et `npm run build` via le hook `prebuild`). `git diff --stat src/content/projects.ts` vide après annulation.
+
+Limite assumée : le message identifie qu'il faut réduire, avec les leviers exacts et les fichiers à modifier, mais ne nomme pas *laquelle* des 6 (ou 12, dans le test) sections a débordé — `pdf-lib` ne donne qu'un compte de pages, pas une attribution par section, et le déterminer précisément aurait demandé d'inspecter l'arbre de rendu interne de `@react-pdf/renderer`. Jugé hors de proportion pour un CV d'une page ; documenté ici plutôt que laissé implicite.
+
+### Livré et validé à l'écran
+
+Chrome piloté (Claude in Chrome connecté cette session), `vite preview` (port 4175, résiduels 4173/4174 déjà occupés par d'anciennes instances) :
+- **1280 px** : lien « Télécharger le CV (PDF) » visible sous les deux CTA du Hero (icône `Download`, style discret souligné — pas un 3ᵉ bouton plein), et dans Contact après la ligne mail/téléphone/WhatsApp/réseaux.
+- **~500 px** (375 px non atteignable par l'outil — limite déjà documentée dans `project_state.md` — mais aucun palier Tailwind entre 375 et 640 px, donc le comportement à 500 px fait foi pour 375 px) : lien visible sous les CTA empilés, aucun débordement horizontal.
+- Attributs vérifiés en JS (`href`, `download`, `type`) sur les deux instances : `href="/portfolio-v2/cv/cv-xavier-bou.pdf"`, `download=""`, `type="application/pdf"`. `fetch(..., {method:"HEAD"})` → 200, `content-type: application/pdf`, `content-length: 32665`.
+- **`?perf=lite`** : `data-perf="lite"` confirmé sur `<html>` ; `getComputedStyle` sur les deux liens : `backdropFilter: none`, `boxShadow: none`, `filter: none` (le composant n'en a jamais introduit).
+- Aucune erreur console sur les trois configurations testées (`read_console_messages`, `onlyErrors: true`).
+- `npm run build`/`lint`/`test` verts : **81 tests** (67 existants + 14 nouveaux dans `buildCvModel.test.ts`). `dist/cv/cv-xavier-bou.pdf` confirmé présent après `npm run build` (copié tel quel depuis `public/cv/` par Vite).
+
+### Hors scope pour cette itération (et où c'est prévu)
+
+- Vérification du déploiement réel (`https://xab-dev.github.io/portfolio-v2/cv/cv-xavier-bou.pdf` répond 200, Lighthouse mobile inchangé — critère §7.7) : nécessite un push, hors de portée avant la clôture de la phase par Xav.
+- `robots.txt`/indexabilité du PDF (DETTE-36) : Phase 7 (polish final), avec DETTE-33.
+- Version anglaise du CV, génération à la demande, photo, lettre de motivation : hors scope explicite de la spec (§8).
+
+### Dette ajoutée / mise à jour
+
+- **DETTE-35** (nouvelle) : CV limité à la trajectoire 2026 (DETTE-17 propagée). Décision **D6** posée dans le ROADMAP, non tranchée.
+- **DETTE-36** (nouvelle) : PDF indexable sans `noindex` (GitHub Pages ne pose pas d'en-têtes HTTP personnalisés) — `robots.txt` à trancher en Phase 7.
+- Correction de numérotation : `specs/09_export-cv-pdf.md` anticipait DETTE-32/33 pour ces deux points ; déjà pris par la Phase 7 au moment d'exécuter cette phase. Renumérotés 35/36, collision documentée dans `dette_suivi.md` et ici.
+
+### [ARRÊT XAV] — levé par Xav
+
+Critère de passage §7.8 de la spec 09 : **relecture du PDF imprimé (ou aperçu impression N&B) par Xav** — lisibilité, hiérarchie, rien de gênant à montrer à un recruteur — et **réponse à D6** (accepter le CV limité à 2026, ou enrichir `timeline.ts`). Tout le reste du critère de passage (modèle testé, rendu, contrôle 1 page, débordement forcé, non-divergence, fuites de contenu, liens Hero/Contact aux deux largeurs et en mode allégé) était déjà vérifié et vert.
+
+**Levé** : Xav a relu le PDF et validé (« pdf relu et validé »). **D6 tranchée : tel quel** — aucune expérience dans le domaine avant 2026, donc pas de jalon antérieur ajouté à `timeline.ts`. **Phase 8 officiellement close.** Push autorisé par Xav (« go pour le push »).
+
+---
+
 ## 2026-09-16 — Phase 7 : Polish, SEO, mentions légales (`09_polish-seo-mentions-legales.md`) — en cours, ARRÊT XAV posé
 
 Session ouverte sur la spec 09 (décisions de Xav du 16/09, 00:50-01:30). Rien n'a été committé.

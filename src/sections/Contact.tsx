@@ -2,6 +2,7 @@ import { Mail, MessageCircle } from "lucide-react";
 import { SectionShell } from "../components/ui/SectionShell";
 import { GlassCard } from "../components/ui/GlassCard";
 import { GithubIcon, LinkedinIcon, YoutubeIcon } from "../components/ui/BrandIcons";
+import { CvDownloadLink } from "../components/ui/CvDownloadLink";
 import { ContactForm } from "../components/contact/ContactForm";
 import {
   availabilityNote,
@@ -76,6 +77,8 @@ export function Contact() {
               </a>
             ))}
           </div>
+
+          <CvDownloadLink />
         </div>
 
         <p className="text-xs text-text-muted">{indicativeRateNote}</p>

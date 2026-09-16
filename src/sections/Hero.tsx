@@ -2,6 +2,7 @@ import { m } from "motion/react";
 import type { Variants } from "motion/react";
 import { hero } from "../content/hero";
 import { NeonButton } from "../components/ui/NeonButton";
+import { CvDownloadLink } from "../components/ui/CvDownloadLink";
 import { AgentPanel } from "../components/agent/AgentPanel";
 import { assetUrl } from "../lib/assetUrl";
 import { fadeUp, fadeUpReduced, useReducedMotionSafe } from "../lib/motion";
@@ -115,6 +116,8 @@ export function Hero() {
               {hero.ctaSecondary.label}
             </NeonButton>
           </div>
+
+          <CvDownloadLink />
         </div>
 
         <AgentPanel />
