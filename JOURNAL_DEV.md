@@ -4,6 +4,61 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-16 — Phase 7 : Polish, SEO, mentions légales (`09_polish-seo-mentions-legales.md`) — en cours, ARRÊT XAV posé
+
+Session ouverte sur la spec 09 (décisions de Xav du 16/09, 00:50-01:30). Rien n'a été committé.
+
+### Décisions prises et pourquoi
+
+- Tout le contenu légal (`site.legal`, `legal.ts`) recopié **tel quel** depuis le §2 de la spec, y compris les deux placeholders `[À COMPLÉTER — Xav]` (adresse) et `[À VÉRIFIER]` (téléphone GitHub) — aucune valeur inventée, conformément à la consigne §6.
+- Les 3 références (`references.ts`) recopiées telles que fournies (DOI vérifiés par l'architecte) ; `idp-vendors-2025` retirée ; `saisie` passée en gain non chiffré dans `simulator.ts` (`timeSavedPct`/`baseline` retirés, `evidence.level: "aucune"`, `qualitativeNote` ajoutée) — `compute.test.ts` mis à jour (fixtures + nouveau test nommant `saisie`).
+- `src/lib/router/hashRoute.ts` créé (factorise la lecture du hash, réutilisé par `Portfolio.tsx` qui gagne au passage un garde-fou explicite : un hash `mentions-legales/…` ne peut plus jamais ouvrir la modale projet — edge case §4).
+- `EvidenceBadge` transformé en déclencheur `<button aria-haspopup="dialog">` + `PortalTooltip` (référence(s) liée(s), lien externe si `url` présent).
+- SEO/OG : plugin `transformIndexHtml` dans `vite.config.ts` (canonical, robots conditionnel, OG/Twitter, JSON-LD `Person`, tout dérivé de `site.ts`/`contact.ts` — pas de valeur dupliquée à la main) ; `scripts/build-og.js` (nouveau, `npm run og`) compose `public/og.png` par SVG + `sharp`, sans dépendance ajoutée ; le build échoue si `public/og.png` est absent (`buildStart`, testé dans les deux sens).
+- `scripts/audit-reduced-motion.js` (nouveau) pilote Chrome headless en **CDP brut** (pas de dépendance `puppeteer` ajoutée — même choix que le script maison de la Phase 6b) : émule `prefers-reduced-motion: reduce` à 375 px/1280 px, scrolle/interagit avec chaque section livrée, lit `document.getAnimations()`, et **ne retient que les animations `transform`/`opacity`** (la règle de la spec 09 §3 ne vise que ces deux propriétés — une transition de couleur au clic n'est pas de la motion vestibulaire ; distinction ajoutée après un premier passage plein de faux positifs sur des transitions de couleur `border`/`background`).
+- Version `package.json` → `0.7.0` (script `og` ajouté), suivant la valeur donnée par la spec (jamais montée depuis 0.1.0, indépendamment de la version du ROADMAP).
+
+### Bugs trouvés et corrigés en vérification visuelle réelle (Chrome piloté, `vite preview`, 375 px et 1280 px, `?perf=full`/`?perf=lite`)
+
+Cinq bugs réels trouvés en testant, aucun n'était visible en lecture de code seule :
+
+1. **Budget reduced-motion dépassé partout** : `fadeUpReduced` (`lib/motion.ts`) était à 300 ms, pas ≤ 150 ms — utilisé par `SectionShell` (donc par presque toutes les sections) et par `Hero`. Corrigé à 150 ms.
+2. **Modale projet jamais réduite** : `Modal.tsx` lançait toujours l'animation complète (`scaleIn`, 300 ms) même sous `prefers-reduced-motion`, aucun garde-fou n'existait. Nouvelle variante `scaleInReduced` (`lib/motion.ts`), branchement sur `useReducedMotionSafe()`.
+3. **Grille Portfolio jamais réduite** : même défaut sur l'apparition/sortie des cartes projet (`Portfolio.tsx`, 250 ms non gardé) et sur la transition `layout` (FLIP) des groupes de la stack recommandée du Simulateur (`StackPanel.tsx`) et de la grille projets — toutes gardées à 0,1 s sous reduced-motion désormais.
+4. **Soulignement de nav actif** (`Navbar.tsx`) : transition CSS pure (`transition-transform duration-base`, 300 ms) hors de portée de `useReducedMotionSafe` côté JS — bascule vers `duration-[0ms]` quand `reducedMotion` est vrai. Trouvé en isolant, élément par élément, la source des animations `transform` restantes après les corrections 1-3 (`a.transitionProperty` / `effect.getKeyframes()` sur chaque `Animation`).
+5. **`EvidenceBadge` : tap = ouverture puis fermeture immédiate.** Réutilisation fautive du patron `AnnotationMark` (Phase 3) : `onClick` faisait basculer l'état au lieu de toujours l'ouvrir, alors que `onMouseEnter` l'avait déjà ouvert — sur un vrai clic souris, le tooltip se rouvrait puis se refermait aussitôt. **Même bug que celui déjà corrigé en Phase 3** ("tooltip jamais visible au tap"), réintroduit ici en copiant le patron sans le relire assez attentivement. Corrigé : `onClick` ouvre toujours (`setOpen(true)`), jamais de bascule.
+6. **`window.scrollTo(0, 0)` bloqué en cours de route sur `#mentions-legales`.** La forme à 2 arguments hérite de `scroll-behavior: smooth` (règle globale, nav ancrée) ; en testant l'ouverture de la page depuis une position de scroll profonde (section Jouer, ~7400 px), le scroll vers le haut restait bloqué à mi-chemin. Corrigé par `behavior: "instant"` explicite, plus `overflow-anchor: none` sur `html` (le "scroll anchoring" du navigateur rattrapait sinon le retrait massif de contenu vers le bas de la page).
+7. **Retour vers le site : position de scroll jamais restaurée.** Même après le fix précédent, revenir depuis Mentions légales (via le bouton, Échap, ou un retour navigateur réel) ne restaurait pas le scroll précédent — la restauration native du navigateur au `popstate` se joue contre le remontage de ~7000 px de sections React (dont un chunk chargé à part, le radar de compétences) et retombe à 0 avant que la page n'ait fini de reprendre sa hauteur réelle. Sauvegarde manuelle du `scrollY` ajoutée dans `App.tsx`, restauration par `ResizeObserver` (réapplique la cible à chaque changement de hauteur du document, jusqu'à l'atteindre ou 2 s).
+8. **Retour direct sur `#mentions-legales` (lien partagé, rechargement) : `history.back()` sortait du site.** `window.history.length > 1` n'est pas un signal fiable (un nouvel onglet peut déjà avoir une entrée d'historique interne au navigateur). Remplacé par un drapeau `enteredLegalInApp` positionné uniquement par un vrai `hashchange` reçu en session — `false` au démarrage direct sur la page légale, auquel cas le bouton "Retour au site" et Échap posent `location.hash = "hero"` plutôt que d'appeler `history.back()`.
+
+`scripts/build-og.js` : bug mineur trouvé et corrigé en vérifiant la taille réelle sur disque (136 Ko) contre la taille annoncée par le script (125 Ko) — `sharp(buffer).toFile()` ré-encodait le PNG avec la compression par défaut au lieu de réutiliser le buffer déjà encodé à `compressionLevel: 9`. Écriture directe du buffer (`fs.writeFileSync`) : taille annoncée et taille réelle concordent (125 Ko, sous le budget 150 Ko).
+
+### Livré et validé à l'écran
+
+Chrome piloté (Claude in Chrome + un script CDP maison pour les largeurs non atteignables par l'outil — même limite que les phases précédentes), `vite preview`, aux deux largeurs et aux deux modes perf :
+- `#mentions-legales` : ouverture directe (rechargement), lien du footer, bouton "Retour au site", Échap — testés dans les deux cas de figure (arrivée directe → section d'accueil ; navigation interne depuis une position de scroll profonde → position restaurée exactement). Nav masquée, en-tête minimal, focus sur le `<h1>`, `document.title` correct, footer conservé. 6 sections affichées avec les valeurs de `site.ts`, aucun `[À` propagé au-delà des deux champs attendus.
+- Badge Simulateur : ouverture au survol **et** au tap (bug 5 ci-dessus corrigé), DOI cliquable (`target="_blank" rel="noreferrer"` vérifiés), niveau "aucune" (saisie) sans lien.
+- Playground, cas `long`, 375 px et 1280 px : `scrollWidth === clientWidth` mesuré sur les deux panneaux (entrée brute + prompt expert, y compris pendant la frappe), aucun débordement horizontal.
+- `dist/index.html` : canonical, `noindex, nofollow` (bascule testée dans les deux sens), OG/Twitter complets (`og:image` absolue), `theme-color`, JSON-LD validé par `JSON.parse` — contenu exact vérifié à l'écran.
+- Audit reduced-motion : **conforme sur toutes les sections aux deux largeurs** après les corrections 1-4 ci-dessus (rapport complet dans le terminal de session ; relancer via `node scripts/audit-reduced-motion.js`, nécessite Chrome installé localement).
+- `npm run build` / `lint` verts. `npm run test` : 65/67 verts, les 2 tests rouges sont **le garde-fou attendu** (`legal.test.ts`, §4 : refuse `site.legal.address`/`host.phone` tant que les placeholders `[À` y sont — comportement voulu, pas une régression).
+
+### Hors scope / reporté
+
+- Bascule `site.seo.indexable` → `true` : Phase 10 (polish final), DETTE-33 ajoutée.
+- Registre des traitements CNIL, aperçu de lien réel (LinkedIn/WhatsApp), PageSpeed Insights sur le vrai déploiement : à faire par Xav après déploiement (hors portée de l'agent).
+- Export CV (Phase 8), FAQ (Phase 9), anglais (Phase 10) : non commencés.
+
+### **[ARRÊT XAV]** — posé avant tout commit/push, critère §7.9
+
+Deux valeurs à fournir avant de poursuivre (`src/content/site.ts`, `site.legal`) :
+1. **`address`** — domicile complet (rue, code postal), remplace `"[À COMPLÉTER — Xav] rue, code postal, Tarascon"`.
+2. **`host.phone`** — téléphone de GitHub, Inc., à relever sur leur page légale (`https://pages.github.com/` ou équivalent), remplace `"[À VÉRIFIER] — relever sur la page légale de GitHub, ne pas écrire de mémoire"` — ne pas l'écrire de mémoire.
+
+Une fois ces deux valeurs renseignées et la page Mentions légales relue à l'écran par Xav : `npm run test` doit passer à 67/67, puis go pour push. Après déploiement, Xav vérifie l'aperçu de lien (WhatsApp/LinkedIn) et PageSpeed Insights (hors agent).
+
+---
+
 ## 2026-09-15 23:00 — Patch de relecture + roadmap post-V1 (`PATCHES_2026-09-15_2300.md`, unités A à G)
 
 Session ouverte après validation de Xav sur Galaxy A04 (`?perf=lite`) et PC plein écran, Playground compris (4 cas) : V1 fonctionnelle complète. Ce patch ne touche aucun composant, sauf pour sortir une chaîne en dur (§C, T8) et ajouter une classe utilitaire déjà existante (§E). Ordre A → B → C → D → E → F → G respecté.

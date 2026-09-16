@@ -152,7 +152,9 @@ export function PromptPlayground() {
                   key={current.id}
                   text={current.expertPrompt}
                   speedMs={TYPING_SPEED_MS}
-                  className="block whitespace-pre-wrap break-words"
+                  // Même règle que `CodeLines` (PromptPane.tsx) : `anywhere`, pas `break-words`
+                  // (spec 09 §3 — la ligne en cours de frappe vit dans la même grille `[2rem_1fr]`).
+                  className="block whitespace-pre-wrap [overflow-wrap:anywhere]"
                   onDone={() => setPhase("done")}
                 />
               </div>

@@ -24,6 +24,14 @@
 
 html {
   scroll-behavior: smooth;
+  /* Le "scroll anchoring" du navigateur recalcule `scrollTop` pour garder le
+     même contenu visible quand la hauteur du document change au-dessus du
+     point de scroll — ce qui entre en conflit avec les échanges de vue par
+     hash (Mentions légales, modale projet) : ceux-ci retirent des milliers
+     de pixels de contenu d'un coup, et l'ancrage automatique ramenait le
+     scroll vers le bas de la page au lieu du haut fixé par `LegalPage`
+     (spec 09 §3, trouvé en testant l'ouverture depuis une position profonde). */
+  overflow-anchor: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

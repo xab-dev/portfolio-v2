@@ -4,8 +4,10 @@ import { Menu, X } from "lucide-react";
 import { cn } from "../../lib/cn";
 import { navLinks } from "../../content/nav";
 import { site } from "../../content/site";
+import { useReducedMotionSafe } from "../../lib/motion";
 
 export function Navbar() {
+  const reducedMotion = useReducedMotionSafe();
   const [activeId, setActiveId] = useState(navLinks[0].id);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -64,11 +66,15 @@ export function Navbar() {
                 >
                   {link.label}
                   {/* Soulignement en transition CSS pure (pas de layout animation JS) :
-                      domAnimation, le bundle LazyMotion le plus léger, ne le supporte pas. */}
+                      domAnimation, le bundle LazyMotion le plus léger, ne le supporte pas.
+                      `duration-base` (300 ms) ignoré par ce `transform` CSS pur sous
+                      reduced-motion (hors de portée de `useReducedMotionSafe` côté JS) :
+                      bascule vers `duration-[0ms]` — trouvé par l'audit (spec 09 §3). */}
                   <span
                     aria-hidden="true"
                     className={cn(
-                      "absolute inset-x-4 -bottom-px h-px origin-center bg-neon-blue transition-transform duration-base",
+                      "absolute inset-x-4 -bottom-px h-px origin-center bg-neon-blue transition-transform",
+                      reducedMotion ? "duration-[0ms]" : "duration-base",
                       activeId === link.id ? "scale-x-100" : "scale-x-0",
                     )}
                   />

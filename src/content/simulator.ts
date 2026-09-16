@@ -122,14 +122,14 @@ export const problems: Problem[] = [
     label: "Saisie de données lourde",
     icon: ScanLine,
     description: "Extraire à la main des informations depuis des documents (factures, formulaires) vers un tableur ou un CRM.",
-    timeSavedPct: [50, 70],
-    baseline: { default: 10, min: 1, max: 40, step: 1 },
     evidence: {
-      level: "editeur",
+      level: "aucune",
       summary:
-        "Chiffres communiqués par des éditeurs de logiciels d'extraction documentaire, pas par une étude académique indépendante sur un flux complet.",
-      refIds: ["idp-vendors-2025"],
+        "Les éditeurs de solutions annoncent des gains importants sur le traitement documentaire, mais aucune étude indépendante ne les mesure sur une semaine de travail réelle.",
+      refIds: [],
     },
+    qualitativeNote:
+      "Les éditeurs de solutions annoncent des gains importants sur le traitement documentaire, mais aucune étude indépendante ne les mesure sur une semaine de travail réelle. On en parle sur votre cas.",
     stack: [
       { name: "Make / n8n", role: "orchestration", why: "Déclenche l'extraction dès l'arrivée d'un document, sans intervention manuelle." },
       { name: "OCR", role: "interface", why: "Transforme un document scanné en texte exploitable." },

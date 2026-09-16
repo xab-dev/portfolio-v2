@@ -2,7 +2,7 @@ import { useEffect, useRef, type PropsWithChildren } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, m } from "motion/react";
 import { X } from "lucide-react";
-import { scaleIn } from "../../lib/motion";
+import { scaleIn, scaleInReduced, useReducedMotionSafe } from "../../lib/motion";
 
 export interface ModalProps extends PropsWithChildren {
   open: boolean;
@@ -15,6 +15,7 @@ const FOCUSABLE_SELECTOR =
 
 export function Modal({ open, onClose, title, children }: ModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotionSafe();
 
   useEffect(() => {
     if (!open) return;
@@ -65,6 +66,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: reducedMotion ? 0.1 : 0.3 }}
           onClick={onClose}
         >
           {/* `min-h-full` (pas `h-full`) : centre le dialogue quand il tient dans
@@ -76,7 +78,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
               role="dialog"
               aria-modal="true"
               aria-labelledby="modal-title"
-              variants={scaleIn}
+              variants={reducedMotion ? scaleInReduced : scaleIn}
               initial="hidden"
               animate="visible"
               exit="exit"

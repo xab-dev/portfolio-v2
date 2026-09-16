@@ -15,9 +15,13 @@ export const fadeUp: Variants = {
   },
 };
 
+// 0.15 s (pas 0.3 s comme `fadeUp`) : budget reduced-motion de la spec 09 §3
+// (aucune transform/opacity transitionnée > 150 ms). Trouvé par l'audit
+// `scripts/audit-reduced-motion.js` — le duration partagé dépassait le budget
+// sur toutes les sections construites avec `SectionShell`.
 export const fadeUpReduced: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.3 } },
+  visible: { opacity: 1, transition: { duration: 0.15 } },
 };
 
 export const stagger: Variants = {
@@ -39,6 +43,17 @@ export const scaleIn: Variants = {
     scale: 0.94,
     transition: { duration: 0.15, ease: "easeIn" },
   },
+};
+
+/**
+ * Variante reduced-motion de `scaleIn` (Modal — spec 09 §3, trouvé par l'audit :
+ * la modale projet ouvrait/fermait avec le fondu+échelle complet même sous
+ * `prefers-reduced-motion: reduce`). Fondu simple, ≤ 150 ms.
+ */
+export const scaleInReduced: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.15 } },
+  exit: { opacity: 0, transition: { duration: 0.1 } },
 };
 
 export const glowPulse: Variants = {

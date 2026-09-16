@@ -80,7 +80,12 @@ export function CodeLines({ lines, renderLine, className }: CodeLinesProps) {
           <span aria-hidden="true" className="select-none pr-3 text-right text-text-muted/50">
             {index + 1}
           </span>
-          <span className="whitespace-pre-wrap break-words">{renderLine ? renderLine(line, index) : line || " "}</span>
+          {/* `overflow-wrap: anywhere` (pas `break-words` = `break-word`) : seul `anywhere`
+              compte comme un point de rupture dans le calcul de la taille min-content de
+              cette colonne de grille — cause racine du débordement horizontal (spec 09 §3). */}
+          <span className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+            {renderLine ? renderLine(line, index) : line || " "}
+          </span>
         </div>
       ))}
     </div>

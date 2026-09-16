@@ -37,7 +37,7 @@ describe("computeOutputs", () => {
     expect(withOverride.heuresGagneesSemaine).toBeLessThan(withDefault.heuresGagneesSemaine);
   });
 
-  it("problématique non chiffrée (tri, formation) exclue du numérateur et du dénominateur", () => {
+  it("problématique non chiffrée (tri, formation, saisie) exclue du numérateur et du dénominateur", () => {
     const withTriAlone = computeOutputs([tri], {}, 35);
     expect(withTriAlone.hasQuantified).toBe(false);
     expect(withTriAlone.heuresGagneesSemaine).toBe(0);
@@ -49,17 +49,31 @@ describe("computeOutputs", () => {
     expect(withSupportAndTri).toEqual(withSupportAlone);
   });
 
+  it("saisie (spec 09 : gain non chiffré, DETTE-31) exclue au même titre que tri/formation", () => {
+    expect(saisie.timeSavedPct).toBeUndefined();
+    expect(saisie.baseline).toBeUndefined();
+    expect(saisie.evidence.level).toBe("aucune");
+
+    const withSaisieAlone = computeOutputs([saisie], {}, 35);
+    expect(withSaisieAlone.hasQuantified).toBe(false);
+    expect(withSaisieAlone.heuresGagneesSemaine).toBe(0);
+
+    const withSupportAndSaisie = computeOutputs([support, saisie], {}, 35);
+    const withSupportAlone = computeOutputs([support], {}, 35);
+    expect(withSupportAndSaisie).toEqual(withSupportAlone);
+  });
+
   it("tous : les 6 problématiques cochées → moyenne pondérée définie, jamais > max des fourchettes cochées", () => {
     const outputs = computeOutputs(problems, {}, 35);
     expect(outputs.hasQuantified).toBe(true);
     expect(Number.isNaN(outputs.tempsGagnePct)).toBe(false);
-    // Fourchette haute globale parmi les problématiques chiffrées : saisie (70 %).
-    expect(outputs.tempsGagnePct).toBeLessThanOrEqual(70);
+    // Fourchette haute globale parmi les problématiques chiffrées (saisie exclue depuis la spec 09) : contenu (40 %).
+    expect(outputs.tempsGagnePct).toBeLessThanOrEqual(40);
     expect(outputs.tempsGagnePct).toBeGreaterThan(0);
   });
 
   it("curseur à min avec plusieurs problématiques cochées : dénominateur toujours > 0", () => {
-    const overrides = { support: support.baseline!.min, contenu: contenu.baseline!.min, saisie: saisie.baseline!.min };
+    const overrides = { support: support.baseline!.min, contenu: contenu.baseline!.min };
     const outputs = computeOutputs([support, contenu, saisie], overrides, 35);
     expect(outputs.heuresGagneesSemaine).toBeGreaterThan(0);
     expect(Number.isFinite(outputs.tempsGagnePct)).toBe(true);

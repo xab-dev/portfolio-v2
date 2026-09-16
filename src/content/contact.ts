@@ -1,4 +1,4 @@
-import { site } from "./site";
+import { site } from "./site.ts";
 
 export const projectTypes = [
   "Diagnostic / cadrage IA",

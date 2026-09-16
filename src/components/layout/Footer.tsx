@@ -40,7 +40,10 @@ export function Footer() {
         </div>
 
         <p className="text-xs text-text-muted">
-          {site.legal.status} · SIRET {site.legal.siret}
+          {site.legal.status} · SIRET {site.legal.siret} ·{" "}
+          <a href="#mentions-legales" className="underline-offset-2 hover:text-neon-blue hover:underline">
+            Mentions légales
+          </a>
         </p>
       </div>
     </footer>

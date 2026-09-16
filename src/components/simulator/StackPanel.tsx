@@ -77,7 +77,7 @@ export function StackPanel({
 
           <div className="flex flex-col gap-4">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted">Stack recommandée</h3>
-            <m.div layout className="flex flex-col gap-4">
+            <m.div layout transition={{ layout: { duration: reducedMotion ? 0.1 : 0.3 } }} className="flex flex-col gap-4">
               <AnimatePresence mode="popLayout">
                 {stackGroups.map((group) => (
                   <m.div
@@ -86,6 +86,7 @@ export function StackPanel({
                     initial={reducedMotion ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={reducedMotion ? undefined : { opacity: 0 }}
+                    transition={{ duration: reducedMotion ? 0.1 : 0.3, layout: { duration: reducedMotion ? 0.1 : 0.3 } }}
                     className="flex flex-col gap-2"
                   >
                     <span className="text-xs text-text-muted">{group.label}</span>
@@ -98,6 +99,7 @@ export function StackPanel({
                             initial={reducedMotion ? false : { opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={reducedMotion ? undefined : { opacity: 0, scale: 0.9 }}
+                            transition={{ duration: reducedMotion ? 0.1 : 0.3, layout: { duration: reducedMotion ? 0.1 : 0.3 } }}
                             title={item.why}
                             className={cn(
                               "rounded-full border px-3 py-1.5 text-sm text-text-primary",

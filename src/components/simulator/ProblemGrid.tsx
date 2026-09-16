@@ -55,7 +55,11 @@ export function ProblemGrid({ selection, baselineOverrides, onToggle, onBaseline
                 transition={{ duration: reducedMotion ? 0 : 0.25 }}
                 className="flex flex-col gap-3 overflow-hidden border-t border-border-glass pt-3"
               >
-                <EvidenceBadge level={problem.evidence.level} summary={problem.evidence.summary} />
+                <EvidenceBadge
+                  level={problem.evidence.level}
+                  summary={problem.evidence.summary}
+                  refIds={problem.evidence.refIds}
+                />
 
                 {problem.baseline ? (
                   <RangeSlider

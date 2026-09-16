@@ -5,15 +5,21 @@ import { FilterBar } from "../components/portfolio/FilterBar";
 import { ProjectCard } from "../components/portfolio/ProjectCard";
 import { ProjectModal } from "../components/portfolio/ProjectModal";
 import { projects, type ProjectTag } from "../content/projects";
+import { readHashRoute } from "../lib/router/hashRoute";
+import { useReducedMotionSafe } from "../lib/motion";
 
 const SECTION_ID = "projets";
 
 function readProjectIdFromHash(): string | null {
-  const [, sub] = window.location.hash.replace(/^#/, "").split("/");
-  return sub ?? null;
+  const route = readHashRoute();
+  // La page Mentions légales est prioritaire (spec 09 §4) : un hash d'une
+  // autre section ne doit jamais ouvrir la modale projet.
+  if (route.section !== SECTION_ID) return null;
+  return route.param;
 }
 
 export function Portfolio() {
+  const reducedMotion = useReducedMotionSafe();
   const [activeTags, setActiveTags] = useState<ProjectTag[]>([]);
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
 
@@ -69,16 +75,20 @@ export function Portfolio() {
           resultCount={filteredProjects.length}
         />
 
-        <m.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <m.div
+          layout
+          transition={{ layout: { duration: reducedMotion ? 0.1 : 0.3 } }}
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
               <m.div
                 key={project.id}
                 layout
-                initial={{ opacity: 0, scale: 0.96 }}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.25 }}
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
+                transition={{ duration: reducedMotion ? 0.1 : 0.25, layout: { duration: reducedMotion ? 0.1 : 0.3 } }}
               >
                 <ProjectCard project={project} onOpen={handleOpen} />
               </m.div>
