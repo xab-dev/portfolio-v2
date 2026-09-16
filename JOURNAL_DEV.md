@@ -65,7 +65,7 @@ Critère de passage §7.8 : **relecture des 6 réponses à l'écran dans le pop-
 
 **Reporté par Xav, pas levé** : « Relecture explicitement reportée par Xav, les vérifications seront faites avant de changer de phase. » Xav a donné le go pour le push sur la base du compte-rendu et des preuves ci-dessus, sans avoir encore lu les 6 réponses à l'écran ni testé le Galaxy A04. **Phase 9 reste ouverte** (non close) : la relecture reste due avant de passer à la Phase 10, et pourra encore faire remonter une correction de texte ou une dette (§2 de la spec : « corriger le chiffre, le noter dans le journal, et signaler l'écart » si le journal a changé d'ici là).
 
-Poussé sur `main` sur autorisation explicite de Xav.
+Poussé sur `main` sur autorisation explicite de Xav (commit `e916ccf`). Déploiement GitHub Actions vérifié après coup : `https://xab-dev.github.io/portfolio-v2/` répond 200 avec le bundle `index-0b02oJJ5.js` (identique au build local testé), le CV PDF répond toujours 200/32 665 octets (inchangé, la Phase 9 ne touche pas `buildCvModel.ts`), le sitemap ne mentionne pas `faq`.
 
 ---
 
