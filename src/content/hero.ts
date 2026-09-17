@@ -9,7 +9,7 @@ export const hero = {
   subtitle:
     "Je conçois des workflows, des outils et des usages IA adaptés aux besoins réels — et je dis aussi quand l'IA n'est pas le bon outil.",
   ctaPrimary: { label: "Voir mes projets", href: "#projets" },
-  ctaSecondary: { label: "Qualifier mon besoin", href: "#contact" },
+  ctaSecondary: { label: "Qualifier votre besoin", href: "#contact" },
   // DETTE-02 résolue : avatar dessiné par Xav, traité en carré 512px ≤100 Ko
   // par `npm run images` (voir scripts/process-images.js). Le repli initiales
   // reste géré par HeroAvatar si `src` est vide (robustesse, pas un besoin actuel).

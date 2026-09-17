@@ -11,7 +11,6 @@ export const site = {
   },
   contact: {
     emailPrimary: "xa.bou@laposte.net",
-    emailSecondary: "phenomenxx@gmail.com",
     phone: "07 69 54 74 94", // affichage FR ; lien wa.me au format international +33769547494
     preferred: "Mail, WhatsApp ou SMS",
   },

@@ -17,12 +17,12 @@ export function matchReply(input: string): AgentReply {
   const normalized = normalize(input);
 
   if (normalized in agentReplies) {
-    return { text: agentReplies[normalized] };
+    return { id: normalized, text: agentReplies[normalized] };
   }
 
   for (const [id, keywords] of Object.entries(agentKeywords)) {
     if (keywords.some((keyword) => normalized.includes(normalize(keyword)))) {
-      return { text: agentReplies[id] };
+      return { id, text: agentReplies[id] };
     }
   }
 

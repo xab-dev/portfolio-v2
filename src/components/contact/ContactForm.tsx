@@ -9,6 +9,8 @@ import {
   gdprConsentLabel,
   projectTypes,
   simulatorProjectType,
+  siteQuoteNote,
+  siteQuoteTiers,
   timings,
   type Budget,
   type ProjectType,
@@ -25,6 +27,21 @@ type TouchedField = "name" | "email" | "message" | "consent";
 const STEP_LABELS: [string, string, string] = ["Type de projet", "Budget & délai", "Coordonnées"];
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MESSAGE_MIN_LENGTH = 20;
+const SITE_PROJECT_TYPE: ProjectType = "Créer un site (vitrine ou comme celui-ci)";
+
+function SiteQuoteTiers() {
+  return (
+    <div className="flex flex-col gap-1.5 rounded-card border border-border-glass bg-bg-panel px-4 py-3 text-sm text-text-muted">
+      {siteQuoteTiers.map((tier) => (
+        <p key={tier.label} className="flex items-center justify-between gap-4">
+          <span>{tier.label}</span>
+          <span className="text-text-primary">{tier.price}</span>
+        </p>
+      ))}
+      <p className="text-xs">{siteQuoteNote}</p>
+    </div>
+  );
+}
 
 function capitalize(value: string): string {
   return value.length === 0 ? value : value[0].toUpperCase() + value.slice(1);
@@ -180,11 +197,13 @@ export function ContactForm() {
                 </Tag>
               ))}
             </div>
+            {projectType === SITE_PROJECT_TYPE ? <SiteQuoteTiers /> : null}
           </div>
         ) : null}
 
         {step === 2 ? (
           <div className="flex flex-col gap-6">
+            {projectType === SITE_PROJECT_TYPE ? <SiteQuoteTiers /> : null}
             <div className="flex flex-col gap-2">
               <p className="text-sm text-text-muted">Budget estimé</p>
               <div role="group" aria-label="Budget" className="flex flex-wrap gap-2">

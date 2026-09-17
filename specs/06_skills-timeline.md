@@ -32,7 +32,7 @@ Valeurs V1 — auto-évaluation à valider par Xav **[DETTE-15]** :
 | Développement | Déploiement / Docker / VPS | 1 | notions, jamais déployé |
 | Données | Biostatistique / analyse de données | [DETTE-16, en réflexion] | |
 | Humain | Vulgarisation / formation | 4 | |
-| Humain | Langues : français natif, anglais très bon | — (badge sans niveau) | DETTE-21 |
+| Humain | Langues : français natif, anglais très bon | — (badge sans niveau) | DETTE-21 — **annulé le 17/09 (patch 9b)** : Langues devient un badge chiffré 5/5, inclus dans le radar Humain. |
 
 *(Éthologie retirée : hors sujet sur ce site, réponse DETTE-16.)*
 

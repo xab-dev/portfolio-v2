@@ -53,7 +53,7 @@ export const faqQuestions: FaqQuestion[] = [
       "Les arrêts. L'agent s'arrête et attend à chaque point qu'il ne peut pas vérifier seul : relecture des fiches, niveaux de compétences, réception d'un mail, ressenti sur un vrai téléphone.",
       "Ce qui a cassé. Une dizaine de bugs trouvés à l'écran et pas dans les tests : menu mobile transparent, modale non scrollable, texte qui tape deux fois trop lentement. Un bug corrigé puis réintroduit deux phases plus tard, avoué dans le journal. Un journal de phase oublié, reconstitué après coup et signalé comme tel.",
       "Le test terrain. Défilement saccadé sur un Galaxy A04. Réponse : un mode allégé, avec un critère strict — le rendu PC doit rester identique au pixel près (vérifié : 0 pixel de différence). Verdict sur le téléphone : « nette amélioration ».",
-      "Le bilan. Trois jours, onze phases dont ce pop-up, 81 tests, 36 lignes de dette suivies, un build qui refuse de passer si le CV dépasse une page. Claude Pro + Claude Code + humain : 90 % du travail. Le reste : ChatGPT pour dégrossir, Gemini pour ce qui touche à Google.",
+      "Le bilan. Trois jours, onze phases dont ce pop-up, 89 tests, 38 lignes de dette suivies, un build qui refuse de passer si le CV dépasse une page. Claude Pro + Claude Code + humain : 90 % du travail. Le reste : ChatGPT pour dégrossir, Gemini pour ce qui touche à Google.",
     ],
   },
   {
@@ -77,7 +77,7 @@ export const faqQuestions: FaqQuestion[] = [
     label: "C'est quoi la dette suivie ?",
     paragraphs: [
       "Un fichier où tout ce qui manque ou reste à confirmer est écrit noir sur blanc, avec un numéro, plutôt que masqué par une valeur inventée. L'agent y ajoute des lignes, n'en supprime jamais ; l'humain coche.",
-      "Ce site : 36 lignes numérotées à ce jour — un niveau de compétence provisoire, une photo de poste de travail floutée avant publication, une numérotation en collision entre deux phases, signalée plutôt que corrigée en silence.",
+      "Ce site : 38 lignes numérotées à ce jour — un niveau de compétence provisoire, une photo de poste de travail floutée avant publication, une numérotation en collision entre deux phases, signalée plutôt que corrigée en silence.",
     ],
   },
   {
@@ -85,7 +85,7 @@ export const faqQuestions: FaqQuestion[] = [
     label: "[ARRÊT HUMAIN], c'est quoi ?",
     paragraphs: [
       "Le marqueur que l'agent pose quand un critère de passage ne peut pas être vérifié par lui : relire un texte, confirmer qu'un mail est arrivé, juger la fluidité sur un vrai téléphone, relire un PDF imprimé. Il s'arrête, rend compte, et rien n'est poussé en ligne.",
-      "Ce site en a connu sept. Aucun n'a été levé par l'agent lui-même.",
+      "Ce site en a connu huit. Aucun n'a été levé par l'agent lui-même.",
     ],
   },
 ];

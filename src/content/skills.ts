@@ -23,13 +23,6 @@ export interface Skill {
   family: SkillFamily;
 }
 
-/** Badge sans niveau chiffré (ex. langues) : affiché, jamais moyenné dans le radar. */
-export interface UnleveledSkill {
-  name: string;
-  note?: string;
-  family: SkillFamily;
-}
-
 export const FAMILIES: SkillFamily[] = [
   "Méthode IA",
   "LLMs & agents",
@@ -48,14 +41,13 @@ export const skills: Skill[] = [
   { family: "Méthode IA", name: "Diagnostic structuré / cause racine", level: 4 },
 
   { family: "LLMs & agents", name: "Claude (Fable 5.1, Opus 5, Sonnet 5) / Claude Code", level: 5, note: "usage quotidien, choix du modèle selon la tâche" },
-  // Niveau 3 posé par l'architecte (DETTE-32, patch 2026-09-15 23:00) : Xav
-  // l'ajuste directement ici s'il le souhaite, comme pour DETTE-15.
-  { family: "LLMs & agents", name: "Autres LLM (ChatGPT, Gemini, Perplexity, Mammouth)", level: 3, note: "usage ciblé : chacun pour ce qu'il fait le mieux" },
+  { family: "LLMs & agents", name: "Autres LLM (ChatGPT, Gemini, Perplexity, Mammouth)", level: 4, note: "usage ciblé : chacun pour ce qu'il fait le mieux" },
   { family: "LLMs & agents", name: "Prompt engineering", level: 4 },
   { family: "LLMs & agents", name: "Architecture d'agents (function calling, MCP, orchestration)", level: 3, note: "compris, peu mis en prod" },
   { family: "LLMs & agents", name: "RAG", level: 1, note: "notions — à creuser quand un projet le demandera" },
 
   { family: "No-code / automatisation", name: "Make / n8n", level: 1, note: "notions — axe de consolidation" },
+  { family: "No-code / automatisation", name: "Conception de workflows humain ↔ LLM ↔ agent de code", level: 5, note: "la logique, pas la plateforme no-code" },
 
   { family: "Développement", name: "HTML/JS/CSS (canvas, single-file)", level: 4 },
   { family: "Développement", name: "Python (scripts, tkinter, pygame)", level: 4 },
@@ -66,14 +58,10 @@ export const skills: Skill[] = [
   // [DETTE-16] Niveau en réflexion côté Xav : valeur neutre non gonflée (1 = notions)
   // en attente de confirmation — voir ARRÊT XAV de la Phase 5.
   { family: "Données", name: "Biostatistique / analyse de données", level: 1, note: "hobby passion" },
+  { family: "Données", name: "SQL", level: 2, note: "notions correctes — requêtes sur bases de hand histories poker (trackers, échantillons de 50 000 à plus d'un million de mains)" },
 
   { family: "Humain", name: "Vulgarisation / formation", level: 3 },
-];
-
-// Langues : badge sans niveau chiffré (réponse DETTE-21), jamais inclus dans la
-// moyenne du radar de la famille "Humain".
-export const unleveledSkills: UnleveledSkill[] = [
-  { family: "Humain", name: "Langues : français natif, anglais très bon" },
+  { family: "Humain", name: "Langues : Français / English", level: 5 },
 ];
 
 export interface RadarPoint {

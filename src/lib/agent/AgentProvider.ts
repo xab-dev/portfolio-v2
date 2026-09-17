@@ -3,7 +3,7 @@ export interface AgentHistoryEntry {
   text: string;
 }
 
-export type AgentReply = { text: string; followUps?: string[] };
+export type AgentReply = { id?: string; text: string; followUps?: string[] };
 
 /**
  * Interface prête pour une vraie API (T5) : V1 = ScriptedAgentProvider.

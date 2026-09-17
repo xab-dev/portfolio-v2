@@ -1,3 +1,5 @@
+import { site } from "./site";
+
 export type ProjectTag = "Automations" | "Formations" | "Jeu" | "Outils" | "Méthode";
 
 export type ProjectStatus =
@@ -45,11 +47,40 @@ export interface Project {
 // Métriques non vérifiées marquées `verified: false` → suffixe "(auto-déclaré)" affiché en modale.
 export const projects: Project[] = [
   {
+    id: "portfolio-v2",
+    title: "Portfolio v2 — ce site",
+    tagline: "Vous l'avez sous les yeux.",
+    tags: ["Outils", "Méthode"],
+    status: "en production",
+    year: 2026,
+    problem:
+      "Pas de CV à jour, pas de réseaux, rien qui montre ce que je veux faire : un problème d'exposition, pas un problème de code.",
+    architecture: [
+      "React + Vite + Tailwind + Motion, déployé sur GitHub Pages par GitHub Actions ; tout le contenu dans `src/content/*.ts`.",
+      "11 specs numérotées, une phase par spec, exécutées par Claude Code : cause racine avant patch, vérification visuelle réelle, journal et dette à chaque phase.",
+      "CV PDF généré à la build depuis la même source de contenu — le build refuse de passer s'il dépasse une page.",
+      "Mode allégé pour mobile (`?perf=lite`), rendu PC identique au pixel près.",
+      "Agent de poche scripté, simulateur aux hypothèses affichées et sourcées, Prompt Playground basé sur mes templates de spec.",
+    ],
+    metrics: [
+      { label: "De la dictée à la mise en ligne", value: "3 jours", verified: true },
+      { label: "Specs numérotées", value: "11", verified: true },
+      { label: "Tests automatisés", value: "89", verified: true },
+    ],
+    limits: [
+      "Agent scripté, pas de LLM branché : choix assumé, une V2 est envisagée.",
+      "Aucun analytics — la mesure se fait sur les contrats signés.",
+      "`noindex` jusqu'au polish final.",
+    ],
+    links: [{ label: "Code source", href: site.links.github }],
+    accent: "violet",
+  },
+  {
     id: "hatd",
     title: "haTD / RPG-monde",
-    tagline: "Tower defense clicker solo, avec surcouche RPG en construction.",
+    tagline: "Tower defense clicker solo, avec surcouche RPG (V1 terminée) — test UX en cours.",
     tags: ["Jeu"],
-    status: "en développement",
+    status: "v1 fonctionnelle",
     year: 2026,
     problem:
       "Construire seul un jeu complet (tower defense clicker + surcouche RPG) en gardant une qualité pro, sans équipe et sans filet.",
@@ -57,15 +88,15 @@ export const projects: Project[] = [
       "Prototype HTML/JS canvas en un seul fichier, pensé pour itérer vite.",
       "Développement piloté par des specs données à Claude Code — pas de session de code à l'aveugle.",
       "`CLAUDE.md` + tests Node comme seule mémoire inter-session : pas de dépôt git à ce stade, choix assumé de Diligence (voir Limites) plutôt qu'un outil ajouté par réflexe.",
-      "Cible à terme : portage sur Godot 4 une fois le prototype validé par le jeu.",
+      "La suite est la refonte RPG-v2, restée en HTML5/Canvas — voir sa fiche.",
     ],
     metrics: [
       { label: "Version jouable en ligne", value: "oui", verified: true },
       { label: "GDD versionné", value: "v0.1.0", verified: true },
-      { label: "Playtest externe réalisé", value: "1 (neveu) [À CONFIRMER date]", verified: false },
+      { label: "Playtest externe", value: "1 (16/09/2026, 3 h)", verified: true },
     ],
     limits: [
-      "Équilibrage encore en cours (vagues, économie de ressources).",
+      "Équilibrage et test UX en cours (playtest externe du 16/09/2026).",
       "Pas jouable au tactile — voir la section Jouer pour le compromis retenu (teaser cold-open sur mobile).",
       "Pas encore de build mobile ni desktop packagé.",
       "Absence de dépôt git : mémoire du projet portée par `CLAUDE.md` et les tests, un choix de Diligence à surveiller si le projet grossit.",
@@ -84,6 +115,33 @@ export const projects: Project[] = [
     accent: "violet",
   },
   {
+    id: "rpg-v2",
+    title: "RPG-v2",
+    tagline: "Refonte complète d'un RPG médiéval-fantastique en HTML5/Canvas, la V1 servant de prototype jetable.",
+    tags: ["Jeu"],
+    status: "en développement",
+    year: 2026,
+    problem:
+      "Repartir d'une V1 jouée de bout en bout (tous les boss battus) pour construire un jeu commercialisable — et en faire une vitrine de ce que la génération de jeux assistée par IA permet à un développeur seul.",
+    architecture: [
+      "HTML5/JS/Canvas, résolution logique 480 × 270 : le choix du moteur natif (Godot) a été écarté faute de pouvoir tenir seul un rôle de graphiste à plein temps.",
+      "Périmètre fermé à la première ère (Grotte → Maison → première zone → Château → Boss 1) ; 3 éléments ; bilingue FR/EN ; entièrement jouable hors-ligne.",
+      "PC à la manette comme plateforme primaire, mobile mené en parallèle. Gratuit + dons : ni publicité ni achat intégré, non négociable.",
+      "Roadmap par phases + specs numérotées + CLAUDE.md, exécutées par Claude Code — même méthode que ce site. Phase 0 (socle) et Phase 1 (Grotte, cinématique et direction artistique validées) closes ; Phase 2 (Maison) en cours.",
+      "haTD devient un mini-jeu du monde, tout en restant jouable séparément. Bande son composée au piano par Xav.",
+    ],
+    metrics: [
+      { label: "V1 terminée de bout en bout", value: "oui", verified: true },
+      { label: "Phases closes (V2)", value: "2 sur la roadmap", verified: true },
+    ],
+    limits: [
+      "Contrôles tactiles encore imparfaits — dette assumée jusqu'à l'intégration des compétences.",
+      "Pas encore de lien de partage public : le test sur téléphone est différé.",
+      "Aucune touche n'est montrée au joueur pour l'instant — point ouvert, volontairement pas tranché.",
+    ],
+    accent: "blue",
+  },
+  {
     id: "templates",
     title: "Bibliothèque de templates de spec",
     tagline: "6 formats pour transformer une dictée brute en instruction exploitable par un agent de code.",
@@ -99,11 +157,12 @@ export const projects: Project[] = [
     ],
     metrics: [
       { label: "Templates formalisés", value: "6", verified: true },
-      { label: "Sessions où les templates ont servi", value: "[DETTE-11]", verified: false },
+      { label: "Projets pilotés avec les templates", value: "2 (portfolio v2, RPG-v2)", verified: true },
     ],
     limits: [
       "Pas encore éprouvé chez un client tiers — seulement sur des projets personnels à ce jour.",
       "Calibrés sur du développement réfléchi ; leur usage en intervention terrain sous pression de temps reste à valider (voir le projet Séquence d'intervention terrain).",
+      "Le bilan chiffré sera publié avec les versions finales.",
     ],
     images: [
       {

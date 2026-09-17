@@ -48,6 +48,7 @@ Puces et réponses V1 (**validées par Xav le 2026-09-15 — DETTE-05 close** ; 
 - Clic sur une puce → message utilisateur ajouté → indicateur "…" 400-700 ms → réponse révélée par `TypingText` → puces `followUps` proposées.
 - Saisie libre : Entrée envoie ; réponse par défaut si pas de match.
 - L'état de conversation est local au composant (pas de persistance).
+- Puces déjà posées désactivées (coche), réactivées par Réinitialiser — patch 9b, 17/09.
 
 ## 4. Edge cases à gérer
 - Double clic rapide sur une puce : ignoré tant qu'une réponse est en cours.

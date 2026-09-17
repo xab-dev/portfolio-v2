@@ -59,10 +59,11 @@ export function Play() {
     <SectionShell
       id="jouer"
       title={play.title}
-      subtitle={play.intro}
       headerAction={<FaqTrigger onOpen={openFaq} />}
     >
       <div className="flex flex-col gap-4">
+        <h3 className="font-display text-xl font-semibold text-text-primary">{play.heading}</h3>
+        <p className="text-text-muted">{play.intro}</p>
         <a
           href="#projets/hatd"
           className="self-start text-sm text-neon-blue underline underline-offset-4"

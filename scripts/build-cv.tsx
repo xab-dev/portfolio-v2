@@ -69,10 +69,12 @@ async function main() {
   if (pageCount !== 1) {
     console.error(`\n❌ CV PDF : ${pageCount} pages générées, 1 attendue (A4, spec 09 §3).`);
     console.error("Le build échoue volontairement plutôt que de livrer un CV de plusieurs pages.");
-    console.error("Réduire dans cet ordre (spec 09 §4 — ne jamais retirer un projet, une compétence ou un jalon) :");
+    console.error("Réduire dans cet ordre (spec 09 §4 + règle D7, patch 9b — jamais retirer une compétence ou un jalon) :");
     console.error("  1) resserrer marges/interligne dans CvDocument.tsx (bornes : marges 14 mm, corps 9-9,5 pt) ;");
     console.error("  2) vérifier la troncature des taglines projet à 140 caractères (buildCvModel.ts, truncateTagline) ;");
-    console.error("  3) limiter les métriques vérifiées à 2 par projet (buildCvModel.ts, buildProject).");
+    console.error("  3) limiter les métriques vérifiées à 2 par projet (buildCvModel.ts, buildProject) ;");
+    console.error("  4) D7 : selectProjectsForPdf exclut déjà les projets en statut \"cadrage\" du PDF (le site n'est pas concerné) ;");
+    console.error("  5) si ça déborde encore : s'arrêter et documenter (ARRÊT XAV), ne rien retirer d'autre.");
     process.exitCode = 1;
     return;
   }

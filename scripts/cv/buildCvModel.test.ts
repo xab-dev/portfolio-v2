@@ -130,11 +130,20 @@ describe("buildCvModel", () => {
     expect(model.timeline[1]!.period).toBe("—");
   });
 
-  it("porte les 6 projets réels quand ils sont fournis en entrée (aucun filtrage de projet)", () => {
+  it("porte tous les projets engagés (statut autre que cadrage) fournis en entrée", () => {
     const projects = Array.from({ length: 6 }, (_, i) => makeProject({ id: `p${i}`, title: `Projet ${i}` }));
     const model = buildCvModel(makeInput({ projects }));
     expect(model.projects).toHaveLength(6);
     expect(model.projects.map((p) => p.title)).toEqual(["Projet 0", "Projet 1", "Projet 2", "Projet 3", "Projet 4", "Projet 5"]);
+  });
+
+  it("exclut du PDF les projets en statut cadrage (D7, patch 9b) — règle codée, jamais le site", () => {
+    const projects = [
+      makeProject({ id: "engage", title: "Projet engagé", status: "v1 fonctionnelle" }),
+      makeProject({ id: "cadrage", title: "Projet en cadrage", status: "cadrage" }),
+    ];
+    const model = buildCvModel(makeInput({ projects }));
+    expect(model.projects.map((p) => p.title)).toEqual(["Projet engagé"]);
   });
 
   it("rend le niveau en libellé texte, jamais en chiffre nu", () => {

@@ -13,6 +13,7 @@ const CHRONOLOGICAL_ORDER = [
   "pivot-consultant",
   "templates",
   "portfolio-v2",
+  "rpg-v2",
 ];
 
 describe("timeline", () => {

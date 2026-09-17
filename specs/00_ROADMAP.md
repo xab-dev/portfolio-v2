@@ -1,8 +1,8 @@
 # Portfolio v2 "Premium Tech" — Roadmap + prompt d'exécution autonome
 
-**Version : 0.9.1** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B), le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu), le 2026-09-15 (soir) (Phase 6 close et poussée, Phase 6b ajoutée — spec 08, DETTE-30), le 2026-09-15 (nuit) (Phase 6b close — mesure terrain Galaxy A04 validée par Xav), le 2026-09-15 19:30 (Phase 2 close, remise sur `main`, DETTE-09 tranchée — `PATCHES_2026-09-15_1930.md`), le 2026-09-15 23:00 (patch de relecture + phases post-V1 tranchées par Xav — `PATCHES_2026-09-15_2300.md`), le 2026-09-16 (spec 09 Phase 7 écrite, décisions Xav du 16/09 ; Phase 7 exécutée et committée, `7b3821f`), le 2026-09-16 (Phase 8 exécutée depuis `specs/09_export-cv-pdf.md`, D6 posée, DETTE-35/36 ouvertes — DETTE-32/33 déjà pris par la Phase 7, numérotation corrigée par l'agent), puis le 2026-09-16 (Phase 9 exécutée depuis `specs/10_faq-comment-ce-site.md`, ARRÊT XAV posé §7.8, non close).
+**Version : 0.9.2** — document vivant. Créé le 2026-09-15 à partir de la dictée de Xav (12:00) ; révisé le 2026-09-15 12:30 (S1-S7) (dettes de contenu — voir `dette_suivi.md` §B), le 2026-09-15 12:45 (D4 tranché, DETTE-25 tranché, scope Phase 6 étendu), le 2026-09-15 (soir) (Phase 6 close et poussée, Phase 6b ajoutée — spec 08, DETTE-30), le 2026-09-15 (nuit) (Phase 6b close — mesure terrain Galaxy A04 validée par Xav), le 2026-09-15 19:30 (Phase 2 close, remise sur `main`, DETTE-09 tranchée — `PATCHES_2026-09-15_1930.md`), le 2026-09-15 23:00 (patch de relecture + phases post-V1 tranchées par Xav — `PATCHES_2026-09-15_2300.md`), le 2026-09-16 (spec 09 Phase 7 écrite, décisions Xav du 16/09 ; Phase 7 exécutée et committée, `7b3821f`), le 2026-09-16 (Phase 8 exécutée depuis `specs/09_export-cv-pdf.md`, D6 posée, DETTE-35/36 ouvertes — DETTE-32/33 déjà pris par la Phase 7, numérotation corrigée par l'agent), le 2026-09-16 (Phase 9 exécutée depuis `specs/10_faq-comment-ce-site.md`, ARRÊT XAV posé §7.8, non close), puis le 2026-09-17 01:00 (relecture 9b par Xav → Phase 9 close, patch `PATCHES_2026-09-17_0100.md`, D7 tranchée).
 
-**Statut** : V1 fonctionnelle complète et validée par Xav. **Phase 8 close** (`specs/09_export-cv-pdf.md`, D6 tranchée, PDF relu et validé par Xav). Phase courante : **9** (spec `10_faq-comment-ce-site.md`, contenu validé par Xav le 16/09 ; exécutée et poussée sur `main`, relecture à l'écran §7.8 explicitement reportée par Xav — « les vérifications seront faites avant de changer de phase » — **phase non close**).
+**Statut** : V1 fonctionnelle complète et validée par Xav. **Phase 9 close** (relecture §7.8 faite le 17/09). Patch de relecture 9b exécuté. Prochaine phase : **10 (version anglaise, spec 11)**, à lancer seulement quand Xav n'a plus envie de rien changer ; Playwright après.
 
 ---
 
@@ -49,6 +49,7 @@
 | ~~D4~~ | ~~Fourchettes de budget affichées dans le formulaire ?~~ | **Tranché** (2026-09-15) : \< 500 €`, `500 – 2 000 €`, `2 000 – 5 000 €`, `> 5 000 €`, `À définir` (DETTE-18). |
 | ~~D5~~ | ~~Durée du teaser mobile ?~~ | **Tranché** : `teaserMs = 18_000` (DETTE-24) ; le bouton Fermer reste visible. |
 | ~~D6~~ | ~~Le CV PDF n'affiche que la trajectoire 2026 (conséquence de DETTE-17, propagée en DETTE-35). Accepter tel quel, ou ajouter dans `timeline.ts` des jalons antérieurs ?~~ | **Tranché (2026-09-16) : tel quel.** Réponse de Xav : aucune expérience dans le domaine avant 2026. |
+| D7 | Débordement du CV PDF | Tranché (17/09) : leviers de mise en page, puis exclusion des projets en statut cadrage du PDF seulement (§8 du patch 9b). |
 
 ---
 

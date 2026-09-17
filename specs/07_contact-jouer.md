@@ -13,7 +13,13 @@ Deux clôtures : (a) permettre à un prospect de qualifier son besoin en 3 clics
 
 ### Contact (`src/content/contact.ts`)
 ```ts
-export const projectTypes = ['Diagnostic / cadrage IA', 'Automatisation d’un process', 'Outil sur mesure', 'Formation équipe (4D)', 'Intervention IT / maintenance', 'Autre'];
+export const projectTypes = ['Diagnostic / cadrage IA', 'Automatisation d’un process', 'Outil sur mesure', 'Formation équipe (4D)', 'Intervention IT / maintenance', 'Créer un site (vitrine ou comme celui-ci)', 'Autre'];
+// Patch 9b (17/09) : encart de repères tarifaires affiché quand "Créer un site" est sélectionné (étapes 1 et 2).
+export const siteQuoteTiers = [
+  { label: 'Site vitrine simple', price: 'à partir de 600 €' },
+  { label: 'Un site comme celui-ci', price: 'environ 1 500 €' },
+  { label: 'Plus ambitieux que celui-ci', price: 'à partir de 2 000 €' },
+];
 export const budgets = ['< 500 €', '500 – 2 000 €', '2 000 – 5 000 €', '> 5 000 €', 'À définir'];   // validé par Xav (D4 / DETTE-18, 2026-09-15)
 export const timings = ['Cette semaine', 'Ce mois', 'Ce trimestre', 'Pas de date'];
 ```
@@ -41,12 +47,13 @@ Iframe `src={play.url}` (URL absolue), `title="haTD — tower defense par Xavier
   - La lecture est isolée dans une fonction pure (`src/lib/contact/readSimulator.ts`) testée avec Vitest sur les trois cas (absent, invalide, valide), pour que la Phase 2 n'ait rien à changer côté Contact.
 - Étape 3 : `name` (requis), `email` (requis, format), `message` (requis, ≥ 20 caractères), case RGPD ("J'accepte que ces informations servent uniquement à me répondre") requise. Champ honeypot caché anti-spam.
 - Envoi → état `sending` (bouton désactivé, spinner) → `sent` (carte de confirmation avec récap des choix + "Réponse sous 24 h" — DETTE-06 validé) ou `error` (message + bouton "Réessayer" + lien mailto de secours).
-- Sous le formulaire, bloc "Contact direct" (préféré par Xav) : `xa.bou@laposte.net` (principal, `mailto:`), `phenomenxx@gmail.com` (secondaire), `07 69 54 74 94` avec deux liens : `tel:+33769547494` et WhatsApp `https://wa.me/33769547494` (DETTE-20 validé). Icônes `Mail`, `MessageCircle` (Lucide) et `Github`, `Youtube` (`BrandIcons.tsx`, Phase 0) ; LinkedIn masqué tant que vide.
+- Sous le formulaire, bloc "Contact direct" (préféré par Xav) : `xa.bou@laposte.net` (seul mail, Gmail secondaire retiré le 17/09 — patch 9b), `07 69 54 74 94` avec deux liens : `tel:+33769547494` et WhatsApp `https://wa.me/33769547494` (DETTE-20 validé). Icônes `Mail`, `MessageCircle` (Lucide) et `Github`, `Youtube` (`BrandIcons.tsx`, Phase 0) ; LinkedIn masqué tant que vide.
+- Type "Créer un site (vitrine ou comme celui-ci)" (patch 9b) : sélectionné à l'étape 1, affiche un encart compact (`siteQuoteTiers` + note) sous les tags, qui reste visible en haut de l'étape 2 (Budget). Aucun autre type n'affiche cet encart.
 - Ligne "Disponibilité" au-dessus du stepper : "Disponible — réponse sous 24 h. À distance de préférence ; déplacement possible, même longue durée (audit en immersion), sur devis signé."
 - Ligne "Tarif indicatif" (DETTE-25 tranché, formulation volontairement souple) : **"Tarif indicatif : à partir de 25 €/h, ajusté selon l'intervention et les outils IA mobilisés. Devis après un premier échange."** Texte dans `contact.ts`, pas dans le composant (T8).
 
 ### Jouer
-- Titre : "Jouer — haTD, mon tower defense (v1 en ligne)". Une ligne de contexte + lien "Voir la fiche projet" (`#projets/hatd`).
+- Titre de section : "Jouer" (patch 9b, 17/09 — sans sous-titre). Dans le corps : `<h3>` "haTD, mon tower defense (v1 en ligne) :" en titre de paragraphe, une ligne de contexte + lien "Voir la fiche projet" (`#projets/hatd`).
 - **Détection** : `pointer: coarse` (media query) = mobile/tactile ; sinon PC.
 - **PC** : iframe dans un cadre verre, ratio 16/9, bouton "Plein écran" (Fullscreen API sur le conteneur). Le jeu est jouable.
 - **Mobile (T12)** : ne pas cacher le jeu. Un bouton "Voir l'intro" (`NeonButton`) ouvre un **overlay plein écran** contenant l'iframe : le cold-open de haTD joue comme teaser. L'overlay porte (a) un bouton "Fermer" toujours visible en haut à droite, zone tactile ≥ 44 px, (b) une fermeture automatique après `play.teaserMs` avec un fin bandeau de progression, (c) une ligne "Jouable sur ordinateur" avec l'URL copiable. Aucune tentative de rendre le jeu jouable au tactile.

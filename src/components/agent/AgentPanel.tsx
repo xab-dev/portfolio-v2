@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Bot, RotateCcw, Send } from "lucide-react";
+import { Bot, Check, RotateCcw, Send } from "lucide-react";
 import { GlassCard } from "../ui/GlassCard";
 import { Tag } from "../ui/Tag";
 import { cn } from "../../lib/cn";
@@ -29,6 +29,7 @@ export function AgentPanel() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [pending, setPending] = useState(false);
   const [input, setInput] = useState("");
+  const [answeredIds, setAnsweredIds] = useState<Set<string>>(new Set());
   const nextId = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -71,6 +72,7 @@ export function AgentPanel() {
     if (reducedMotion) {
       const reply = await provider.ask(question, history);
       pushMessage("agent", reply.text, true);
+      if (reply.id) setAnsweredIds((current) => new Set(current).add(reply.id!));
       return;
     }
 
@@ -80,6 +82,7 @@ export function AgentPanel() {
     const reply = await provider.ask(question, history);
     setPending(false);
     pushMessage("agent", reply.text, false);
+    if (reply.id) setAnsweredIds((current) => new Set(current).add(reply.id!));
   }
 
   function handleTypingDone(id: number) {
@@ -90,6 +93,7 @@ export function AgentPanel() {
     setMessages([]);
     setInput("");
     setPending(false);
+    setAnsweredIds(new Set());
   }
 
   function handleSubmit(event: React.FormEvent) {
@@ -145,18 +149,30 @@ export function AgentPanel() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {agentBullets.map((bullet) => (
-          <Tag
-            key={bullet.id}
-            disabled={isResponding}
-            onClick={() => void handleAsk(bullet.id, bullet.label)}
-          >
-            {bullet.label}
-          </Tag>
-        ))}
+        {agentBullets.map((bullet) => {
+          const alreadyAnswered = answeredIds.has(bullet.id);
+          return (
+            <Tag
+              key={bullet.id}
+              disabled={isResponding || alreadyAnswered}
+              aria-disabled={alreadyAnswered}
+              title={alreadyAnswered ? "Déjà répondu — voir plus haut" : undefined}
+              onClick={() => void handleAsk(bullet.id, bullet.label)}
+            >
+              {alreadyAnswered ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <Check size={14} aria-hidden="true" />
+                  {bullet.label}
+                </span>
+              ) : (
+                bullet.label
+              )}
+            </Tag>
+          );
+        })}
       </div>
 
-      {messages.length >= MAX_HISTORY ? (
+      {messages.length >= MAX_HISTORY || answeredIds.size > 0 ? (
         <button
           type="button"
           onClick={handleReset}

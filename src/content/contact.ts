@@ -6,8 +6,16 @@ export const projectTypes = [
   "Outil sur mesure",
   "Formation équipe (4D)",
   "Intervention IT / maintenance",
+  "Créer un site (vitrine ou comme celui-ci)",
   "Autre",
 ] as const;
+
+export const siteQuoteTiers = [
+  { label: "Site vitrine simple", price: "à partir de 600 €" },
+  { label: "Un site comme celui-ci", price: "environ 1 500 €" },
+  { label: "Plus ambitieux que celui-ci", price: "à partir de 2 000 €" },
+];
+export const siteQuoteNote = "Repères hors nom de domaine et hébergement. Devis après un premier échange.";
 
 // Fourchettes validées par Xav (D4 / DETTE-18, 2026-09-15).
 export const budgets = ["< 500 €", "500 – 2 000 €", "2 000 – 5 000 €", "> 5 000 €", "À définir"] as const;
@@ -41,7 +49,6 @@ export const confirmationDelayNote = "Réponse sous 24 h.";
 
 export const directContact = {
   emailPrimary: site.contact.emailPrimary,
-  emailSecondary: site.contact.emailSecondary,
   phoneDisplay: site.contact.phone,
   // DETTE-20 validé : affichage FR, liens au format international.
   telHref: "tel:+33769547494",

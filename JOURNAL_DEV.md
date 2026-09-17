@@ -4,6 +4,28 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-17 01:00 — Patch de relecture 9b (`PATCHES_2026-09-17_0100.md`) — clôture de la Phase 9, ARRÊT XAV posé (DETTE-39)
+
+Session ouverte sur `specs/00_ROADMAP.md` (v0.9.1) puis `PATCHES_2026-09-17_0100.md` en entier, exécuté intégralement sections 1 à 10. Ce patch clôt la Phase 9 : la relecture §7.8 explicitement reportée par Xav a été faite le 17/09 à 01:00.
+
+**Décisions posées par Xav, appliquées telles quelles** : agent de poche solution 1 (puces déjà posées désactivées) ; mesure d'usage de l'agent écartée (DETTE-37) ; jonction agent→mail rejetée (DETTE-38) ; « workflow » dans No-code, Autres LLM 4/5, Langues chiffrées 5/5 (badge, annule DETTE-21), SQL 2/5 ; Portfolio v2 en fiche projet ; Gmail secondaire retiré définitivement.
+
+**Livré et vérifié à l'écran** (`vite preview` + Claude in Chrome, 375 px et 1280 px) :
+- Agent de poche : 5 puces cliquées tour à tour → coche + désactivation visuelle immédiate, bouton « Réinitialiser » apparu dès la première puce consommée ; saisie libre « roi » après avoir cliqué la puce ROI → réponse redonnée normalement, puce toujours désactivée ; Réinitialiser → tout réactivé, `answeredIds` vidé.
+- Contact : nouveau type « Créer un site (vitrine ou comme celui-ci) », encart `siteQuoteTiers` affiché à l'étape 1 sous les tags et toujours visible en haut de l'étape 2 ; aucun autre type n'affiche l'encart ; un seul mail dans « Contact direct ».
+- Jouer : titre de section réduit à « Jouer » (plus de sous-titre), `<h3>` « haTD, mon tower defense (v1 en ligne) : » en titre de paragraphe au-dessus du texte de contexte, bouton FAQ toujours en haut à droite (desktop) / sous le titre (mobile).
+- Compétences : 3 nouveaux badges visibles (workflow humain↔LLM↔agent en No-code, SQL en Données, Langues : Français / English chiffré en Humain), radar recalculé, `unleveledSkills`/`UnleveledSkill` supprimés du code (plus aucune référence).
+- Projets : 8 fiches, `portfolio-v2` en tête, `rpg-v2` juste après `hatd` ; fiche `rpg-v2` ouverte en modale, rendu conforme (pas d'image, pas de lien).
+- Frise : jalon `portfolio-v2` daté 15–16/09, nouveau jalon `rpg-v2` en dernière position.
+- `grep -rn "phenomenxx" .` : zéro occurrence dans le code source et le contenu applicatif (`site.ts`, `contact.ts`, `Contact.tsx`, `projects.ts`, `dette_suivi.md`, `specs/07_contact-jouer.md`). Occurrences restantes, volontairement non touchées car hors scope de ce patch : `faq.test.ts` (chaîne canari `FORBIDDEN_STRINGS`, doit rester pour tester son absence du contenu), `JOURNAL_DEV.md` et `specs/01_socle-design-system.md`/`specs/10_faq-comment-ce-site.md` (relevé historique de phases déjà closes, jamais réécrit), `specs/registre_traitements_CNIL.md` (fichier non tracké, non mentionné par le patch — à noter pour Xav : il documente encore le Gmail secondaire comme sous-traitant actif).
+- Branche `master` : absente du remote (`git ls-remote --heads origin` ne renvoie que `main`) — déjà supprimée lors de la clôture de la Phase 2, rien à faire.
+
+**D7 (§8, débordement du CV PDF)** : confirmé, le build est passé au rouge (2 pages) après l'ajout de 2 fiches projet, 1 jalon et 3 compétences. Palier 1 appliqué en premier (`CvDocument.tsx` : marges 12→10 mm, corps resserré au plancher bas de la fourchette 9–9,5 pt, interlignage et espacements de section/projet/jalon/compétence resserrés) — insuffisant seul. Palier 2 appliqué (`buildCvModel.ts`, nouvelle fonction `selectProjectsForPdf` : exclut du modèle PDF les projets en statut `"cadrage"` — `terrain` et `1am` — règle codée et testée dans `buildCvModel.test.ts`, jamais une exception manuelle ; le site n'est pas concerné, les deux fiches y restent visibles). Résultat : `npm run cv` → 1 page, 33 Ko. Palier 3 (ARRÊT XAV) non nécessaire.
+
+**Tests / build** : `timeline.test.ts` mis à jour (nouvel ordre chronologique avec `rpg-v2`) ; `ScriptedAgentProvider.test.ts` adapté au nouveau format `AgentReply` (`{ id?, text }`) ; `buildCvModel.test.ts` : un test renommé (le commentaire « aucun filtrage de projet » n'était plus exact) et un test ajouté pour la règle D7. `npm run test` / `lint` / `build` verts (89 tests, +1 par rapport à la Phase 9 grâce à la correction de `timeline.test.ts`). Chiffres FAQ mis à jour avec les valeurs réelles lues en fin de session : 89 tests, 38 lignes de dette (`grep -o "DETTE-[0-9]\+" dette_suivi.md | sort -u | wc -l`), huit arrêts humains (+1 pour l'ARRÊT XAV de la fiche RPG-v2).
+
+**[ARRÊT XAV] posé puis levé (DETTE-39)** : le texte de la fiche `rpg-v2` dans `projects.ts` a été rédigé par l'architecte à partir des mots de Xav (transcription de sa dictée). Xav l'a relu et validé tel quel (« awesome »). DETTE-39 close, go donné pour commit + push.
+
 ## 2026-09-16 — Phase 9 : FAQ « Comment ce site a été créé ? » (`10_faq-comment-ce-site.md`) — ARRÊT XAV posé
 
 Session ouverte sur `specs/00_ROADMAP.md` puis `specs/10_faq-comment-ce-site.md` (contenu déjà validé par Xav le 16/09, 12:12→13:30). Phase 8 déjà committée (`ca5fdd2`) au moment d'ouvrir cette session. Rien n'a été committé dans cette session.

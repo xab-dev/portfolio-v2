@@ -145,6 +145,16 @@ function buildProject(project: Project): CvProject {
   };
 }
 
+/**
+ * D7 (patch 9b, 17/09) : un CV PDF une page ne peut pas afficher indéfiniment
+ * de nouveaux projets. Règle codée plutôt qu'une exception manuelle : les
+ * projets en statut `"cadrage"` (pas encore engagés concrètement) sont exclus
+ * du PDF seulement — le site n'est pas concerné, ils y restent visibles.
+ */
+function selectProjectsForPdf(projects: Project[]): Project[] {
+  return projects.filter((project) => project.status !== "cadrage");
+}
+
 /** Groupe par famille en préservant l'ordre de première apparition (le contenu source est déjà écrit famille par famille). */
 function buildSkillGroups(skills: Skill[], levelLabels: Record<Level, string>): CvSkillGroup[] {
   const order: string[] = [];
@@ -191,7 +201,7 @@ export function buildCvModel(input: CvBuildInput): CvModel {
       phone: site.contact.phone,
       links: buildContactLinks(site.links),
     },
-    projects: projects.map(buildProject),
+    projects: selectProjectsForPdf(projects).map(buildProject),
     skillGroups: buildSkillGroups(skills, cv.levelLabels),
     timeline: timeline.map(buildMilestone),
     languages: site.languages,

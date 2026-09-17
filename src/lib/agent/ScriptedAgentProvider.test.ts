@@ -4,17 +4,27 @@ import { matchReply } from "./ScriptedAgentProvider";
 
 describe("matchReply", () => {
   it.each(agentBullets)("matche l'id de puce $id vers sa réponse scriptée", ({ id }) => {
-    expect(matchReply(id).text).toBe(agentReplies[id]);
+    const reply = matchReply(id);
+    expect(reply.text).toBe(agentReplies[id]);
+    expect(reply.id).toBe(id);
   });
 
   it("matche une saisie libre par mot-clé (insensible à la casse et aux accents)", () => {
-    expect(matchReply("Es-tu DISPONIBLE la semaine prochaine ?").text).toBe(agentReplies.dispo);
-    expect(matchReply("c'est quoi le ROI reel ?").text).toBe(agentReplies.roi);
+    const dispo = matchReply("Es-tu DISPONIBLE la semaine prochaine ?");
+    expect(dispo.text).toBe(agentReplies.dispo);
+    expect(dispo.id).toBe("dispo");
+    const roi = matchReply("c'est quoi le ROI reel ?");
+    expect(roi.text).toBe(agentReplies.roi);
+    expect(roi.id).toBe("roi");
   });
 
   it("retombe sur la réponse par défaut sans correspondance", () => {
-    expect(matchReply("bonjour").text).toBe(agentDefaultReply);
-    expect(matchReply("").text).toBe(agentDefaultReply);
+    const bonjour = matchReply("bonjour");
+    expect(bonjour.text).toBe(agentDefaultReply);
+    expect(bonjour.id).toBeUndefined();
+    const vide = matchReply("");
+    expect(vide.text).toBe(agentDefaultReply);
+    expect(vide.id).toBeUndefined();
   });
 
   it("ne cite jamais le poker en dehors de la réponse roi", () => {

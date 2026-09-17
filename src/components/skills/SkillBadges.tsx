@@ -5,7 +5,6 @@ import {
   FAMILIES,
   LEVEL_LABELS,
   skills,
-  unleveledSkills,
   type SkillFamily,
 } from "../../content/skills";
 
@@ -21,7 +20,6 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
     <div className="flex flex-col gap-6">
       {FAMILIES.map((family) => {
         const familySkills = skills.filter((skill) => skill.family === family);
-        const familyUnleveled = unleveledSkills.filter((skill) => skill.family === family);
         const isFamilyActive = family === activeFamily;
 
         return (
@@ -71,16 +69,6 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
                   </m.div>
                 );
               })}
-
-              {familyUnleveled.map((skill) => (
-                <span
-                  key={skill.name}
-                  className="rounded-full border border-dashed border-border-glass bg-bg-deep/40 px-3 py-1.5 text-sm text-text-muted"
-                  title={skill.note}
-                >
-                  {skill.name}
-                </span>
-              ))}
             </div>
           </div>
         );

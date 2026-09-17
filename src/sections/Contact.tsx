@@ -45,12 +45,6 @@ export function Contact() {
               <Mail size={16} aria-hidden="true" /> {directContact.emailPrimary}
             </a>
             <a
-              href={`mailto:${directContact.emailSecondary}`}
-              className="inline-flex items-center gap-2 transition-colors duration-fast hover:text-text-primary"
-            >
-              <Mail size={16} aria-hidden="true" /> {directContact.emailSecondary}
-            </a>
-            <a
               href={directContact.telHref}
               className="transition-colors duration-fast hover:text-text-primary"
             >
