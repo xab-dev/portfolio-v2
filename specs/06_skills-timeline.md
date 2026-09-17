@@ -51,20 +51,22 @@ Valeurs de référence = `src/content/skills.ts` (Xav édite à la main, DETTE-1
 | LLMs & agents | Autres LLM (ChatGPT, Gemini, Perplexity, Mammouth) | 4 | usage ciblé : chacun pour ce qu'il fait le mieux |
 | LLMs & agents | Prompt engineering | 4 | |
 | LLMs & agents | Architecture d'agents (function calling, MCP, orchestration) | 3 | compris, peu mis en prod |
-| LLMs & agents | RAG | 1 | notions — à creuser quand un projet le demandera (S2) |
 | No-code / automatisation | Make / n8n | 1 | notions (S3) — axe de consolidation IA6 |
 | No-code / automatisation | Conception de workflows humain ↔ LLM ↔ agent de code | 5 | la logique, pas la plateforme no-code |
+| No-code / automatisation | RAG | 1 | notions — à creuser quand un projet le demandera (S2) — déplacé depuis « LLMs & agents » (patch tooltip-rag : ni no-code ni automatisation stricto sensu, mais un pipeline de données ; renommer la famille en « Automatisation & pipelines » si le libellé gêne un jour) |
 | Développement | HTML/JS/CSS (canvas, single-file) | 4 | |
 | Développement | Python (scripts, tkinter, pygame) | 4 | |
 | Développement | PowerShell | 4 | (ajusté par Xav, DETTE-15) |
-| Développement | Godot / GDScript | 2 | cible haTD |
+| Développement | Godot / GDScript | 3 | haTD (prototype jouable, playtesté) + RPG en développement — utilisé sur un projet réel (patch tooltip-rag) |
 | Développement | Déploiement / Docker / VPS | 1 | notions, jamais déployé |
 | Données | Biostatistique / analyse de données | 1 | hobby passion (DETTE-16) |
 | Données | SQL | 2 | notions correctes — requêtes sur bases de hand histories poker (trackers, échantillons de 50 000 à plus d'un million de mains) |
-| Humain | Vulgarisation / formation | 3 | (ajusté par Xav, DETTE-15) |
+| Humain | Vulgarisation / formation | 4 | autonome sur le contenu pédagogique 1AM et les 6 templates documentés — cohérent avec l'offre « Formation équipe (4D) » du site (patch tooltip-rag) |
 | Humain | Langues : Français / English | 5 | badge chiffré depuis le 17/09 (patch 9b), inclus dans le radar Humain |
 
-*Seule modification de valeur dans ce patch : Spec-driven 5→6. Les autres lignes sont recopiées de `skills.ts` tel qu'il est réellement au 2026-09-17 (DETTE-15 et DETTE-16 closes, Vulgarisation et PowerShell ajustés, Langues chiffrée depuis le patch 9b) — ce tableau corrige aussi 3 lignes que ce patch avait initialement omises (Autres LLM, Conception de workflows, SQL), déjà présentes dans `skills.ts` mais absentes de la spec.*
+*Modifications de valeur : Spec-driven 5→6 (patch skills-7niveaux) ; RAG déplacée vers No-code / automatisation, Godot 2→3, Vulgarisation 3→4 (patch tooltip-rag, §2 et §3 validés par Xav). Les autres lignes sont recopiées de `skills.ts` tel qu'il est réellement au 2026-09-17.*
+
+**Effet de bord radar (patch tooltip-rag §2)** — recalculé sur `skills.ts` tel qu'il est réellement (le patch citait un calcul basé sur une version de `skills.ts` antérieure à « Autres LLM » et « Conception de workflows », déjà signalée obsolète par le patch skills-7niveaux) : l'axe « LLMs & agents » passe de **3,5 à 4,0** (5+4+4+3+1 → 5+4+4+3, RAG retirée). L'axe « No-code / automatisation » ne « reste » pas à 1,0 comme l'affirmait le patch — cette famille avait déjà « Conception de workflows » à 5 depuis le patch précédent — il **descend de 3,0 à 2,5** (1+5 → 1+5+1, moyenne 2,33 arrondie à 2,5). Décision de Xav en connaissance de cause (§2 et §3 validés explicitement) ; les deux mouvements sont à ne pas « corriger » plus tard en les prenant pour une régression.
 
 *(Éthologie retirée : hors sujet sur ce site, réponse DETTE-16.)*
 
@@ -94,10 +96,10 @@ Une frise courte et datée vaut mieux qu'une frise longue et floue. Le composant
 
 ## 4. Edge cases à gérer
 - Famille avec un seul skill : le radar reste valide (min 3 axes garantis par les données).
-- Famille "No-code / automatisation" n'a qu'un skill à 1 : le radar l'affiche tel quel, sans lissage — c'est voulu (honnêteté du positionnement).
+- Une famille avec un skill à 1 ne fait pas l'objet d'un lissage artificiel : le radar l'affiche tel quel — c'est voulu (honnêteté du positionnement).
 - Recharts sur mobile étroit : radar min 260 px, labels abrégés si < 400 px.
 - Reduced-motion : ligne dessinée d'emblée, pas de stagger.
-- Tooltip de badge chevauchant la carte suivante : la carte survolée/focalisée passe au-dessus de ses sœurs (fix `f856c54`). Règle de primitive : un élément qui déborde de sa carte (tooltip, menu) doit soit remonter le `z-index` de la carte au survol/focus, soit être rendu en portail.
+- Bulle de badge : rendue en portail (`PortalTooltip`, fix `f856c54`), jamais en `absolute` dans la carte — la carte ne coupe jamais ses bulles (pas d'`overflow` sur la carte) et le portail échappe aussi au contexte d'empilement qu'un `transform` de reveal laisserait dessus une fois l'animation terminée. Les libellés longs plient via `min-w-0` + `break-words`, sans avoir besoin d'`overflow-hidden` sur la carte.
 - Un badge à 6 ou 7 dans une famille dont le radar est déjà à 5 : pas de dépassement du radar (clamp), mais le badge affiche bien 6/7 ou 7/7.
 - `POSITIONING` avec 0 palier `en cours` ou `cible` : le bandeau reste valide (tout plein). Avec un palier `acquis` après un `en cours` : autorisé (l'échelle n'est pas strictement linéaire, cf. Positionnement §3), ne pas "corriger" l'ordre.
 - Contenu édité à la main : `skills.test.ts` vérifie que chaque `level` ∈ 1..7, que chaque famille a ≥ 1 skill, que `POSITIONING` a exactement 7 entrées IA1→IA7 dans l'ordre, et que le radar ne dépasse jamais 5.

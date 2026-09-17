@@ -62,21 +62,21 @@ export const skills: Skill[] = [
   { family: "LLMs & agents", name: "Autres LLM (ChatGPT, Gemini, Perplexity, Mammouth)", level: 4, note: "usage ciblé : chacun pour ce qu'il fait le mieux" },
   { family: "LLMs & agents", name: "Prompt engineering", level: 4 },
   { family: "LLMs & agents", name: "Architecture d'agents (function calling, MCP, orchestration)", level: 3, note: "compris, peu mis en prod" },
-  { family: "LLMs & agents", name: "RAG", level: 1, note: "notions — à creuser quand un projet le demandera" },
 
   { family: "No-code / automatisation", name: "Make / n8n", level: 1, note: "notions — axe de consolidation" },
   { family: "No-code / automatisation", name: "Conception de workflows humain ↔ LLM ↔ agent de code", level: 5, note: "la logique, pas la plateforme no-code" },
+  { family: "No-code / automatisation", name: "RAG", level: 1, note: "notions — à creuser quand un projet le demandera" },
 
   { family: "Développement", name: "HTML/JS/CSS (canvas, single-file)", level: 4 },
   { family: "Développement", name: "Python (scripts, tkinter, pygame)", level: 4 },
   { family: "Développement", name: "PowerShell", level: 4 },
-  { family: "Développement", name: "Godot / GDScript", level: 2, note: "cible haTD" },
+  { family: "Développement", name: "Godot / GDScript", level: 3, note: "haTD (prototype jouable, playtesté) + RPG en développement — utilisé sur un projet réel" },
   { family: "Développement", name: "Déploiement / Docker / VPS", level: 1, note: "notions, jamais déployé" },
 
   { family: "Données", name: "Biostatistique / analyse de données", level: 1, note: "hobby passion" },
   { family: "Données", name: "SQL", level: 2, note: "notions correctes — requêtes sur bases de hand histories poker (trackers, échantillons de 50 000 à plus d'un million de mains)" },
 
-  { family: "Humain", name: "Vulgarisation / formation", level: 3 },
+  { family: "Humain", name: "Vulgarisation / formation", level: 4, note: "autonome sur le contenu pédagogique 1AM et les 6 templates documentés" },
   { family: "Humain", name: "Langues : Français / English", level: 5 },
 ];
 
