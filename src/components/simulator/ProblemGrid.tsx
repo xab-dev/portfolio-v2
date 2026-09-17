@@ -64,7 +64,7 @@ export function ProblemGrid({ selection, baselineOverrides, onToggle, onBaseline
                 {problem.baseline ? (
                   <RangeSlider
                     id={`baseline-${problem.id}`}
-                    label="Temps passé aujourd'hui"
+                    label="Temps passé actuellement:"
                     value={baseline}
                     min={problem.baseline.min}
                     max={problem.baseline.max}
