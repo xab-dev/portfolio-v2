@@ -6,7 +6,7 @@ export const projectTypes = [
   "Outil sur mesure",
   "Formation équipe (4D)",
   "Intervention IT / maintenance",
-  "Créer un site (vitrine ou comme celui-ci)",
+  "Créer un site",
   "Autre",
 ] as const;
 
