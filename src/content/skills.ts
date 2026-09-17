@@ -1,4 +1,7 @@
-export type Level = 1 | 2 | 3 | 4 | 5;
+export type Level = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+// 1 notions · 2 en apprentissage · 3 en consolidation · 4 maîtrisé · 5 pratique quotidienne
+// 6 mis en production · 7 architecture & supervision
+// Radar : min(level, 5). Les niveaux 6-7 sont des paliers de preuve (≈ IA6 / IA7), pas des ressentis.
 
 export type SkillFamily =
   | "Méthode IA"
@@ -8,13 +11,28 @@ export type SkillFamily =
   | "Données"
   | "Humain";
 
-export const LEVEL_LABELS: Record<Level, string> = {
-  1: "Notions",
-  2: "En apprentissage",
-  3: "En consolidation",
-  4: "Maîtrisé",
-  5: "Pratique quotidienne",
+export const LEVEL_SCALE: Record<Level, { label: string; meaning: string; tier: string }> = {
+  1: { label: "Notions", meaning: "Je sais ce que c'est et à quoi ça sert ; je n'ai rien produit avec.", tier: "≈ IA1–2" },
+  2: { label: "En apprentissage", meaning: "Premiers essais, encore guidé ou sur exemples.", tier: "≈ IA2–3" },
+  3: { label: "En consolidation", meaning: "Utilisé sur au moins un projet réel ; je m'appuie encore sur la doc ou l'IA pour les cas non triviaux.", tier: "≈ IA3–4" },
+  4: { label: "Maîtrisé", meaning: "Autonome : je livre sans supervision et je sais expliquer mes choix.", tier: "≈ IA4–5" },
+  5: { label: "Pratique quotidienne", meaning: "Outil de travail courant ; méthode documentée et réutilisable.", tier: "≈ IA5" },
+  6: { label: "Mis en production", meaning: "J'ai conçu et fait tourner avec ça une chaîne ou une automatisation qui fonctionne sans moi, et je la maintiens.", tier: "≈ IA6" },
+  7: { label: "Architecture & supervision", meaning: "Je conçois le système complet (IA, outils, données, contrôle), je le supervise et je transmets la méthode.", tier: "≈ IA7" },
 };
+
+// Bandeau Positionnement — indépendant des badges. À éditer à la main quand un palier change.
+export type TierStatus = "acquis" | "en cours" | "cible";
+export const POSITIONING: { tier: string; role: string; status: TierStatus; note?: string }[] = [
+  { tier: "IA1", role: "Utilisateur", status: "acquis" },
+  { tier: "IA2", role: "Power User", status: "acquis" },
+  { tier: "IA3", role: "Prompt Engineer", status: "acquis" },
+  { tier: "IA4", role: "AI Practitioner", status: "acquis" },
+  { tier: "IA5", role: "AI Builder / Vibe Coder", status: "acquis", note: "Je construis des outils et applications avec l'IA au quotidien." },
+  { tier: "IA6", role: "Automation Builder", status: "en cours", note: "Automatisations et agents compris et prototypés, pas encore en production." },
+  { tier: "IA7", role: "AI Workflow Architect", status: "en cours", note: "Je conçois déjà des systèmes multi-outils ; la mise en production supervisée est l'étape suivante." },
+];
+export const POSITIONING_DISCLAIMER = "Grille de compétence personnelle, pas une certification.";
 
 export interface Skill {
   name: string;
@@ -33,11 +51,11 @@ export const FAMILIES: SkillFamily[] = [
 ];
 
 // Contenu réel (Fiche_Professionnelle_Xav.md §Compétences, Positionnement...md §2-3).
-// Auto-évaluation à valider par Xav [DETTE-15]. Ne jamais gonfler un niveau :
+// Auto-évaluation validée par Xav (DETTE-15, DETTE-16 closes). Ne jamais gonfler un niveau :
 // un "1 notions" affiché honnêtement vaut mieux qu'un 3 flatté.
 export const skills: Skill[] = [
   { family: "Méthode IA", name: "Cadre 4D (Délégation/Description/Discernment/Diligence)", level: 5, note: "pratique documentée" },
-  { family: "Méthode IA", name: "Spec-driven development (6 templates)", level: 5 },
+  { family: "Méthode IA", name: "Spec-driven development (6 templates)", level: 6, note: "méthode formalisée et réutilisée sur plusieurs projets — passage à 7 quand elle aura été transmise et appliquée chez un client" },
   { family: "Méthode IA", name: "Diagnostic structuré / cause racine", level: 4 },
 
   { family: "LLMs & agents", name: "Claude (Fable 5.1, Opus 5, Sonnet 5) / Claude Code", level: 5, note: "usage quotidien, choix du modèle selon la tâche" },
@@ -55,8 +73,6 @@ export const skills: Skill[] = [
   { family: "Développement", name: "Godot / GDScript", level: 2, note: "cible haTD" },
   { family: "Développement", name: "Déploiement / Docker / VPS", level: 1, note: "notions, jamais déployé" },
 
-  // [DETTE-16] Niveau en réflexion côté Xav : valeur neutre non gonflée (1 = notions)
-  // en attente de confirmation — voir ARRÊT XAV de la Phase 5.
   { family: "Données", name: "Biostatistique / analyse de données", level: 1, note: "hobby passion" },
   { family: "Données", name: "SQL", level: 2, note: "notions correctes — requêtes sur bases de hand histories poker (trackers, échantillons de 50 000 à plus d'un million de mains)" },
 
@@ -69,10 +85,16 @@ export interface RadarPoint {
   average: number;
 }
 
-/** Moyenne des niveaux par famille, arrondie au 0,5 le plus proche. */
+/**
+ * Moyenne des niveaux par famille, arrondie au 0,5 le plus proche.
+ * Le radar mesure la maîtrise pratique et reste sur 5 : un niveau 6/7 (palier de
+ * preuve, cf. LEVEL_SCALE) y vaut 5, sans faire déborder l'axe.
+ */
 export function computeRadarData(source: Skill[] = skills): RadarPoint[] {
   return FAMILIES.map((family) => {
-    const levels = source.filter((skill) => skill.family === family).map((skill) => skill.level);
+    const levels = source
+      .filter((skill) => skill.family === family)
+      .map((skill) => Math.min(skill.level, 5));
     const average = levels.length === 0 ? 0 : levels.reduce((sum, level) => sum + level, 0) / levels.length;
     return { family, average: Math.round(average * 2) / 2 };
   });

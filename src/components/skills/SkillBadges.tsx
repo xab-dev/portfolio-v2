@@ -3,7 +3,7 @@ import { m } from "motion/react";
 import { cn } from "../../lib/cn";
 import {
   FAMILIES,
-  LEVEL_LABELS,
+  LEVEL_SCALE,
   skills,
   type SkillFamily,
 } from "../../content/skills";
@@ -39,6 +39,7 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
               {familySkills.map((skill) => {
                 const key = `${family}:${skill.name}`;
                 const isHovered = hoveredSkill === key;
+                const isProofTier = skill.level >= 6;
 
                 return (
                   <m.div
@@ -54,14 +55,17 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
                   >
                     <button
                       type="button"
-                      className="rounded-full border border-border-glass bg-bg-deep/40 px-3 py-1.5 text-sm text-text-primary"
+                      className={cn(
+                        "rounded-full border border-border-glass bg-bg-deep/40 px-3 py-1.5 text-sm text-text-primary",
+                        isProofTier && "border-neon-emerald/50 lite:border-neon-emerald/70",
+                      )}
                     >
                       {skill.name}
                     </button>
                     {isHovered ? (
                       <div className="absolute left-0 top-full z-10 mt-2 w-64 rounded-lg border border-border-glass bg-bg-panel p-3 text-xs text-text-muted backdrop-blur-xl lite:bg-bg-deep/95 lite:backdrop-blur-none">
                         <p className="font-medium text-text-primary">
-                          Niveau {skill.level}/5 — {LEVEL_LABELS[skill.level]}
+                          Niveau {skill.level}/7 — {LEVEL_SCALE[skill.level].label}
                         </p>
                         {skill.note ? <p className="mt-1">{skill.note}</p> : null}
                       </div>

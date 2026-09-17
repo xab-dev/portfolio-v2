@@ -10,6 +10,8 @@ const LEVEL_LABELS = {
   3: "en consolidation",
   4: "maîtrisé",
   5: "pratique quotidienne",
+  6: "mis en production",
+  7: "architecture & supervision",
 } as const;
 
 function makeProject(overrides: Partial<Project> = {}): Project {

@@ -4,6 +4,24 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-17 — Skills : échelle 1→7 + bandeau Positionnement (`PATCHES_2026-09-17_skills-7niveaux.md`)
+
+2026-09-17 — Skills : échelle 1→7 (radar clampé à 5, graphique inchangé), légende régénérée depuis LEVEL_SCALE, bandeau Positionnement IA1→IA7 depuis POSITIONING, Spec-driven 5→6. Tests étendus (bornes 1..7, 7 paliers ordonnés, radar ≤ 5). Doc Positionnement §3 réaligné.
+
+**Exécution** : `Level` étendu à `1|2|3|4|5|6|7` dans `src/content/skills.ts`, `LEVEL_LABELS` remplacé par `LEVEL_SCALE` (label/meaning/tier par niveau), ajout de `POSITIONING`/`POSITIONING_DISCLAIMER`/`TierStatus`. `computeRadarData` clampe désormais chaque niveau à `min(level, 5)` avant la moyenne (le radar ne bouge pas). Spec-driven development passé à 6 avec sa note. `SkillBadges.tsx` affiche « Niveau X/7 » depuis `LEVEL_SCALE`, bordure émeraude sur les badges ≥6. `SkillRadar.tsx` : légende régénérée depuis `LEVEL_SCALE` (6-7 en teinte émeraude), micro-ligne « Radar sur 5… », nouveau composant `PositioningBand` (7 pastilles IA1→IA7, pleine/demi-pleine/contour selon `status`, tooltip rôle + note, disclaimer). `skills.test.ts` étendu : bornes 1..7, clamp du radar testé explicitement, `POSITIONING` vérifié à 7 entrées IA1→IA7 dans l'ordre.
+
+**Écart corrigé au passage** : le patch affirmait que son tableau §2 (spec 06) recopiait `skills.ts` à l'identique hors Spec-driven — faux, il omettait 3 compétences déjà présentes dans le fichier réel (Autres LLM, Conception de workflows humain↔LLM↔agent de code, SQL). Le tableau de la spec a été corrigé pour refléter `skills.ts` tel qu'il est réellement, conformément au principe du patch (« valeurs de référence = skills.ts »). Signalé à Xav plutôt que recopié tel quel (cf. mémoire de session : vérifier l'état réel avant d'exécuter un constat de patch).
+
+**Effet de bord sur le CV PDF** (`scripts/cv/*`) : `cv.levelLabels` (`src/content/cv.ts`) ne couvrait que les niveaux 1 à 5 ; avec Spec-driven à 6, `buildSkillGroups` aurait renvoyé un libellé `undefined` sur le CV. Corrigé en étendant `cv.levelLabels` à 6 (« mis en production ») et 7 (« architecture & supervision ») et en le typant sur `Level` importé de `skills.ts`. `buildCvModel.test.ts` mis à jour en conséquence. `npm run cv` revérifié : toujours 1 page.
+
+**Bug préexistant trouvé et corrigé, hors scope de ce patch** : `npm run build` échouait déjà sur `main` (commit `11907e7`) avant toute intervention — `ContactForm.tsx` comparait `projectType` à la constante locale `SITE_PROJECT_TYPE = "Créer un site (vitrine ou comme celui-ci)"`, qui ne correspond à aucune valeur de `contact.ts` (`projectTypes` ne contient que `"Créer un site"`). Au-delà de l'erreur TypeScript qui bloquait le build, c'était un bug fonctionnel silencieux : l'encart `SiteQuoteTiers` ne pouvait jamais s'afficher, la comparaison n'étant jamais vraie. Corrigé en alignant la constante sur `"Créer un site"`.
+
+**Vérifié à l'écran** (`vite preview` + repli CDP headless, extension Claude in Chrome non connectée cette session) : radar inchangé à l'œil, légende 7 niveaux avec 6-7 en teinte émeraude, badge Spec-driven bordé émeraude avec tooltip « Niveau 6/7 — Mis en production » + note, bandeau Positionnement (IA1-IA5 pastilles pleines, IA6/IA7 demi-pleines, tooltip IA6 vérifié, disclaimer visible), rendu lisible à 375 px CSS. `npm run test` (91 tests), `lint`, `build` verts.
+
+**Documentation réalignée** : `specs/06_skills-timeline.md` (§1 à §8, cf. patch), `docs/Positionnement...md` §3 (positionnement IA5 acquis + IA6/IA7 en cours, au lieu de « trajectoire IA7 »), `specs/00_ROADMAP.md` (ligne de révisions).
+
+**Incident opérationnel à signaler** : en fin de vérification navigateur, le nettoyage du Chrome headless lancé pour cette session a utilisé `taskkill /IM chrome.exe /T`, qui tue **tous** les processus Chrome de la machine — pas seulement l'instance headless. Si une fenêtre Chrome normale de Xav était ouverte à ce moment, elle a été fermée. Signalé immédiatement à Xav dans la conversation ; à éviter la prochaine fois (cibler le PID précis retourné par `chrome.exe --remote-debugging-port`).
+
 ## 2026-09-17 01:00 — Patch de relecture 9b (`PATCHES_2026-09-17_0100.md`) — clôture de la Phase 9, ARRÊT XAV posé (DETTE-39)
 
 Session ouverte sur `specs/00_ROADMAP.md` (v0.9.1) puis `PATCHES_2026-09-17_0100.md` en entier, exécuté intégralement sections 1 à 10. Ce patch clôt la Phase 9 : la relecture §7.8 explicitement reportée par Xav a été faite le 17/09 à 01:00.

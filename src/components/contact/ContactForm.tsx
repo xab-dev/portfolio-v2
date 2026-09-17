@@ -27,7 +27,7 @@ type TouchedField = "name" | "email" | "message" | "consent";
 const STEP_LABELS: [string, string, string] = ["Type de projet", "Budget & délai", "Coordonnées"];
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MESSAGE_MIN_LENGTH = 20;
-const SITE_PROJECT_TYPE: ProjectType = "Créer un site (vitrine ou comme celui-ci)";
+const SITE_PROJECT_TYPE: ProjectType = "Créer un site";
 
 function SiteQuoteTiers() {
   return (

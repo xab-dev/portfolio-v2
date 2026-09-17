@@ -37,9 +37,14 @@ Cette échelle est une **grille de compétence**, et non une équivalence offici
 
 # 3. Positionnement actuel
 
-Le profil actuel se situe principalement dans une trajectoire **IA7 — AI Workflow Architect**.
+Le profil actuel se situe **au niveau IA5 (AI Builder / Vibe Coder), acquis et pratiqué au quotidien**, avec un pied dans les deux paliers suivants :
 
-Les compétences déjà développées ou fortement comprises couvrent notamment :
+- **IA6 — Automation Builder** : en cours. Le fonctionnement des automatisations, agents et orchestrateurs est compris et prototypé ; la mise en production reste à faire.
+- **IA7 — AI Workflow Architect** : en cours. La conception de systèmes combinant plusieurs outils, modèles et méthodes est déjà pratiquée (spec-driven development, cadre 4D, découpage en composants) ; la supervision d'un système déployé chez un client est l'étape suivante.
+
+La **trajectoire visée** reste IA7. Le positionnement affiché sur le site (section Compétences, bandeau "Positionnement") reprend exactement cette formulation ; toute évolution se fait dans `src/content/skills.ts` puis ici, jamais l'un sans l'autre.
+
+Ce qui est acquis (IA1→IA5) ou fortement compris (IA6–IA7) couvre notamment :
 
 - utilisation avancée des assistants IA ;
 - prompt engineering ;
@@ -51,7 +56,8 @@ Les compétences déjà développées ou fortement comprises couvrent notamment 
 - réflexion sur MCP, n8n, boucles et systèmes automatisés ;
 - capacité à décomposer un problème en plusieurs composants ;
 - capacité à choisir différents outils selon leur rôle ;
-- capacité à faire travailler plusieurs IA de manière complémentaire.
+- capacité à faire travailler plusieurs IA de manière complémentaire ;
+- formalisation d'une méthode de spec réutilisable (6 templates) pilotant un agent de code — seule pratique déjà au niveau "mise en production" au sens de la grille du site.
 
 ### IA6 : automatisation / agents
 
@@ -73,6 +79,8 @@ Un architecte doit avant tout comprendre :
 - comment contrôler son fonctionnement.
 
 La pratique d'IA6 constitue donc un **prochain axe de consolidation**, et non un prérequis bloquant.
+
+Le même raisonnement vaut pour IA7 : la partie *conception* est acquise, la partie *supervision d'un système en production* ne l'est pas encore. Se dire "IA7" aujourd'hui serait exagéré ; se dire "IA5 avec IA6 et IA7 en cours" est exact et vérifiable.
 
 ---
 
