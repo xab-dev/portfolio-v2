@@ -44,7 +44,7 @@ Valeurs de référence = `src/content/skills.ts` (Xav édite à la main, DETTE-1
 
 | Famille | Compétence | Niveau | Note |
 |---|---|---|---|
-| Méthode IA | Cadre 4D (Délégation/Description/Discernment/Diligence) | 5 | pratique documentée |
+| Méthode IA | Cadre 4D | 5 | Délégation · Description · Discernement · Diligence — pratique documentée |
 | Méthode IA | Spec-driven development (6 templates) | **6** | méthode formalisée et réutilisée sur plusieurs projets — passage à 7 quand elle aura été transmise et appliquée chez un client |
 | Méthode IA | Diagnostic structuré / cause racine | 4 | |
 | LLMs & agents | Claude (Fable 5.1, Opus 5, Sonnet 5) / Claude Code | 5 | usage quotidien, choix du modèle selon la tâche |
@@ -101,6 +101,7 @@ Une frise courte et datée vaut mieux qu'une frise longue et floue. Le composant
 - Un badge à 6 ou 7 dans une famille dont le radar est déjà à 5 : pas de dépassement du radar (clamp), mais le badge affiche bien 6/7 ou 7/7.
 - `POSITIONING` avec 0 palier `en cours` ou `cible` : le bandeau reste valide (tout plein). Avec un palier `acquis` après un `en cours` : autorisé (l'échelle n'est pas strictement linéaire, cf. Positionnement §3), ne pas "corriger" l'ordre.
 - Contenu édité à la main : `skills.test.ts` vérifie que chaque `level` ∈ 1..7, que chaque famille a ≥ 1 skill, que `POSITIONING` a exactement 7 entrées IA1→IA7 dans l'ordre, et que le radar ne dépasse jamais 5.
+- Libellé de badge long : passe à la ligne dans le badge, ne sort jamais de la carte ; section plus haute qu'un écran : reveal par bloc, seuil ≤ 0,1.
 
 ## 5. Structure des fichiers
 ```

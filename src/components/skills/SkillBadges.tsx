@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { m } from "motion/react";
 import { cn } from "../../lib/cn";
+import { Reveal } from "../ui/Reveal";
 import {
   FAMILIES,
   LEVEL_SCALE,
@@ -23,10 +24,10 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
         const isFamilyActive = family === activeFamily;
 
         return (
-          <div
+          <Reveal
             key={family}
             className={cn(
-              "rounded-card border border-border-glass bg-bg-panel p-4 transition-shadow duration-base",
+              "overflow-hidden rounded-card border border-border-glass bg-bg-panel p-4 transition-shadow duration-base",
               isFamilyActive && "shadow-glow-blue lite:border-neon-blue/40",
             )}
             onMouseEnter={() => onFamilyHover(family)}
@@ -44,7 +45,7 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
                 return (
                   <m.div
                     key={key}
-                    className={cn("relative", isHovered && "z-20")}
+                    className={cn("relative min-w-0", isHovered && "z-20")}
                     onMouseEnter={() => setHoveredSkill(key)}
                     onMouseLeave={() => setHoveredSkill(null)}
                     onFocus={() => setHoveredSkill(key)}
@@ -56,7 +57,7 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
                     <button
                       type="button"
                       className={cn(
-                        "rounded-full border border-border-glass bg-bg-deep/40 px-3 py-1.5 text-sm text-text-primary",
+                        "rounded-full border border-border-glass bg-bg-deep/40 px-3 py-1.5 text-sm text-text-primary [overflow-wrap:anywhere]",
                         isProofTier && "border-neon-emerald/50 lite:border-neon-emerald/70",
                       )}
                     >
@@ -74,7 +75,7 @@ export function SkillBadges({ activeFamily, onFamilyHover }: SkillBadgesProps) {
                 );
               })}
             </div>
-          </div>
+          </Reveal>
         );
       })}
     </div>

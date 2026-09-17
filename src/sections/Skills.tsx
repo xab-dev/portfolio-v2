@@ -27,6 +27,7 @@ export function Skills() {
       id="competences"
       title="Compétences"
       subtitle="Un niveau par famille, affiché avec son statut réel — pas de niveau gonflé. Un parcours court et daté, sans jalon inventé."
+      revealContent={false}
     >
       <div className="flex flex-col gap-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">

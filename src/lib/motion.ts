@@ -31,6 +31,30 @@ export const stagger: Variants = {
   },
 };
 
+/**
+ * Seuil de reveal partagé par la primitive `Reveal` (`components/ui/Reveal.tsx`).
+ * Bug 1, `PATCHES_2026-09-17_fix-skills-mobile.md` : la section Compétences
+ * était rendue mais invisible pour toujours (`opacity: 0`) sur Galaxy A04 /
+ * Firefox Android — un seul reveal groupé sur toute la section exigeait
+ * qu'une fraction de sa hauteur totale soit visible à l'écran, fraction
+ * jamais atteinte dès que le contenu dépasse un écran de téléphone. Règle :
+ * `amount` ne doit jamais dépasser 0,2 ici, et `Reveal` s'utilise bloc par
+ * bloc (une carte, un groupe de badges…), jamais sur un conteneur qui peut
+ * dépasser un écran de téléphone.
+ */
+export const revealViewport = { once: true, amount: 0.1, margin: "0px 0px -10% 0px" } as const;
+
+/**
+ * Vrai si le reveal par scroll doit être sauté (contenu visible d'emblée,
+ * sans transition) : sous `prefers-reduced-motion`, ou si `IntersectionObserver`
+ * est absent — jamais lié au mode `lite` (qui coupe les effets coûteux, pas
+ * les reveals, cf. patch ci-dessus).
+ */
+export function shouldSkipReveal(reducedMotion: boolean): boolean {
+  const hasObserver = typeof window !== "undefined" && "IntersectionObserver" in window;
+  return reducedMotion || !hasObserver;
+}
+
 export const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.94 },
   visible: {

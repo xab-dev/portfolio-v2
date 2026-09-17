@@ -54,7 +54,7 @@ export const FAMILIES: SkillFamily[] = [
 // Auto-évaluation validée par Xav (DETTE-15, DETTE-16 closes). Ne jamais gonfler un niveau :
 // un "1 notions" affiché honnêtement vaut mieux qu'un 3 flatté.
 export const skills: Skill[] = [
-  { family: "Méthode IA", name: "Cadre 4D (Délégation/Description/Discernment/Diligence)", level: 5, note: "pratique documentée" },
+  { family: "Méthode IA", name: "Cadre 4D", level: 5, note: "Délégation · Description · Discernement · Diligence — pratique documentée" },
   { family: "Méthode IA", name: "Spec-driven development (6 templates)", level: 6, note: "méthode formalisée et réutilisée sur plusieurs projets — passage à 7 quand elle aura été transmise et appliquée chez un client" },
   { family: "Méthode IA", name: "Diagnostic structuré / cause racine", level: 4 },
 

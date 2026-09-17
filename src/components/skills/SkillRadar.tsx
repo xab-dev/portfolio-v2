@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from "recharts";
 import { cn } from "../../lib/cn";
+import { Reveal } from "../ui/Reveal";
 import {
   computeRadarData,
   LEVEL_SCALE,
@@ -165,53 +166,59 @@ export function SkillRadar({ activeFamily, onFamilyHover }: SkillRadarProps) {
 
   return (
     <div className="flex min-h-[260px] flex-col gap-4">
-      <ResponsiveContainer width="100%" height={narrow ? 260 : 320}>
-        <RadarChart data={data} outerRadius="70%">
-          <PolarGrid stroke="rgb(var(--text-muted) / 0.3)" />
-          <PolarAngleAxis
-            dataKey="family"
-            tick={(props) => (
-              <AngleTick
-                {...props}
-                activeFamily={activeFamily}
-                narrow={narrow}
-                onFamilyHover={onFamilyHover}
-              />
-            )}
-          />
-          <PolarRadiusAxis
-            domain={[0, 5]}
-            tickCount={6}
-            axisLine={false}
-            tick={{ fill: "rgb(var(--text-muted))", fontSize: 10 }}
-          />
-          <Radar
-            dataKey="average"
-            stroke="rgb(var(--neon-blue))"
-            fill="rgb(var(--neon-blue) / 0.25)"
-            fillOpacity={1}
-            isAnimationActive={false}
-          />
-          <Tooltip content={<RadarTooltip />} />
-        </RadarChart>
-      </ResponsiveContainer>
+      <Reveal>
+        <ResponsiveContainer width="100%" height={narrow ? 260 : 320}>
+          <RadarChart data={data} outerRadius="70%">
+            <PolarGrid stroke="rgb(var(--text-muted) / 0.3)" />
+            <PolarAngleAxis
+              dataKey="family"
+              tick={(props) => (
+                <AngleTick
+                  {...props}
+                  activeFamily={activeFamily}
+                  narrow={narrow}
+                  onFamilyHover={onFamilyHover}
+                />
+              )}
+            />
+            <PolarRadiusAxis
+              domain={[0, 5]}
+              tickCount={6}
+              axisLine={false}
+              tick={{ fill: "rgb(var(--text-muted))", fontSize: 10 }}
+            />
+            <Radar
+              dataKey="average"
+              stroke="rgb(var(--neon-blue))"
+              fill="rgb(var(--neon-blue) / 0.25)"
+              fillOpacity={1}
+              isAnimationActive={false}
+            />
+            <Tooltip content={<RadarTooltip />} />
+          </RadarChart>
+        </ResponsiveContainer>
+      </Reveal>
 
-      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
-        {(Object.entries(LEVEL_SCALE) as [string, { label: string }][]).map(([level, { label }]) => (
-          <li
-            key={level}
-            className={cn(Number(level) >= 6 && "text-neon-emerald/90")}
-          >
-            <span className="font-medium text-text-primary">{level}</span> {label}
-          </li>
-        ))}
-      </ul>
-      <p className="text-[10px] text-text-muted">
-        Radar sur 5 (maîtrise pratique). Niveaux 6–7 = mise en production et architecture — voir
-        Positionnement.
-      </p>
+      <Reveal className="flex flex-col gap-2">
+        <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
+          {(Object.entries(LEVEL_SCALE) as [string, { label: string }][]).map(([level, { label }]) => (
+            <li
+              key={level}
+              className={cn(Number(level) >= 6 && "text-neon-emerald/90")}
+            >
+              <span className="font-medium text-text-primary">{level}</span> {label}
+            </li>
+          ))}
+        </ul>
+        <p className="text-[10px] text-text-muted">
+          Radar sur 5 (maîtrise pratique). Niveaux 6–7 = mise en production et architecture — voir
+          Positionnement.
+        </p>
+      </Reveal>
 
-      <PositioningBand />
+      <Reveal>
+        <PositioningBand />
+      </Reveal>
     </div>
   );
 }

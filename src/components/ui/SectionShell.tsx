@@ -1,7 +1,6 @@
 import type { PropsWithChildren, ReactNode } from "react";
-import { m } from "motion/react";
 import { cn } from "../../lib/cn";
-import { fadeUp, fadeUpReduced, stagger, useReducedMotionSafe } from "../../lib/motion";
+import { Reveal } from "./Reveal";
 
 export interface SectionShellProps extends PropsWithChildren {
   id: string;
@@ -10,25 +9,35 @@ export interface SectionShellProps extends PropsWithChildren {
   className?: string;
   /** Action affichée à droite du titre (desktop) / sous le sous-titre (mobile). Réservée à `Play` (spec 10 §3). */
   headerAction?: ReactNode;
+  /**
+   * `false` quand le contenu de la section peut dépasser un écran de
+   * téléphone (Bug 1, `PATCHES_2026-09-17_fix-skills-mobile.md` — ex.
+   * Compétences) : un reveal groupé sur tout `children` n'atteindrait alors
+   * jamais son seuil de visibilité et resterait caché pour toujours. La
+   * section applique ses propres `Reveal` par bloc à la place (radar, carte
+   * de famille, légende, bandeau…), jamais sur elle-même en entier. Défaut
+   * `true` : la plupart des sections tiennent sur un écran ou deux et
+   * profitent du reveal groupé sans rien changer.
+   */
+  revealContent?: boolean;
 }
 
-export function SectionShell({ id, title, subtitle, children, className, headerAction }: SectionShellProps) {
-  const reducedMotion = useReducedMotionSafe();
-  const itemVariants = reducedMotion ? fadeUpReduced : fadeUp;
-
+export function SectionShell({
+  id,
+  title,
+  subtitle,
+  children,
+  className,
+  headerAction,
+  revealContent = true,
+}: SectionShellProps) {
   return (
     <section
       id={id}
       className={cn("scroll-mt-24 px-6 py-16 md:px-12 md:py-28", className)}
     >
-      <m.div
-        className="mx-auto flex max-w-5xl flex-col gap-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <m.div variants={itemVariants} className="flex flex-col gap-3">
+      <div className="mx-auto flex max-w-5xl flex-col gap-10">
+        <Reveal className="flex flex-col gap-3">
           {headerAction ? (
             // `relative`/`absolute` plutôt qu'un item flex à côté du titre : un item flex
             // aurait réduit la largeur dispo du titre et changé son retour à la ligne
@@ -49,9 +58,9 @@ export function SectionShell({ id, title, subtitle, children, className, headerA
           )}
           {subtitle ? <p className="max-w-2xl text-text-muted">{subtitle}</p> : null}
           {headerAction ? <div className="md:hidden">{headerAction}</div> : null}
-        </m.div>
-        <m.div variants={itemVariants}>{children}</m.div>
-      </m.div>
+        </Reveal>
+        {revealContent ? <Reveal>{children}</Reveal> : <div>{children}</div>}
+      </div>
     </section>
   );
 }
