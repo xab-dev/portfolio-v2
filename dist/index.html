@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/portfolio-v2/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Xavier Joseph Bou — Consultant outils et solutions IA : conception de workflows, outils et usages IA adaptés aux besoins réels."
+    />
+    <title>Xavier Joseph Bou — Consultant outils et solutions IA</title>
+    <!-- Barre d'UI du navigateur : deux valeurs selon `prefers-color-scheme`
+         pour le tout premier rendu ; le script ci-dessous écrit ensuite la
+         couleur du thème réellement appliqué dans les deux (un choix explicite
+         peut contredire le réglage système). -->
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Pose data-theme avant le premier rendu (Phase 9c, spec 12 §1.3) pour
+      // éviter tout flash, dans les deux sens. Même patron que le script
+      // data-perf ci-dessous : réimplémente volontairement une version
+      // minimale de src/lib/theme/theme.ts (testée par ailleurs), sans
+      // dépendance, exécutée avant le chargement de tout module.
+      (function () {
+        var theme;
+        try {
+          var stored = localStorage.getItem("theme");
+          if (stored === "light" || stored === "dark") {
+            theme = stored;
+          } else {
+            theme =
+              window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          }
+        } catch (e) {
+          theme = "dark";
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.style.colorScheme = theme;
+        var color = theme === "dark" ? "#0b0f19" : "#ffffff";
+        var metas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var i = 0; i < metas.length; i++) metas[i].setAttribute("content", color);
+      })();
+    </script>
+    <script>
+      // Pose data-perf avant le premier rendu (Phase 6b, spec 08 §2) pour éviter
+      // un flash "complet → allégé". Réimplémente volontairement une version
+      // minimale de la logique de src/lib/perf/liteMode.ts (testée par ailleurs) :
+      // ce script doit rester sans dépendance et s'exécuter avant le chargement
+      // de tout module.
+      (function () {
+        try {
+          var urlValue = new URLSearchParams(location.search).get("perf");
+          var mode;
+          if (urlValue === "lite" || urlValue === "full") {
+            mode = urlValue;
+            sessionStorage.setItem("perf", mode);
+          } else {
+            var stored = sessionStorage.getItem("perf");
+            if (stored === "lite" || stored === "full") {
+              mode = stored;
+            } else {
+              mode = window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "lite" : "full";
+            }
+          }
+          document.documentElement.setAttribute("data-perf", mode);
+        } catch (e) {
+          document.documentElement.setAttribute("data-perf", "full");
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/portfolio-v2/assets/index-DXJNwSvN.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio-v2/assets/index-DkcdPw1w.css">
+    <link rel="canonical" href="https://xab-dev.github.io/portfolio-v2/">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:type" content="profile">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="Xavier Joseph Bou">
+    <meta property="og:title" content="Xavier Joseph Bou — Consultant outils et solutions IA">
+    <meta property="og:description" content="Xavier Joseph Bou — Consultant outils et solutions IA : conception de workflows, outils et usages IA adaptés aux besoins réels.">
+    <meta property="og:url" content="https://xab-dev.github.io/portfolio-v2/">
+    <meta property="og:image" content="https://xab-dev.github.io/portfolio-v2/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Xavier Joseph Bou — Consultant outils et solutions IA">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Xavier Joseph Bou — Consultant outils et solutions IA">
+    <meta name="twitter:description" content="Xavier Joseph Bou — Consultant outils et solutions IA : conception de workflows, outils et usages IA adaptés aux besoins réels.">
+    <meta name="twitter:image" content="https://xab-dev.github.io/portfolio-v2/og.png">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Xavier Joseph Bou","alternateName":"Xav","jobTitle":"Consultant outils et solutions IA","url":"https://xab-dev.github.io/portfolio-v2/","image":"https://xab-dev.github.io/portfolio-v2/images/avatar.webp","email":"mailto:xa.bou@laposte.net","telephone":"+33769547494","address":{"@type":"PostalAddress","addressLocality":"Tarascon","addressRegion":"Provence-Alpes-Côte d'Azur","addressCountry":"FR"},"sameAs":["https://github.com/xab-dev/portfolio-v2","https://www.youtube.com/@1_Autre_Monde"]}</script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <!-- Sans JS, le choix stocké est illisible : on laisse le navigateur
+           trancher (D7). Sombre = valeurs actuelles, clair = D5. -->
+      <style>.noscript-fallback{padding:2rem;font-family:system-ui,sans-serif}@media (prefers-color-scheme:light){.noscript-fallback{color:#0b0f19;background:#fff}}@media (prefers-color-scheme:dark){.noscript-fallback{color:#e5e7eb;background:#0b0f19}}</style>
+      <div class="noscript-fallback">
+        <h1>Xavier Joseph Bou — Consultant outils et solutions IA</h1>
+        <p>Ce site nécessite JavaScript pour son affichage complet. Contact : xa.bou@laposte.net</p>
+      </div>
+    </noscript>
+  </body>
+</html>
