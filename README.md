@@ -4,7 +4,7 @@ Bienvenue sur ce dépôt open-source. En tant que **Consultant en Prévention et
 
 L'objectif de ce journal de bord est de mettre en lumière les forces, les limites techniques, les comportements imprévus (erreurs de fusion de diff, hallucinations de contexte) et la robustesse globale des LLM en situation de développement intensif.
 
-Le terrain d'observation est réel et vérifiable : **ce dépôt est aussi le code source de mon site portfolio**, construit de bout en bout selon la méthode décrite plus bas.
+Le terrain d'observation est réel et vérifiable : il s'agit de mon site portfolio, construit de bout en bout selon la méthode décrite plus bas. Depuis le 2026-09-22, **ce dépôt porte la méthode et le journal ; le code source du site vit dans un dépôt privé** — les 41 commits antérieurs à la scission restent ici, code compris.
 
 **→ Site en ligne : [xab-dev.github.io/portfolio-v2](https://xab-dev.github.io/portfolio-v2/)**
 
@@ -24,7 +24,7 @@ Concrètement, dans l'arborescence :
 | `process/dette_suivi.md` | Dette technique et de contenu, numérotée (`DETTE-NN`), ouverte par l'agent, tranchée par moi. |
 | `specs/` | Le cadrage écrit **avant** chaque phase de code, plus la roadmap versionnée (`00_ROADMAP.md`) et les patchs archivés. |
 | `docs/` | Documents de méthode : bibliothèque de templates de cadrage, séquence d'intervention terrain, déclaration de diligence AI Fluency. |
-| `src/`, `scripts/` | Le code du site et son outillage (génération du CV PDF, pipeline d'images, audits automatisés de contraste et de thème). |
+| *(code source)* | Parti dans un dépôt privé le 2026-09-22 : le site, son outillage (génération du CV PDF, pipeline d'images, audits automatisés de contraste et de thème) et sa configuration. Consultable ici jusqu'au commit `480185e`. |
 
 ---
 
@@ -48,26 +48,14 @@ Mes interventions suivent un cadre strict et itératif visant à garantir la sé
 
 ## ⚙️ Faire tourner le site en local
 
-Stack : React 19 + TypeScript + Vite + Tailwind CSS. Node 20+.
+Le code n'est plus dans ce dépôt (scission du 2026-09-22). Les commandes de
+build, de test et d'audit sont documentées dans le dépôt privé.
 
-```bash
-npm install
-npm run dev      # serveur de dev (régénère d'abord le CV PDF)
-npm run build    # tsc -b && vite build → dist/
-npm test         # vitest
-npm run lint     # oxlint
-```
-
-Outillage d'audit maison :
-
-```bash
-npm run audit:contrast   # axe-core, thèmes clair et sombre
-npm run audit:theme      # diff pixel du rendu sombre (référence locale)
-npm run images           # images-src/ → .webp dans public/images/
-npm run cv               # génère le CV PDF depuis src/content/
-```
-
-**Déploiement** : une seule branche de travail, `main`. Chaque push déclenche `.github/workflows/deploy.yml` (build + publication de `dist/` sur GitHub Pages). Pour tester une modification sans toucher au site en ligne : `npm run build && npx vite preview --host`, puis ouvrir `http://<ip-du-pc>:4173/portfolio-v2/` depuis le mobile sur le même Wi-Fi.
+**Déploiement** : jusqu'à la scission, chaque push sur `main` déclenchait
+`.github/workflows/deploy.yml` (build + publication de `dist/` sur GitHub
+Pages). Le workflow a été retiré avec le code ; la dernière publication reste
+servie en l'état. Le nouveau circuit — construire dans le dépôt privé,
+publier ici — reste à câbler.
 
 ---
 

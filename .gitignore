@@ -1,47 +1,26 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
+# Dépôt de méthode et de journal depuis la scission du 2026-09-22 : le code
+# est parti dans un dépôt privé. Les règles ci-dessous ne protègent plus un
+# build, elles couvrent les **résidus physiques** encore présents dans la
+# copie de travail locale (le `git rm` a retiré les fichiers suivis, pas les
+# dossiers qui ne l'étaient pas). Ne pas les supprimer à l'aveugle :
+# `node_modules/` sert de cible à une jonction créée dans le dépôt privé.
+# Nettoyage physique à faire après un vrai `npm install` côté privé.
 node_modules
 dist
-dist-ssr
+/images-src/
+/public/
+/audit/
 *.local
 
-# Images sources (non compressées, hors de public/ pour ne jamais finir dans
-# le build) : converties en .webp par `npm run images` (DETTE-14, spec 05 §6).
-# Seuls les .webp générés dans public/images/ sont versionnés.
-/images-src/
-
-# CV PDF : artefact de build régénéré par `npm run cv` (prebuild/predev,
-# spec 09 §5, Phase 8). Le dossier reste versionné via .gitkeep pour exister
-# dès le premier `git clone`, mais jamais le PDF lui-même.
-/public/cv/*.pdf
-
-# Captures des audits de thème (spec 12 §5, Phase 9c) : la référence pixel D4
-# est locale et se reprend à la demande (`audit-theme-diff.js --ref`) ; la
-# committer figerait un rendu dépendant de la version de Chrome installée.
-/audit/
+# Documents personnels de cadrage (ménage du 2026-09-22) : restent en local,
+# hors de la vitrine publique. TEMPLATES_SPEC / Sequence_Intervention /
+# declaration_diligence documentent la méthode et restent publics.
+/docs/Fiche_Professionnelle_Xav.md
+/docs/Positionnement — Consultant - Architecte en solutions IA.md
+/docs/readme portfolio.md
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Documents personnels de cadrage (ménage du 2026-09-22) : restent en local,
-# hors de la vitrine publique. Le CV reste versionné, il fait partie de la
-# vitrine ; TEMPLATES_SPEC / Sequence_Intervention / declaration_diligence
-# documentent la méthode et restent publics.
-/docs/Fiche_Professionnelle_Xav.md
-/docs/Positionnement — Consultant - Architecte en solutions IA.md
-/docs/readme portfolio.md
