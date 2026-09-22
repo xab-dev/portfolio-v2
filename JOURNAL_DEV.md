@@ -4,6 +4,10 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-17 (suite) — ARRÊT XAV levé : mesure Galaxy A04 validée
+
+Xav a testé `?perf=lite` puis `?perf=full` sur le Galaxy A04 / Firefox Android (URL déployée) : bulles de badge (§1 du patch tooltip-rag) et rendu général validés dans les deux modes. Critère du patch `PATCHES_2026-09-17_skills-tooltip-rag.md` levé, plus aucun ARRÊT XAV en attente sur les trois correctifs skills de la journée (`d6e628d`, `6a8db3c`, `4a51b1b`). Session close.
+
 ## 2026-09-17 — Correctif Z : bulles coupées + RAG déplacée + rééquilibrage (`PATCHES_2026-09-17_skills-tooltip-rag.md`)
 
 **§1 — Bulles de badge coupées par la carte de famille (régression du patch mobile précédent)**. Cause confirmée : `overflow-hidden`, ajouté sur la carte pour empêcher un libellé long de déborder (patch mobile, Bug 2), coupait aussi la bulle `absolute` du dernier badge de la carte. Corrigé :
