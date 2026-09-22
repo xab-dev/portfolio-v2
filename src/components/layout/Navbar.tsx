@@ -5,6 +5,7 @@ import { cn } from "../../lib/cn";
 import { navLinks } from "../../content/nav";
 import { site } from "../../content/site";
 import { useReducedMotionSafe } from "../../lib/motion";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
   const reducedMotion = useReducedMotionSafe();
@@ -51,6 +52,14 @@ export function Navbar() {
           <a href="#hero" className="font-display font-semibold text-text-primary">
             {site.shortName}
           </a>
+
+          {/* Bouton de thème au milieu du bandeau, équidistant de la marque et
+              de la nav (PC) ou du burger (mobile) — D2 : un seul `flex-1`
+              centré dans le `justify-between` existant, aucun code
+              conditionnel par breakpoint. */}
+          <div className="flex flex-1 justify-center">
+            <ThemeToggle />
+          </div>
 
           <ul className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => (

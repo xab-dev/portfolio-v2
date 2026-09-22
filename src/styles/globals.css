@@ -69,14 +69,15 @@ body::before {
     radial-gradient(45rem 32rem at 50% 100%, rgba(16, 185, 129, 0.08), transparent 60%);
 }
 
-/* Grain léger pour casser les aplats du fond très sombre */
+/* Grain léger pour casser les aplats du fond très sombre. Opacité 0 en thème
+   clair (D7) : sur blanc pur il n'a plus rien à casser et salirait le fond. */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: var(--grain-opacity);
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
@@ -87,13 +88,16 @@ h4 {
   font-family: "Space Grotesk", system-ui, sans-serif;
 }
 
+/* Accents en rôle « texte/icône » (D7) : sur fond blanc, les `--neon-*` de
+   décor ne tiennent pas le contraste. Le blanc du texte sélectionné est fixe
+   dans les deux thèmes (le violet reste le fond dans les deux cas). */
 ::selection {
-  background: rgb(var(--neon-violet));
-  color: rgb(var(--bg-deep));
+  background: rgb(var(--accent-violet-fg));
+  color: rgb(255 255 255);
 }
 
 :focus-visible {
-  outline: 2px solid rgb(var(--neon-blue));
+  outline: 2px solid rgb(var(--accent-blue-fg));
   outline-offset: 2px;
 }
 

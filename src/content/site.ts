@@ -27,13 +27,21 @@ export const site = {
       url: "https://pages.github.com/",
     },
     dataRetentionMonths: 12,
-    lastUpdated: "2026-09-16",
+    lastUpdated: "2026-09-22",
   },
   seo: {
     siteUrl: "https://xab-dev.github.io/portfolio-v2/", // seule valeur à changer le jour du domaine perso
     indexable: false, // noindex jusqu'au polish final (décision Xav)
     ogImage: "og.png", // généré par `npm run og`, 1200×630
     locale: "fr_FR",
+  },
+  ui: {
+    // Libellés du bouton de thème (spec 12 §5) : l'`aria-label` annonce
+    // l'action, pas l'état — le bouton n'a pas d'`aria-pressed`.
+    theme: {
+      toLight: "Passer en thème clair",
+      toDark: "Passer en thème sombre",
+    },
   },
   languages: [
     { name: "Français", level: "natif" },

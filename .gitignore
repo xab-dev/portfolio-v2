@@ -22,6 +22,11 @@ dist-ssr
 # dès le premier `git clone`, mais jamais le PDF lui-même.
 /public/cv/*.pdf
 
+# Captures des audits de thème (spec 12 §5, Phase 9c) : la référence pixel D4
+# est locale et se reprend à la demande (`audit-theme-diff.js --ref`) ; la
+# committer figerait un rendu dépendant de la version de Chrome installée.
+/audit/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -78,7 +78,10 @@ function seoHeadPlugin(): Plugin {
         { tag: "meta", attrs: { name: "twitter:title", content: ogTitle }, injectTo: "head" },
         { tag: "meta", attrs: { name: "twitter:description", content: description }, injectTo: "head" },
         { tag: "meta", attrs: { name: "twitter:image", content: ogImage }, injectTo: "head" },
-        { tag: "meta", attrs: { name: "theme-color", content: "#0B0F19" }, injectTo: "head" },
+        // `theme-color` : plus injecté ici depuis la Phase 9c (spec 12 §5) — deux
+        // balises `media="(prefers-color-scheme: …)"` vivent dans `index.html` et
+        // sont réécrites à chaque bascule de thème. Une balise sans `media`
+        // injectée après elles les aurait emportées au premier rendu.
         {
           tag: "script",
           attrs: { type: "application/ld+json" },
