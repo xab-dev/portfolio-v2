@@ -1,0 +1,46 @@
+# Publication seule : ce dépôt ne contient plus le code depuis la scission du
+# 2026-09-22, donc rien n'est construit ici. `dist/` y est commité, produit par
+# `npm run deploy` dans le dépôt privé, et ce workflow se contente de le servir.
+#
+# Conséquences voulues : aucun secret dans ce dépôt public, aucun accès au code
+# privé depuis un workflow dont les logs sont publics, et la source Pages reste
+# réglée sur « GitHub Actions » — rien à changer côté réglages du dépôt.
+name: Publier dist/ sur GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    # Un commit de journal ou de spec ne redéploie pas le site.
+    paths: ["dist/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Garde-fou — dist/ doit exister
+        run: test -f dist/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

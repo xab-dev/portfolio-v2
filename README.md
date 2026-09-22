@@ -51,11 +51,17 @@ Mes interventions suivent un cadre strict et itératif visant à garantir la sé
 Le code n'est plus dans ce dépôt (scission du 2026-09-22). Les commandes de
 build, de test et d'audit sont documentées dans le dépôt privé.
 
-**Déploiement** : jusqu'à la scission, chaque push sur `main` déclenchait
-`.github/workflows/deploy.yml` (build + publication de `dist/` sur GitHub
-Pages). Le workflow a été retiré avec le code ; la dernière publication reste
-servie en l'état. Le nouveau circuit — construire dans le dépôt privé,
-publier ici — reste à câbler.
+**Déploiement** : le site est servi par ce dépôt, mais construit dans le dépôt
+privé. Le circuit, câblé le 2026-09-22 :
+
+1. dans le dépôt privé, `npm run deploy` construit et recopie `dist/` ici ;
+2. `dist/` est commité dans ce dépôt (c'est le site publié, pas un artefact — il
+   n'est donc pas ignoré) ;
+3. au push, `.github/workflows/pages.yml` publie `dist/` sur GitHub Pages.
+
+Aucun secret n'est stocké ici et aucun workflow n'accède au code privé : ce
+dépôt est public, ses logs d'exécution le sont aussi. Un commit de journal ou
+de spec ne redéclenche pas de publication (le workflow n'écoute que `dist/`).
 
 ---
 
