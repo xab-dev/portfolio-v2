@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { m } from "motion/react";
 import type { Variants } from "motion/react";
 import { hero } from "../content/hero";
@@ -7,6 +8,7 @@ import { AgentPanel } from "../components/agent/AgentPanel";
 import { assetUrl } from "../lib/assetUrl";
 import { fadeUp, fadeUpReduced, useReducedMotionSafe } from "../lib/motion";
 import { useLiteMode } from "../lib/perf/useLiteMode";
+import { useTheme } from "../lib/theme/useTheme";
 
 const titleContainer: Variants = {
   hidden: {},
@@ -44,18 +46,39 @@ function HeroGlow({ reducedMotion }: { reducedMotion: boolean }) {
   );
 }
 
+/**
+ * Avatar du Hero. Deux tirages du même dessin selon le thème (Phase 9c/4) :
+ * l'original sur fond sombre reste servi en thème sombre — D4 de la spec 12
+ * gèle ce rendu au pixel — et la version claire prend sa place en thème clair.
+ *
+ * Choix en JS plutôt qu'en CSS (deux `<img>` superposés, ou `<picture>` +
+ * `prefers-color-scheme`) pour deux raisons : le navigateur ne téléchargerait
+ * qu'une seule des deux images ici, et surtout `<picture>` ne verrait que la
+ * préférence système, donc raterait le choix explicite stocké par le bouton.
+ * `useTheme` relit `data-theme` posé avant le premier rendu par le script
+ * inline d'`index.html` : pas de flash, pas de bascule après coup.
+ */
 function HeroAvatar() {
+  const { theme } = useTheme();
+  const [lightFailed, setLightFailed] = useState(false);
   const hasImage = hero.avatar.src !== "";
+  // Repli explicite : si `avatar-light.webp` manque (source `mode-clair` non
+  // fournie à `npm run images`), on retombe sur le tirage sombre plutôt que
+  // d'afficher une image cassée. Le sombre, lui, n'a pas de repli : son absence
+  // serait un build cassé, pas une variante optionnelle.
+  const useLight = theme === "light" && !lightFailed;
+  const src = useLight ? hero.avatar.srcLight : hero.avatar.src;
 
   return (
     <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full border border-neon-violet/40 shadow-glow-violet">
       {hasImage ? (
         <img
-          src={assetUrl(hero.avatar.src)}
+          src={assetUrl(src)}
           alt={hero.avatar.alt}
           width={96}
           height={96}
           className="h-full w-full object-cover"
+          onError={useLight ? () => setLightFailed(true) : undefined}
         />
       ) : (
         <div

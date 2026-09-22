@@ -13,7 +13,17 @@ export const hero = {
   // DETTE-02 résolue : avatar dessiné par Xav, traité en carré 512px ≤100 Ko
   // par `npm run images` (voir scripts/process-images.js). Le repli initiales
   // reste géré par HeroAvatar si `src` est vide (robustesse, pas un besoin actuel).
-  avatar: { src: "/images/avatar.webp", alt: "Silhouette encapuchonnée — avatar de Xav", initials: initialsOf(site.name) },
+  //
+  // Deux tirages du même dessin (Phase 9c/4) : `src` est celui du thème sombre
+  // — inchangé, et seul utilisé par l'OG (`scripts/build-og.js`) — `srcLight`
+  // celui du thème clair. `alt` est commun : c'est le même sujet, seul le
+  // rendu change, donc rien de nouveau à décrire pour un lecteur d'écran.
+  avatar: {
+    src: "/images/avatar.webp",
+    srcLight: "/images/avatar-light.webp",
+    alt: "Silhouette encapuchonnée — avatar de Xav",
+    initials: initialsOf(site.name),
+  },
 };
 
 /** "Xavier Joseph Bou" → "XB" (première lettre du premier et du dernier mot). */
