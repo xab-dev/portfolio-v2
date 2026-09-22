@@ -4,6 +4,16 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 (clôture de session) — Vérifications de Xav
+
+Xav a vérifié le site déployé après le push du ménage (`ecf150e`) : **Galaxy A04**, **PC Firefox** et **iPhone émulé (F12)** — « all good ». Trois environnements dont deux jamais couverts par l'outillage de l'agent (Firefox, et un rendu iOS même émulé : tous les audits CDP de la Phase 9c tournent sous Chrome).
+
+L'**[ARRÊT XAV]** de la Phase 9c est donc levé sur ses trois premiers points (vérification PC, push, Galaxy A04). Il **reste ouvert** sur le dernier : la relecture de la version claire par un tiers — l'origine même de la phase (une lectrice avait abandonné la lecture à cause du blanc sur noir). Tant qu'elle n'a pas eu lieu, le critère de clôture de la spec 12 n'est pas rempli.
+
+DETTE-43 vue et non contestée par Xav : l'historique public garde les deux documents retirés, aucune purge demandée. La remarque sur la part de l'agent dans le README ne sera pas portée au dépôt — Xav en fait le sujet d'une vidéo YouTube.
+
+---
+
 ## 2026-09-22 (suite) — Ménage de repo : vitrine GitHub
 
 Session hors phase : rendre le dépôt présentable publiquement. **Aucune ligne de code applicatif touchée** — le périmètre a été borné avant d'agir, par vérification de ce dont dépend réellement le build (`prebuild: npm run cv` puis `tsc -b && vite build`). `docs/`, `specs/`, le journal et la dette ne sont importés par rien : seulement cités en prose dans des commentaires. Le ménage est donc documentaire, pas technique.
