@@ -37,3 +37,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Documents personnels de cadrage (ménage du 2026-09-22) : restent en local,
+# hors de la vitrine publique. Le CV reste versionné, il fait partie de la
+# vitrine ; TEMPLATES_SPEC / Sequence_Intervention / declaration_diligence
+# documentent la méthode et restent publics.
+/docs/Fiche_Professionnelle_Xav.md
+/docs/Positionnement — Consultant - Architecte en solutions IA.md
+/docs/readme portfolio.md

@@ -2,7 +2,7 @@ import { ROLE_LABELS, WEEKS_PER_YEAR, type Problem, type StackItem, type StackRo
 
 /**
  * Fonctions pures du Simulateur (spec 03 §2 + §5, amendées par DETTE-07 —
- * `specs/PATCHES_2026-09-15_1800.md`). Aucun React ici : testé isolément.
+ * `specs/archives/PATCHES_2026-09-15_1800.md`). Aucun React ici : testé isolément.
  */
 
 /** Baseline h/sem choisie par le visiteur pour chaque problématique cochée. */

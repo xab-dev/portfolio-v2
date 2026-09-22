@@ -73,7 +73,7 @@ Aucun nouveau fichier de contenu : ce module ne touche pas `src/content/`.
 
 ## 6. Consignes d'autonomie pour Claude Code
 - **Cause racine avant patch** : avant d'écrire une ligne, lister les règles CSS du build actuel qui déclenchent `backdrop-filter`, `filter`, `box-shadow` à rayon > 20 px, `mix-blend-mode`, et les animations de gradient. C'est l'inventaire à allégir ; le joindre au journal.
-- Ne pas "optimiser" le mode complet au passage, même si une amélioration semble évidente : hors scope, à noter dans `JOURNAL_DEV.md` pour la Phase 7.
+- Ne pas "optimiser" le mode complet au passage, même si une amélioration semble évidente : hors scope, à noter dans `process/JOURNAL_DEV.md` pour la Phase 7.
 - Ne pas introduire de détection par `userAgent`, `deviceMemory` ou `hardwareConcurrency` : `pointer: coarse` est le seul critère V1 (Firefox n'expose pas `deviceMemory`, et un critère hybride rend le comportement imprévisible).
 - Ne pas ajouter de réglage utilisateur ("activer les effets") en V1 — si Xav le veut, ce sera un micro-ticket ultérieur.
 - Une seule stratégie par effet (token **ou** variante `lite:`), pas les deux pour le même effet.
@@ -98,7 +98,7 @@ Optimisation du mode complet (Phase 7). Réglage utilisateur pour forcer un mode
 - Esquisse des phases : insérer après la Phase 6 : `- **Phase 6b — Mode allégé tactile** (\`08_mode-allege-tactile.md\`) : effets de rendu (flou, glows) coupés sous \`pointer: coarse\`, PC pixel-identique. Ouverte suite au test terrain sur Galaxy A04 / Firefox Android.`
 - Ordre conseillé : `0 → 4 → 5 → 1 → 6 → 6b → 2 → 3 → 7`.
 
-### `dette_suivi.md` §C
+### `process/dette_suivi.md` §C
 - Nouvelle ligne : `☐ **[DETTE-30]** Défilement saccadé de façon uniforme sur tactile d'entrée de gamme (Galaxy A04, Firefox Android, 2026-09-15) ; fonctionnalités intactes, PC fluide. Cause probable : coût par image de \`backdrop-filter\` + glows sur GPU Mali-G52, aggravé par le chemin de rendu de Firefox Android. | Phase 6b`
 - Cocher : `Poids de l'iframe haTD non mesuré` → ☑ (375 Ko, page autonome, mesuré en DETTE-29).
 

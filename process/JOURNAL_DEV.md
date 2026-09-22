@@ -4,6 +4,40 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 (suite) — Ménage de repo : vitrine GitHub
+
+Session hors phase : rendre le dépôt présentable publiquement. **Aucune ligne de code applicatif touchée** — le périmètre a été borné avant d'agir, par vérification de ce dont dépend réellement le build (`prebuild: npm run cv` puis `tsc -b && vite build`). `docs/`, `specs/`, le journal et la dette ne sont importés par rien : seulement cités en prose dans des commentaires. Le ménage est donc documentaire, pas technique.
+
+### Décisions de Xav appliquées
+
+- `docs/Fiche_Professionnelle_Xav.md` et `docs/Positionnement — Consultant - Architecte en solutions IA.md` : retirés du suivi Git (`git rm --cached`, fichiers conservés en local) et ajoutés au `.gitignore`. `docs/readme portfolio.md` (brouillon du README, jamais versionné) ignoré aussi.
+- `docs/CV_fake_archi_fake.md` : **reste public**, il fait partie de la vitrine (décision de Xav après signalement du mail `xa.bou@laposte.net` et du téléphone partiellement masqué qu'il contient).
+- `specs/` (et `specs/archives/`) : conservé tel quel, le cadrage écrit fait partie de ce que la vitrine démontre.
+- `JOURNAL_DEV.md` et `dette_suivi.md` : déplacés dans `process/` (`git mv`, historique préservé). Xav n'avait tranché que pour le journal ; la dette suit par cohérence, elle relève du même registre — trivial à annuler si ce n'est pas le choix voulu. Compaction du journal (163 Ko) explicitement hors scope.
+- `README.md` : remplacé par le texte rédigé par Xav (`docs/readme portfolio.md`).
+
+### Écart assumé sur le README
+
+Le texte fourni présente le dépôt comme un journal d'audit de la robustesse des LLM, sans mentionner que ce même dépôt est le code source du site portfolio déployé. Un visiteur serait tombé sur du React/Vite sans savoir quoi en faire. Le texte de Xav a été **repris intégralement, sans coupe ni réécriture** ; deux ajouts seulement, à valider :
+- une phrase + le lien du site en ligne dans l'intro, et un tableau d'arborescence sous « Contenu du Dépôt » (qui rattache les rubriques annoncées aux fichiers réels) ;
+- une section « Faire tourner le site en local » (stack, commandes npm, outillage d'audit, flux de déploiement) — reprise du `README.md` précédent, dont c'était le seul contenu à sauver.
+
+### Deux corrections trouvées en passant
+
+- **Références mortes dans le code** : `src/content/simulator.ts` et `src/lib/simulator/compute.ts` pointaient vers `specs/PATCHES_2026-09-15_1800.md`, déplacé dans `specs/archives/` depuis. Corrigé (commentaires seuls).
+- **Dérive de version** : `package.json` était resté en `0.7.0` alors que la ROADMAP est en `0.10.1`. Aligné sur `0.10.1`.
+- Les mentions en prose de `JOURNAL_DEV.md`/`dette_suivi.md` dans `specs/*.md` ont été réécrites en `process/…`. `specs/archives/` n'a **pas** été touché : ce sont des documents historiques, les réécrire falsifierait ce qu'ils disaient au moment où ils ont été écrits.
+
+### Limite de ce nettoyage
+
+Retirer les deux documents personnels du suivi Git **ne les efface pas de l'historique** : ils restent lisibles dans les commits antérieurs d'un dépôt public. Les en purger demanderait une réécriture d'historique + `push --force` — non fait, non proposé en autonomie. DETTE-43 ouverte.
+
+### Vérifications
+
+`npm run build` vert (bundle identique en taille au précédent), `npm test` 104/104. Aucun fichier de `src/`, `public/`, `index.html`, `scripts/` ou de configuration modifié autrement que les deux commentaires ci-dessus et le numéro de version.
+
+---
+
 ## 2026-09-22 (suite) — Phase 9c/4 : avatar par thème
 
 Demande de Xav : `images-src/avatar/raw/avatar_mode-clair.jpg` sert le thème clair, l'original `20230603_001451.png` reste le thème sombre. Rien d'autre.

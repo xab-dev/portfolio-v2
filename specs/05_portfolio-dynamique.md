@@ -87,7 +87,7 @@ src/content/projects.test.ts     (chaque tag ↔ ≥1 projet ; ids uniques)
 ```
 
 ## 6. Consignes d'autonomie pour Claude Code
-- Rédiger `problem/architecture/limits` à partir des sources listées ; ne **jamais** produire une métrique chiffrée qui n'y figure pas — utiliser le marqueur `[DETTE-xx]` dans `dette_suivi.md`.
+- Rédiger `problem/architecture/limits` à partir des sources listées ; ne **jamais** produire une métrique chiffrée qui n'y figure pas — utiliser le marqueur `[DETTE-xx]` dans `process/dette_suivi.md`.
 - Ne pas utiliser `CV_fake_archi_fake.md` (fictif, T7).
 - Réutiliser `Modal` et `GlassCard` sans les modifier ; si une prop manque, l'ajouter dans Phase 0 (fichier ui) et le noter.
 - **Captures d'écran (DETTE-14)** : Xav les dépose dans `public/images/projects/<id>/` (ids : `hatd`, `templates`, `miniciel`, `terrain`, `regie-maison`, `1am`). L'agent les convertit en WebP (largeur max 1600 px, ≤ 200 Ko chacune, script `npm run images` avec `sharp`), garde les originaux hors du repo (`.gitignore` sur `raw/`), et renseigne `images[]` avec un `alt` descriptif en français. Dans la modale : galerie horizontale scrollable, `loading="lazy"`, clic → agrandissement dans la même `Modal`. Une carte sans image reste valide (pas de vignette cassée).

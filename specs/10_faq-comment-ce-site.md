@@ -1,12 +1,12 @@
 # Portfolio v2 — SPEC : FAQ « Comment ce site a été créé ? » (Phase 9)
 
-**Version : 1.0.0** — rédigée le 2026-09-16 à partir des réponses de Xav (16/09, 12:12 → 13:30) et de `JOURNAL_DEV.md`. Contenu relu et validé par Xav (Q1, Q2, 4 questions de base, formulation sobre : « Galaxy A04 », « Claude Pro »).
+**Version : 1.0.0** — rédigée le 2026-09-16 à partir des réponses de Xav (16/09, 12:12 → 13:30) et de `process/JOURNAL_DEV.md`. Contenu relu et validé par Xav (Q1, Q2, 4 questions de base, formulation sobre : « Galaxy A04 », « Claude Pro »).
 
 **Contexte déjà disponible pour Claude Code** : `00_ROADMAP.md` (T5, T6, T7, T8 ; « Design et animations : figés »), primitives `Modal`, `TypingText`, `Tag`, `NeonButton` (Phase 0), `AgentMessage` (`src/components/agent/`, Phase 1), `useLiteMode()` (Phase 6b), `useReducedMotionSafe()`, `SectionShell`, section `Play.tsx` (Phase 6).
 
 ## 1. Rôle du module
 
-Répondre à la question que le site pose implicitement : *comment un consultant IA a-t-il produit ce site ?* — en utilisant le site lui-même comme cas réel, dans le format que le visiteur a déjà vu en haut de page (agent de poche). **Hors du flux principal** : pas dans la nav, pas une section ; un seul bouton discret en haut à droite de la section Jouer, qui ouvre un pop-up. Tout le contenu est **dérivé de `JOURNAL_DEV.md` et des réponses de Xav** ; rien d'inventé (T6/T7), rien qui répète l'agent de poche v1 (4D, outils, non-IA, ROI, disponibilité).
+Répondre à la question que le site pose implicitement : *comment un consultant IA a-t-il produit ce site ?* — en utilisant le site lui-même comme cas réel, dans le format que le visiteur a déjà vu en haut de page (agent de poche). **Hors du flux principal** : pas dans la nav, pas une section ; un seul bouton discret en haut à droite de la section Jouer, qui ouvre un pop-up. Tout le contenu est **dérivé de `process/JOURNAL_DEV.md` et des réponses de Xav** ; rien d'inventé (T6/T7), rien qui répète l'agent de poche v1 (4D, outils, non-IA, ROI, disponibilité).
 
 ## 2. Entrées / Sorties
 
@@ -43,7 +43,7 @@ Texte de référence des 6 questions (**à recopier tel quel**, ponctuation et e
 | `dette` | C'est quoi la dette suivie ? | — | 1. « Un fichier où tout ce qui manque ou reste à confirmer est écrit noir sur blanc, avec un numéro, plutôt que masqué par une valeur inventée. L'agent y ajoute des lignes, n'en supprime jamais ; l'humain coche. » 2. « Ce site : 36 lignes numérotées à ce jour — un niveau de compétence provisoire, une photo de poste de travail floutée avant publication, une numérotation en collision entre deux phases, signalée plutôt que corrigée en silence. » |
 | `arret` | [ARRÊT HUMAIN], c'est quoi ? | — | 1. « Le marqueur que l'agent pose quand un critère de passage ne peut pas être vérifié par lui : relire un texte, confirmer qu'un mail est arrivé, juger la fluidité sur un vrai téléphone, relire un PDF imprimé. Il s'arrête, rend compte, et rien n'est poussé en ligne. » 2. « Ce site en a connu sept. Aucun n'a été levé par l'agent lui-même. » |
 
-Sources des chiffres (pour vérification, pas pour affichage) : 7 specs initiales → `README.md` du kit ; 12 décisions → ROADMAP T1–T12 ; 7 questions de fond → `dette_suivi.md` §A (S1–S7) ; 81 tests, `ca5fdd2` → journal Phase 8 ; 36 lignes → DETTE-36 ; « nette amélioration », 0 pixel → journal Phase 6b ; bug réintroduit → journal Phase 7 (bug 5) ; journal reconstitué → journal Phase 2 (patch B) ; 7 arrêts → journaux Phases 4, 5, 6, 6b, 3, 7, 8 ; onze phases → 0, 1, 2, 3, 4, 5, 6, 6b, 7, 8, 9. **Si un chiffre du journal a changé au moment de l'exécution, corriger le texte et le noter dans le journal — jamais l'inverse.**
+Sources des chiffres (pour vérification, pas pour affichage) : 7 specs initiales → `README.md` du kit ; 12 décisions → ROADMAP T1–T12 ; 7 questions de fond → `process/dette_suivi.md` §A (S1–S7) ; 81 tests, `ca5fdd2` → journal Phase 8 ; 36 lignes → DETTE-36 ; « nette amélioration », 0 pixel → journal Phase 6b ; bug réintroduit → journal Phase 7 (bug 5) ; journal reconstitué → journal Phase 2 (patch B) ; 7 arrêts → journaux Phases 4, 5, 6, 6b, 3, 7, 8 ; onze phases → 0, 1, 2, 3, 4, 5, 6, 6b, 7, 8, 9. **Si un chiffre du journal a changé au moment de l'exécution, corriger le texte et le noter dans le journal — jamais l'inverse.**
 
 ## 3. Comportement attendu
 
@@ -113,7 +113,7 @@ Saisie libre, réponses dynamiques, `ApiAgentProvider`. Version anglaise (Phase 
 - Ligne Phase 9 de l'esquisse : ajouter `(\`10_faq-comment-ce-site.md\`)` après le titre, et « 6 questions : workflow, création du site (prioritaires), spec, phases, dette, arrêt humain ; deep link `#faq` ; prop `headerAction` ajoutée à `SectionShell` pour Jouer uniquement ».
 - Note de nommage : les fichiers `09_polish-seo-mentions-legales.md` et `09_export-cv-pdf.md` portent le même numéro ; la FAQ prend le **10** et la version anglaise prendra le **11**. Ne pas renommer les deux 09 (liens dans le journal).
 
-### `dette_suivi.md`
+### `process/dette_suivi.md`
 - §D : `2026-09-16 — spec 10 (FAQ) écrite, contenu validé par Xav ; collision de numéro 09/09 constatée, FAQ = 10, anglais = 11.`
 - Aucune DETTE-xx nouvelle attendue. Si l'exécution en ouvre une (chiffre du journal divergent), la numéroter à partir de **37** après vérification de l'état réel du fichier (leçon Phase 8).
 

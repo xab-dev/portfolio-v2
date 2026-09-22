@@ -121,7 +121,7 @@ Version anglaise du CV. Génération à la demande / personnalisation par visite
 - Esquisse des phases : ajouter après la Phase 7 : `- **Phase 8 — Export CV classique** (\`09_export-cv-pdf.md\`) : PDF A4 une page généré à la build depuis \`src/content/*.ts\` (\`npm run cv\`, \`prebuild\`), servi depuis \`dist/cv/\`, lien \`download\` dans le Hero et Contact. Aucune génération côté client.`
 - Ordre conseillé : `0 → 4 → 5 → 1 → 6 → 6b → 2 → 3 → 8 → 7` — la Phase 8 passe **avant** la 7 pour que l'audit final (SEO, robots, Lighthouse) couvre aussi le PDF.
 
-### `dette_suivi.md`
+### `process/dette_suivi.md`
 - §C, deux lignes :
   `☐ **[DETTE-32]** CV PDF limité à la trajectoire 2026 (DETTE-17 propagée) ; peut paraître mince hors contexte du site. Décision D6. | Phase 8`
   `☐ **[DETTE-33]** PDF contenant mail + téléphone (déjà publics sur le site) indexable par les moteurs sans en-tête \`noindex\` (GitHub Pages ne permet pas d'en-têtes) ; trancher \`robots.txt\` \`Disallow: /portfolio-v2/cv/\` ou assumer. | Phase 7`

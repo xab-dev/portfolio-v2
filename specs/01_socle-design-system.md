@@ -1,6 +1,6 @@
 # Portfolio v2 — SPEC : Socle Vite + design system + squelette (Phase 0)
 
-**Contexte déjà disponible pour Claude Code** : `00_ROADMAP.md` (lire en entier, surtout T1-T12). Repo `xab-dev/portfolio-v2` (contient déjà `specs/` et `dette_suivi.md`).
+**Contexte déjà disponible pour Claude Code** : `00_ROADMAP.md` (lire en entier, surtout T1-T12). Repo `xab-dev/portfolio-v2` (contient déjà `specs/` et `process/dette_suivi.md`).
 
 ## 1. Rôle du module
 Poser la fondation technique et visuelle sur laquelle les 6 sections suivantes viendront se brancher sans jamais redéfinir une couleur, une animation d'entrée ou une modale. Tout ce qui est "transversal" est fait ici, une fois.

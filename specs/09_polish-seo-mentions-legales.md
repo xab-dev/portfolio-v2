@@ -2,7 +2,7 @@
 
 **Créée le 2026-09-16** à partir des décisions de Xav (session du 16/09, 00:50-01:30). Format : Module Standard. Clôt **DETTE-31**, la ligne §C « Pas de SEO/OG/sitemap » et la ligne §B DETTE-22 (page Mentions légales). Toutes les décisions ci-dessous sont **tranchées par Xav** : ne pas les rouvrir, ne pas proposer d'alternative.
 
-**Contexte déjà disponible pour Claude Code** : `specs/00_ROADMAP.md` (T5, T8, T10, contraintes de méthode), `index.html` (script inline `data-perf`), `src/content/site.ts`, `src/components/layout/Footer.tsx`, le deep-link `#projets/<id>` de la Phase 4 (patron pour `#mentions-legales`), `src/content/references.ts`, `src/content/simulator.ts`, `src/lib/simulator/compute.ts` + tests, `src/components/simulator/EvidenceBadge.tsx`, `PortalTooltip` (Phase 3), `src/components/playground/PromptPane.tsx`, `scripts/process-images.js` (patron pour le script OG), `JOURNAL_DEV.md` Phase 0 (script Puppeteer d'audit + `emulateMediaFeatures`).
+**Contexte déjà disponible pour Claude Code** : `specs/00_ROADMAP.md` (T5, T8, T10, contraintes de méthode), `index.html` (script inline `data-perf`), `src/content/site.ts`, `src/components/layout/Footer.tsx`, le deep-link `#projets/<id>` de la Phase 4 (patron pour `#mentions-legales`), `src/content/references.ts`, `src/content/simulator.ts`, `src/lib/simulator/compute.ts` + tests, `src/components/simulator/EvidenceBadge.tsx`, `PortalTooltip` (Phase 3), `src/components/playground/PromptPane.tsx`, `scripts/process-images.js` (patron pour le script OG), `process/JOURNAL_DEV.md` Phase 0 (script Puppeteer d'audit + `emulateMediaFeatures`).
 
 ## 1. Rôle du module
 
@@ -182,7 +182,7 @@ package.json                            (script `og`, version → 0.7.0 — la v
 - Cause racine avant patch (Playground, écarts reduced-motion).
 - Vérification visuelle réelle à 375 px (ou la largeur minimale atteignable par l'outil, à noter) et 1280 px, `?perf=full` et `?perf=lite`, pour : page Mentions légales, badge Simulateur ouvert, Playground cas `long`.
 - Tester les aperçus OG **sans réseau externe** : ouvrir `dist/index.html` et vérifier les balises par `document.head` ; l'aperçu réel sur LinkedIn/WhatsApp est fait par Xav après déploiement.
-- `dette_suivi.md` : ajouter, ne jamais supprimer.
+- `process/dette_suivi.md` : ajouter, ne jamais supprimer.
 
 ## 7. Critères de validation
 
@@ -210,7 +210,7 @@ Basculer `indexable` à `true` (polish final, avant la version anglaise). Image 
 - Phase 7 dans l'esquisse : remplacer « (spec à écrire — Module Standard) » par « (\`09_polish-seo-mentions-legales.md\`) » et ajouter en fin : « Décisions du 16/09 : domicile complet publié, TVA art. 293 B, vue \`#mentions-legales\` pleine page, JSON-LD complet (mail + téléphone inclus), OG générée par script sharp, \`noindex\` jusqu'au polish final, 4ᵉ référence retirée / \`saisie\` non chiffrée, liens de références dans le badge, Playground en retour à la ligne, audit reduced-motion par émulation seule, DETTE-32 traitée à la main par Xav. »
 - Ligne « Phase 0 — … Phase à exécuter maintenant » : `Phase 7 (09_polish-seo-mentions-legales.md)`.
 
-### `dette_suivi.md`
+### `process/dette_suivi.md`
 - §B DETTE-22 : ajouter « Page Mentions légales livrée en Phase 7 (spec 09) ; statut affiché "Entrepreneur individuel (EI)" ; adresse et TVA (293 B) ajoutées. »
 - §C « Pas de SEO/OG/sitemap en Phases 0-6 » → ☑ « livré Phase 7 ; \`noindex\` volontaire jusqu'au polish final (\`site.seo.indexable\`) ».
 - §C DETTE-31 → ☑ « 3 références vérifiées par l'architecte le 2026-09-16 (DOI QJE 10.1093/qje/qjae044, Science 10.1126/science.adh2586, Organization Science 10.1287/orsc.2025.21838) ; référence éditeurs IDP retirée, \`saisie\` passée en non chiffrée (décision Xav). »

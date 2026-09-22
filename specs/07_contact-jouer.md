@@ -63,7 +63,7 @@ Iframe `src={play.url}` (URL absolue), `title="haTD — tower defense par Xavier
 Deux restes des phases précédentes, petits et sans dépendance, sont **dans le scope** de cette phase pour ne pas traîner :
 
 1. **Retrait de la section temporaire `#kitchen-sink`** (prévu "au plus tard fin de Phase 6" depuis la Phase 0). Supprimer la section, son lien éventuel, et le fichier `KitchenSink.tsx`. Vérifier que `NeonButton` (prop `href`), `Modal`, `Tag`, `AnimatedCounter`, `TypingText`, `GlassCard` restent tous utilisés par au moins une vraie section (`AnimatedCounter` ne le sera qu'en Phase 2 : le garder, ne pas le supprimer).
-2. **Câblage des images déjà générées (DETTE-14)** : `public/images/projects/templates/templates-01.webp` et `public/images/projects/1am/1am-01.webp` existent mais ne sont pas référencés. Ajouter `images[]` avec un `alt` descriptif en français dans `src/content/projects.ts` pour les fiches `templates` et `1am`. `terrain` reste sans image (source non fournie). Mettre à jour la ligne DETTE-14 de `dette_suivi.md` en conséquence (ne reste que `terrain`).
+2. **Câblage des images déjà générées (DETTE-14)** : `public/images/projects/templates/templates-01.webp` et `public/images/projects/1am/1am-01.webp` existent mais ne sont pas référencés. Ajouter `images[]` avec un `alt` descriptif en français dans `src/content/projects.ts` pour les fiches `templates` et `1am`. `terrain` reste sans image (source non fournie). Mettre à jour la ligne DETTE-14 de `process/dette_suivi.md` en conséquence (ne reste que `terrain`).
 
 ## 4. Edge cases à gérer
 - Endpoint absent : le formulaire fonctionne quand même via `mailto:` — jamais un bouton mort.
@@ -97,7 +97,7 @@ src/content/play.ts
 
 ## 7. Critères de validation
 1. Parcours complet en 3 clics + saisie, envoi réel vers `formspree.io/f/xgaegryp` **confirmé reçu par Xav** sur `xa.bou@laposte.net` (adresse déjà validée côté Formspree par Xav le 2026-09-15) ; repli `mailto:` vérifié en coupant le réseau. **[ARRÊT XAV]** : la confirmation de réception est le seul point que l'agent ne peut pas vérifier seul.
-2. Pré-remplissage depuis le simulateur : **vérifiable en conditions réelles seulement après la Phase 2** — ne pas le cocher. En attendant : tests `readSimulator.test.ts` verts (3 cas) + vérification manuelle en injectant la clé dans DevTools (`sessionStorage.setItem('simulator', '{"selection":["support","saisie"]}')`, puis rechargement). Noter explicitement le report dans `JOURNAL_DEV.md`.
+2. Pré-remplissage depuis le simulateur : **vérifiable en conditions réelles seulement après la Phase 2** — ne pas le cocher. En attendant : tests `readSimulator.test.ts` verts (3 cas) + vérification manuelle en injectant la clé dans DevTools (`sessionStorage.setItem('simulator', '{"selection":["support","saisie"]}')`, puis rechargement). Noter explicitement le report dans `process/JOURNAL_DEV.md`.
 3. Validation des champs et messages d'erreur accessibles (`aria-describedby`).
 4. Desktop : le jeu se charge et le plein écran fonctionne. Mobile émulé (pointeur coarse) : l'overlay s'ouvre, le cold-open joue, "Fermer" et la fermeture auto fonctionnent tous les deux.
 5. Lighthouse Performance ne chute pas de plus de 5 points par rapport à la Phase 5 (grâce au lazy).

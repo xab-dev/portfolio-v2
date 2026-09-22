@@ -10,7 +10,7 @@ import {
 
 /**
  * Contenu du Simulateur (Phase 2, spec 03) — amendé par DETTE-07,
- * tranchée par Xav le 2026-09-15 : voir `specs/PATCHES_2026-09-15_1800.md`
+ * tranchée par Xav le 2026-09-15 : voir `specs/archives/PATCHES_2026-09-15_1800.md`
  * (le patch prime sur la spec 03 en cas de conflit).
  *
  * Fourchettes "temps gagné" limitées à ce qui est documenté publiquement.

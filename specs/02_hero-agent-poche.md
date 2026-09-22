@@ -70,7 +70,7 @@ src/content/agent.ts
 
 ## 6. Consignes d'autonomie pour Claude Code
 - Reformuler les réponses scriptées pour qu'elles sonnent naturel est autorisé ; **inventer une disponibilité, un tarif ou un chiffre client ne l'est pas**.
-- Ne pas implémenter `ApiAgentProvider` ; laisser l'interface et une note dans `JOURNAL_DEV.md`.
+- Ne pas implémenter `ApiAgentProvider` ; laisser l'interface et une note dans `process/JOURNAL_DEV.md`.
 - Réutiliser `Tag` et `TypingText` de Phase 0, ne pas en recréer.
 
 ## 7. Critères de validation

@@ -16,7 +16,7 @@ verifie_par: xav
 
 **Changements 1.0.0 → 1.1.0** : Phase 0 exécutée et ses constats intégrés (§3) ; D4 reformulée (référence prise fin de Phase 1) ; chemins réels du dépôt (`Navbar.tsx`, `src/lib/theme/`, `src/styles/tokens.css`) ; noms de tokens existants **conservés** ; valeurs claires figées (§4) ; `--border-glass` → DETTE-40 post-spec ; outillage d'audit à écrire (§5) ; version ROADMAP 0.10.0 ; prérequis d'arbre propre.
 
-**Contexte déjà disponible pour Claude Code** : le rapport de Phase 0 (dans la conversation), `specs/00_ROADMAP.md`, `index.html` (script inline `data-perf`), `tailwind.config.ts` (variante `lite` = `addVariant("lite", 'html[data-perf="lite"] &')`), `src/styles/tokens.css` + `globals.css`, `src/lib/perf/liteMode.ts` + `useLiteMode.ts` (patron de dossier), `src/components/layout/Navbar.tsx`, `src/content/site.ts` + `legal.ts`, `scripts/audit-reduced-motion.js` (pilotage Chrome en CDP brut), `sharp` (déjà en dépendance), `dette_suivi.md` (dernière ligne DETTE-39).
+**Contexte déjà disponible pour Claude Code** : le rapport de Phase 0 (dans la conversation), `specs/00_ROADMAP.md`, `index.html` (script inline `data-perf`), `tailwind.config.ts` (variante `lite` = `addVariant("lite", 'html[data-perf="lite"] &')`), `src/styles/tokens.css` + `globals.css`, `src/lib/perf/liteMode.ts` + `useLiteMode.ts` (patron de dossier), `src/components/layout/Navbar.tsx`, `src/content/site.ts` + `legal.ts`, `scripts/audit-reduced-motion.js` (pilotage Chrome en CDP brut), `sharp` (déjà en dépendance), `process/dette_suivi.md` (dernière ligne DETTE-39).
 
 ## 1. Rôle du module
 
@@ -59,7 +59,7 @@ Comportement standard :
 - Conséquence : la Phase 2 n'est **pas une migration de valeurs en dur** mais un découpage des accents en deux rôles (décor / texte) sur 13 fichiers, plus le scrim et le bouton plein.
 - Le diff pixel de la Phase 6b était une méthode manuelle (`git stash -u` + `sharp`), jamais committée ; ni Puppeteer ni axe-core dans le projet.
 
-**Prérequis avant Phase 1 — arbre de travail** (à faire par Xav, fait/à confirmer au lancement) : committer l'entrée `JOURNAL_DEV.md` « ARRÊT XAV levé : mesure Galaxy A04 validée », le rangement `specs/archives/` (= anciens tickets `PATCHES_*` ; `specs/` = specs numérotées, dont `12_theme-clair-sombre.md`), et la suppression des doublons `PATCHES_*` restés à la racine de `specs/`. Claude Code vérifie `git status` propre avant de toucher au code ; sinon il s'arrête et le signale.
+**Prérequis avant Phase 1 — arbre de travail** (à faire par Xav, fait/à confirmer au lancement) : committer l'entrée `process/JOURNAL_DEV.md` « ARRÊT XAV levé : mesure Galaxy A04 validée », le rangement `specs/archives/` (= anciens tickets `PATCHES_*` ; `specs/` = specs numérotées, dont `12_theme-clair-sombre.md`), et la suppression des doublons `PATCHES_*` restés à la racine de `specs/`. Claude Code vérifie `git status` propre avant de toucher au code ; sinon il s'arrête et le signale.
 
 ## 4. Table des tokens (validée par Xav le 22/09 — recopier, ne pas recalculer)
 
@@ -135,7 +135,7 @@ Dans l'ordre : les 13 fichiers `text-neon-*` → `text-accent-*-fg` (AgentPanel,
 5. Défaut : `Emulation.setEmulatedMedia` `prefers-color-scheme: light` sans clé → clair ; `dark` → sombre ; clé stockée → prime ; changement de média à chaud → suit.
 6. `reduced-motion` : icône sans animation.
 7. `npm run test` / `lint` / `build` / `cv` verts ; PDF et OG inchangés (diff git vide sur `scripts/cv/`, `scripts/build-og.js`, `public/og.png`).
-8. `JOURNAL_DEV.md` (section Phase 9c : cause racine, ce qui a cassé, vérifié à l'écran, méthode de masque D4), `dette_suivi.md` (DETTE-40 `--border-glass` post-spec ; suivantes numérotées à la suite), `specs/00_ROADMAP.md` (Phase 9c, exception D4, `0.10.0`, ligne « prochaine phase » ajustée — D15).
+8. `process/JOURNAL_DEV.md` (section Phase 9c : cause racine, ce qui a cassé, vérifié à l'écran, méthode de masque D4), `process/dette_suivi.md` (DETTE-40 `--border-glass` post-spec ; suivantes numérotées à la suite), `specs/00_ROADMAP.md` (Phase 9c, exception D4, `0.10.0`, ligne « prochaine phase » ajustée — D15).
 9. Séquence de commits proposée (D12). Rien de committé.
 
 **[ARRÊT XAV]** : vérification en local sur PC (deux thèmes, bascule, rechargement, `lite`), push `main`, Galaxy A04, relecture de la version claire par sa mère. Critère de clôture : lecture possible sans gêne.
