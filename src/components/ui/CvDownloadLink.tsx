@@ -16,7 +16,7 @@ export function CvDownloadLink({ className }: { className?: string }) {
       download
       type="application/pdf"
       className={cn(
-        "inline-flex items-center gap-2 text-sm text-text-muted underline decoration-border-glass underline-offset-4 transition-colors duration-fast hover:text-neon-blue hover:decoration-neon-blue",
+        "inline-flex items-center gap-2 text-sm text-text-muted underline decoration-border-glass underline-offset-4 transition-colors duration-fast hover:text-accent-blue-fg hover:decoration-accent-blue-fg",
         className,
       )}
     >

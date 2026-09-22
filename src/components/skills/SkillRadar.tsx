@@ -76,7 +76,7 @@ function AngleTick({
       <text
         textAnchor="middle"
         fontSize={narrow ? 10 : 12}
-        fill={isActive ? "rgb(var(--neon-blue))" : "rgb(var(--text-muted))"}
+        fill={isActive ? "rgb(var(--accent-blue-fg))" : "rgb(var(--text-muted))"}
         fontWeight={isActive ? 600 : 400}
       >
         {label}
@@ -204,7 +204,7 @@ export function SkillRadar({ activeFamily, onFamilyHover }: SkillRadarProps) {
           {(Object.entries(LEVEL_SCALE) as [string, { label: string }][]).map(([level, { label }]) => (
             <li
               key={level}
-              className={cn(Number(level) >= 6 && "text-neon-emerald/90")}
+              className={cn(Number(level) >= 6 && "text-accent-emerald-fg/90")}
             >
               <span className="font-medium text-text-primary">{level}</span> {label}
             </li>

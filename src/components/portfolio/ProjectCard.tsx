@@ -44,7 +44,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
 
             <span
               className={cn(
-                "flex items-center gap-1 text-xs text-neon-blue opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100",
+                "flex items-center gap-1 text-xs text-accent-blue-fg opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100",
               )}
             >
               Voir le cas

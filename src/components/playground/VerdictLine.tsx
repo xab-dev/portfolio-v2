@@ -34,8 +34,8 @@ export function VerdictLine({ verdict, instant }: VerdictLineProps) {
         className={cn(
           "inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs transition-colors duration-fast",
           isTemplate
-            ? "border-neon-violet/50 bg-neon-violet/10 text-neon-violet hover:bg-neon-violet/20"
-            : "border-neon-emerald/50 bg-neon-emerald/10 text-neon-emerald hover:bg-neon-emerald/20",
+            ? "border-neon-violet/50 bg-neon-violet/10 text-accent-violet-fg hover:bg-neon-violet/20"
+            : "border-neon-emerald/50 bg-neon-emerald/10 text-accent-emerald-fg hover:bg-neon-emerald/20",
         )}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}

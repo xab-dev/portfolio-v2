@@ -77,7 +77,7 @@ export function CodeLines({ lines, renderLine, className }: CodeLinesProps) {
     <div className={cn("flex flex-col", className)}>
       {lines.map((line, index) => (
         <div key={index} className="grid grid-cols-[2rem_1fr]">
-          <span aria-hidden="true" className="select-none pr-3 text-right text-text-muted/50">
+          <span aria-hidden="true" className="select-none pr-3 text-right text-text-gutter">
             {index + 1}
           </span>
           {/* `overflow-wrap: anywhere` (pas `break-words` = `break-word`) : seul `anywhere`

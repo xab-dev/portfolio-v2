@@ -35,7 +35,7 @@ export function RoiCounters({ outputs, hourlyRate, onHourlyRateChange }: RoiCoun
           <AnimatedCounter
             value={outputs.valeurIndicativeAn}
             suffix="€"
-            className="font-display text-2xl text-neon-emerald"
+            className="font-display text-2xl text-accent-emerald-fg"
           />
         </div>
       </div>

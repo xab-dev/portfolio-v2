@@ -105,7 +105,7 @@ export function AgentPanel() {
   return (
     <GlassCard glow="violet" className="flex flex-col gap-4">
       <header className="flex items-center gap-3">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-neon-violet/50 bg-neon-violet/15 text-neon-violet">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-neon-violet/50 bg-neon-violet/15 text-accent-violet-fg">
           <Bot size={18} aria-hidden="true" />
         </span>
         <div className="flex-1">
@@ -176,7 +176,7 @@ export function AgentPanel() {
         <button
           type="button"
           onClick={handleReset}
-          className="inline-flex items-center gap-1.5 self-start text-xs text-text-muted transition-colors duration-fast hover:text-neon-blue"
+          className="inline-flex items-center gap-1.5 self-start text-xs text-text-muted transition-colors duration-fast hover:text-accent-blue-fg"
         >
           <RotateCcw size={14} aria-hidden="true" />
           Réinitialiser la conversation
@@ -202,7 +202,7 @@ export function AgentPanel() {
           className={cn(
             "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors duration-fast",
             canSend
-              ? "border-neon-blue bg-neon-blue/15 text-neon-blue hover:bg-neon-blue/25"
+              ? "border-neon-blue bg-neon-blue/15 text-accent-blue-fg hover:bg-neon-blue/25"
               : "border-border-glass text-text-muted",
           )}
         >
@@ -210,7 +210,7 @@ export function AgentPanel() {
         </button>
       </form>
       {inputTooLong ? (
-        <p className="-mt-2 text-xs text-neon-violet">300 caractères maximum.</p>
+        <p className="-mt-2 text-xs text-accent-violet-fg">300 caractères maximum.</p>
       ) : null}
     </GlassCard>
   );

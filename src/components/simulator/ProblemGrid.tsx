@@ -39,7 +39,7 @@ export function ProblemGrid({ selection, baselineOverrides, onToggle, onBaseline
               className="flex items-start gap-3 text-left"
             >
               <Icon
-                className={cn("mt-0.5 h-5 w-5 shrink-0", checked ? "text-neon-blue" : "text-text-muted")}
+                className={cn("mt-0.5 h-5 w-5 shrink-0", checked ? "text-accent-blue-fg" : "text-text-muted")}
                 aria-hidden="true"
               />
               <span className="flex flex-col gap-1">

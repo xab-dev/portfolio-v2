@@ -149,7 +149,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm text-neon-blue underline underline-offset-4"
+                className="text-sm text-accent-blue-fg underline underline-offset-4"
               >
                 {link.label}
               </a>

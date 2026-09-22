@@ -24,8 +24,11 @@ export type NeonButtonProps = CommonProps &
   );
 
 const variantClasses: Record<Variant, string> = {
+  // Bouton plein : le fond porte du texte, donc `--accent-solid` / `--on-accent`
+  // (assombri en clair) et non les `--neon-*` de décor. En sombre les deux
+  // paires valent la même chose : le changement est neutre au pixel près.
   primary:
-    "bg-neon-blue text-bg-deep border border-neon-blue font-medium",
+    "bg-accent-solid text-on-accent border border-accent-solid font-medium",
   ghost:
     "bg-transparent text-text-primary border border-border-glass hover:border-neon-blue",
 };

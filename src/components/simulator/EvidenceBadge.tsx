@@ -6,8 +6,8 @@ import { cn } from "../../lib/cn";
 import { PortalTooltip } from "../ui/PortalTooltip";
 
 const LEVEL_STYLE: Record<EvidenceLevel, string> = {
-  etude: "border-neon-emerald/50 bg-neon-emerald/10 text-neon-emerald",
-  editeur: "border-neon-violet/50 bg-neon-violet/10 text-neon-violet",
+  etude: "border-neon-emerald/50 bg-neon-emerald/10 text-accent-emerald-fg",
+  editeur: "border-neon-violet/50 bg-neon-violet/10 text-accent-violet-fg",
   aucune: "border-border-glass bg-bg-deep/40 text-text-muted",
 };
 
@@ -66,7 +66,7 @@ export function EvidenceBadge({ level, summary, refIds, className }: EvidenceBad
                     href={reference.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-neon-blue hover:underline"
+                    className="inline-flex items-center gap-1 text-accent-blue-fg hover:underline"
                   >
                     {reference.authors} — {reference.title}
                     <ExternalLink size={12} aria-hidden="true" className="shrink-0" />

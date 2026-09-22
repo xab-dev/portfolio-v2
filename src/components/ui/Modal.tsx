@@ -62,7 +62,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     <AnimatePresence>
       {open ? (
         <m.div
-          className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm lite:bg-black/90 lite:backdrop-blur-none"
+          className="fixed inset-0 z-50 overflow-y-auto bg-scrim backdrop-blur-sm lite:backdrop-blur-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -83,7 +83,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
               animate="visible"
               exit="exit"
               onClick={(event) => event.stopPropagation()}
-              className="relative w-full max-w-lg rounded-card border border-border-glass bg-bg-panel p-6 backdrop-blur-xl lite:bg-bg-deep/95 lite:backdrop-blur-none"
+              className="relative w-full max-w-lg rounded-card border border-border-glass bg-bg-modal p-6 backdrop-blur-xl lite:bg-bg-deep/95 lite:backdrop-blur-none"
             >
               <button
                 type="button"

@@ -66,7 +66,7 @@ export function Play() {
         <p className="text-text-muted">{play.intro}</p>
         <a
           href="#projets/hatd"
-          className="self-start text-sm text-neon-blue underline underline-offset-4"
+          className="self-start text-sm text-accent-blue-fg underline underline-offset-4"
         >
           Voir la fiche projet
         </a>
@@ -97,7 +97,7 @@ export function Play() {
                 type="button"
                 onClick={handleFullscreen}
                 aria-label="Plein écran"
-                className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-bg-deep/80 px-3 py-1.5 text-xs text-text-primary backdrop-blur-xl transition-colors duration-fast hover:text-neon-blue"
+                className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-bg-deep/80 px-3 py-1.5 text-xs text-text-primary backdrop-blur-xl transition-colors duration-fast hover:text-accent-blue-fg"
               >
                 <Expand size={14} aria-hidden="true" /> Plein écran
               </button>

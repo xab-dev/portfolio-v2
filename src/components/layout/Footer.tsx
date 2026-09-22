@@ -25,7 +25,7 @@ export function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label={label}
-              className="text-text-muted transition-colors duration-fast hover:text-neon-blue"
+              className="text-text-muted transition-colors duration-fast hover:text-accent-blue-fg"
             >
               <Icon size={20} />
             </a>
@@ -33,7 +33,7 @@ export function Footer() {
           <a
             href={`mailto:${site.contact.emailPrimary}`}
             aria-label="Envoyer un e-mail"
-            className="text-text-muted transition-colors duration-fast hover:text-neon-blue"
+            className="text-text-muted transition-colors duration-fast hover:text-accent-blue-fg"
           >
             <Mail size={20} />
           </a>
@@ -41,7 +41,7 @@ export function Footer() {
 
         <p className="text-xs text-text-muted">
           {site.legal.status} · SIRET {site.legal.siret} ·{" "}
-          <a href="#mentions-legales" className="underline-offset-2 hover:text-neon-blue hover:underline">
+          <a href="#mentions-legales" className="underline-offset-2 hover:text-accent-blue-fg hover:underline">
             Mentions légales
           </a>
         </p>

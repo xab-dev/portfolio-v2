@@ -155,7 +155,7 @@ export function ContactForm() {
   if (status === "sent") {
     return (
       <div className="flex flex-col items-center gap-3 py-6 text-center">
-        <CheckCircle2 size={32} className="text-neon-emerald" aria-hidden="true" />
+        <CheckCircle2 size={32} className="text-accent-emerald-fg" aria-hidden="true" />
         <p className="font-display text-lg text-text-primary">Message envoyé</p>
         <p className="max-w-sm text-sm text-text-muted">
           {projectType ? `${projectType} · ${budget} · ${timing}. ` : null}
@@ -270,7 +270,7 @@ export function ContactForm() {
                 className={inputClass(Boolean(touched.name) && !nameValid)}
               />
               {touched.name && !nameValid ? (
-                <p id="contact-name-error" className="text-xs text-neon-violet">
+                <p id="contact-name-error" className="text-xs text-accent-violet-fg">
                   Le nom est requis.
                 </p>
               ) : null}
@@ -291,7 +291,7 @@ export function ContactForm() {
                 className={inputClass(Boolean(touched.email) && !emailValid)}
               />
               {touched.email && !emailValid ? (
-                <p id="contact-email-error" className="text-xs text-neon-violet">
+                <p id="contact-email-error" className="text-xs text-accent-violet-fg">
                   Une adresse e-mail valide est requise.
                 </p>
               ) : null}
@@ -312,7 +312,7 @@ export function ContactForm() {
                 className={inputClass(Boolean(touched.message) && !messageValid)}
               />
               {touched.message && !messageValid ? (
-                <p id="contact-message-error" className="text-xs text-neon-violet">
+                <p id="contact-message-error" className="text-xs text-accent-violet-fg">
                   20 caractères minimum ({message.trim().length}/{MESSAGE_MIN_LENGTH}).
                 </p>
               ) : null}
@@ -334,7 +334,7 @@ export function ContactForm() {
               </label>
             </div>
             {touched.consent && !consent ? (
-              <p id="contact-consent-error" className="-mt-2 text-xs text-neon-violet">
+              <p id="contact-consent-error" className="-mt-2 text-xs text-accent-violet-fg">
                 Cette case est requise pour envoyer le formulaire.
               </p>
             ) : null}
@@ -345,13 +345,13 @@ export function ContactForm() {
                 className="flex flex-col gap-2 rounded-card border border-neon-violet/50 bg-neon-violet/10 px-4 py-3 text-sm text-text-primary"
               >
                 <p className="flex items-center gap-2">
-                  <TriangleAlert size={16} className="shrink-0 text-neon-violet" aria-hidden="true" />
+                  <TriangleAlert size={16} className="shrink-0 text-accent-violet-fg" aria-hidden="true" />
                   L'envoi a échoué{errorReason ? ` (${errorReason})` : ""}. Vos informations sont conservées.
                 </p>
                 {payloadForRetry ? (
                   <a
                     href={buildMailtoFallback(payloadForRetry)}
-                    className="self-start text-xs text-neon-blue underline underline-offset-4"
+                    className="self-start text-xs text-accent-blue-fg underline underline-offset-4"
                   >
                     Écrire un e-mail à la place
                   </a>

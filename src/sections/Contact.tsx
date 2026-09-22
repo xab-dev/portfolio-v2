@@ -65,7 +65,7 @@ export function Contact() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                className="text-text-muted transition-colors duration-fast hover:text-neon-blue"
+                className="text-text-muted transition-colors duration-fast hover:text-accent-blue-fg"
               >
                 <Icon size={18} />
               </a>
