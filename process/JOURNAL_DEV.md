@@ -4,6 +4,32 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 (suite) — Scission du dépôt : public / privé / déploiement
+
+Session hors phase, décidée par Xav après un échange sur ce qui, dans le dépôt, est open source et ce qui est commercialisable. Sa hiérarchie de valeur, posée par lui : (1) ce qui n'est pas dans le dépôt — jugement, application, transmission ; (2) le code du site. Il veut la première publique et la seconde privée, packageable.
+
+**Deux constats posés avant d'agir, l'un a changé la décision.**
+
+1. *Le couplage méthode ↔ code.* 80 des 102 fichiers de `src/` et `scripts/` sont nommés dans `specs/` et `process/`, et les specs contiennent 62 blocs de code : publier la méthode, c'est publier le plan de reconstruction du produit. Seul `docs/TEMPLATES_SPEC.md` ne cite aucun fichier — la méthode générique est donc séparable du produit.
+2. *L'historique.* 25 des 41 commits touchent `src/` ou `scripts/`, et 103 fichiers de code vivent dans l'historique. Garder le dépôt historique public signifie garder le code publiquement lisible **pour toujours** : un `git mv` n'y change rien. Ce point a été remonté à Xav avant tout déplacement, parce qu'il contredisait le choix qu'il venait de faire.
+
+**Décisions de Xav.** Le dépôt public garde le nom `portfolio-v2` — donc l'URL du site, l'OG, le sitemap, le lien du CV et `links.github` continuent de fonctionner sans toucher à `site.ts` ni à `vite.config.ts`. Et **option A** : l'historique n'est pas réécrit. L'agent recommandait A contre l'inversion des identités, pour une raison non technique : le produit public est un journal d'audit dont la crédibilité tient aux commits datés ; repartir d'un historique neuf aurait détruit une preuve qui existe pour protéger un produit qui n'existe pas encore. La coupe (jusqu'où le journal reste public) n'a pas été tranchée explicitement : hypothèse retenue et appliquée — **journal et specs publics**, conformément à ce que le README annonce déjà.
+
+**Exécution, en cinq commits, aucun push.**
+
+- Le dépôt privé est un **clone local** (`git clone --no-hardlinks`) créé *avant* tout élagage, pour qu'aucun fichier ne puisse être perdu : les 41 commits sont repris tels quels. `origin` y a été détaché immédiatement, pour rendre impossible un push accidentel vers le dépôt public.
+- Côté privé : retrait de `docs/`, `specs/`, `process/` (27 fichiers), puis README remplacé — celui hérité du clone présentait le dépôt comme un journal d'audit open source, ce qu'il n'est plus.
+- Côté public : retrait de `src/`, `scripts/`, `public/`, `index.html`, de toute la configuration et du workflow de déploiement (127 fichiers), puis alignement du README et du `.gitignore`.
+
+**Vérifié, pas supposé.** Avant de retirer quoi que ce soit : aucun fichier de `src/`, `scripts/`, `.github/` ni la configuration ne lit `docs/`, `specs/` ou `process/` — ces dossiers n'étaient cités qu'en prose dans des commentaires ; le seul couplage réel (`scripts/cv/` importe des types de `src/content/`) reste intact, les deux partant ensemble. Après scission, le dépôt privé a été **réellement construit**, pas seulement raisonné : `npm run test` 104/104 et `npm run build` verts, CV PDF régénéré par le `prebuild`. Pour y parvenir sans réinstaller les dépendances, une **jonction Windows** `portfolio-v2-src/node_modules → portfolio-v2/node_modules` a été créée : commodité locale, non versionnée, mais piège si le dossier cible disparaît — d'où DETTE-46.
+
+**Deux effets de bord traités plutôt que subis.** Le workflow `deploy.yml` a été retiré du dépôt public au lieu d'y être laissé : sans `package.json` il aurait échoué à chaque push. La dernière publication GitHub Pages reste servie en l'état, mais le circuit est à refaire (DETTE-45). Et en nettoyant le `.gitignore` de ses règles de build, les résidus physiques (`node_modules`, `dist`, `public/`, `audit/`, `images-src/`) sont remontés en non suivi : les règles ont été rétablies, avec un commentaire qui dit ce qu'elles couvrent désormais.
+
+**Ce qui n'a pas été fait**, faute de décision : aucune licence posée d'aucun côté (DETTE-47), alors que le README public annonce « open-source » depuis l'origine sans fichier `LICENSE` — le dépôt est donc, juridiquement, tous droits réservés. Aucun push : les deux dépôts attendent le go de Xav, et le dépôt privé n'existe pas encore côté GitHub.
+
+---
+
+
 ## 2026-09-22 (suite) — Synthèse « hallucination constructive » versée à la vitrine
 
 Xav a déposé `docs/synthese_hallucination_constructive.pdf` (non suivi) et demandé un **diagnostic en lecture seule** avant toute intégration à la page web. Document lu en entier : une page, quatre sections — définition de l'« hallucination constructive », canevas Thèse / Antithèse / Synthèse en trois messages, quatre « domaines validés », invitation à explorer les « sujets qui traînent ». Origine précisée par Xav après coup : rédigé par Google Recherche (mode IA) au 5ᵉ prompt, le 4ᵉ ayant été refusé par la limite de l'outil.
