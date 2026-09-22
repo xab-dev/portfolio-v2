@@ -1,0 +1,6 @@
+# Sans cette règle, `core.autocrlf=true` (Windows) classe ce PDF comme du texte
+# — sa taille et son encodage le privent des octets nuls qui déclenchent la
+# détection binaire automatique de Git — et convertirait ses fins de ligne au
+# checkout, produisant un fichier illisible. Constaté le 2026-09-22 sur
+# `docs/synthese_hallucination_constructive.pdf`, avant son premier commit.
+*.pdf binary

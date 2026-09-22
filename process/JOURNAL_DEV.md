@@ -4,6 +4,27 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 (suite) — Synthèse « hallucination constructive » versée à la vitrine
+
+Xav a déposé `docs/synthese_hallucination_constructive.pdf` (non suivi) et demandé un **diagnostic en lecture seule** avant toute intégration à la page web. Document lu en entier : une page, quatre sections — définition de l'« hallucination constructive », canevas Thèse / Antithèse / Synthèse en trois messages, quatre « domaines validés », invitation à explorer les « sujets qui traînent ». Origine précisée par Xav après coup : rédigé par Google Recherche (mode IA) au 5ᵉ prompt, le 4ᵉ ayant été refusé par la limite de l'outil.
+
+**Diagnostic rendu, aucune intégration faite.** Trois blocages relevés :
+
+- **Voix incompatible** — document à la deuxième personne et à registre valorisant (« Vous avez appliqué d'instinct… »), face à une vitrine écrite à la première personne et sans auto-éloge (`hero.ts`, en-tête de `playground.ts`).
+- **Trois affirmations non reprenables telles quelles** — « en un mois d'utilisation empirique » est contredit par `timeline.ts` (haTD depuis le 01/08) et par `faq.ts` (« deux mois de projets ») ; « Red Teaming cognitif » et « Idéation scientifique assistée » sont absents de `skills.ts` et sans livrable attaché ; les « questionnements de jeunesse » touchent la zone antérieure à 2026, exclue du site par DETTE-17 et D6.
+- **Aucun livrable** — `projects.ts` exige problème / architecture / métriques vérifiées / limites ; le document n'en fournit aucun.
+
+Seul élément neuf et publiable : le **canevas dialectique** lui-même. Piste recommandée si Xav le reprend un jour — un 5ᵉ cas du Prompt Playground en `kind: "conseil"`, **sans** créer de T7 (la bibliothèque à 6 templates est citée à trois endroits : `skills.ts`, `faq.ts`, métrique de `projects.ts`), au prix de `playground.test.ts` (ids et longueur figés en dur) et d'un amendement de la spec 04. Non engagé : il manque un sujet réel sur lequel le canevas a été appliqué, sans quoi le cas serait inventé (T6/T7).
+
+**Décision de Xav** : le PDF passe en vitrine tel quel, sans intégration au site, le temps qu'il y réfléchisse ; il le sortira avant la Phase 10 (version anglaise). L'agent recommandait l'inverse — le `.gitignore` avec les autres documents personnels du ménage du 22/09, notamment parce que le mot « hallucination » en titre travaille contre le positionnement du site hors de son contexte. **Recommandation écartée par Xav, consignée ici telle quelle.** DETTE-44 ouverte : l'état est temporaire et porte une échéance que l'agent ne peut pas lever seul.
+
+**Un défaut trouvé en passant, corrigé avant le commit.** Au premier `git add`, Git a annoncé convertir les fins de ligne du PDF (`core.autocrlf=true` sous Windows, aucun `.gitattributes` dans le dépôt) : le fichier était classé **texte**, faute d'octets nuls dans ses premiers kilo-octets pour déclencher la détection binaire automatique. Committé tel quel, il serait ressorti illisible au checkout suivant — sur une machine tierce comme sur un `git clone` de vérification. Les binaires déjà versionnés (`.webp` de `public/images/`) échappent au piège par chance, leur en-tête portant des octets nuls. Corrigé par un `.gitattributes` minimal (`*.pdf binary`), et vérifié après coup : le blob indexé est **octet pour octet identique** au fichier de travail (`git cat-file blob` puis `cmp`), et le diff affiche bien `Bin 0 -> 4038 bytes`. Règle volontairement bornée aux PDF — les autres types binaires méritent la même protection, mais l'élargir sortait du périmètre demandé.
+
+Aucun fichier applicatif touché, `npm run test` vert (104/104). `docs/` n'est importé par rien et ne part pas dans le build (`public/` seul est copié) : le PDF est visible sur GitHub, pas sur le site déployé. ROADMAP volontairement **non incrémentée** (pas de changement de produit, et un bump entraînerait `package.json` — hors du « on ne fait rien de plus » demandé) ; à rouvrir si Xav veut la trace en version.
+
+---
+
+
 ## 2026-09-22 (clôture de session) — Vérifications de Xav
 
 Xav a vérifié le site déployé après le push du ménage (`ecf150e`) : **Galaxy A04**, **PC Firefox** et **iPhone émulé (F12)** — « all good ». Trois environnements dont deux jamais couverts par l'outillage de l'agent (Firefox, et un rendu iOS même émulé : tous les audits CDP de la Phase 9c tournent sous Chrome).
