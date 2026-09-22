@@ -4,6 +4,52 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 (suite) — Phase 9c/4 : avatar par thème
+
+Demande de Xav : `images-src/avatar/raw/avatar_mode-clair.jpg` sert le thème clair, l'original `20230603_001451.png` reste le thème sombre. Rien d'autre.
+
+### Diagnostic avant toute modification
+
+Deux obstacles, aucun visible depuis la demande.
+
+**1. Le pipeline d'images ne savait produire qu'un seul avatar.** `processAvatar()` (`scripts/process-images.js`) listait `images-src/avatar/raw/`, triait par nom et ne gardait que **le premier** — une contrainte assumée à l'époque de DETTE-02 (un seul dessin). Déposer un second fichier n'a rien cassé par chance : `20230603_001451.png` trie avant `avatar_mode-clair.jpg`, le chiffre passant avant la lettre. Mais le rendu sombre, gelé au pixel par D4, se serait mis à dépendre du nom d'un fichier source.
+
+**2. Un seul consommateur du thème masquait un défaut de `useTheme`.** Voir plus bas — c'est le vrai sujet de cette session.
+
+### Méthode retenue
+
+**Pipeline** : une convention de nommage explicite remplace l'ordre de tri. Un fichier source dont le nom contient `mode-clair` alimente `avatar-light.webp` ; le premier des fichiers restants alimente `avatar.webp`. Même traitement pour les deux (carré 512 px, `cover`, budget 100 Ko), donc aucune divergence de qualité entre les thèmes. Les deux branches sont indépendantes : une source manquante laisse l'autre sortie en l'état et le signale, sans rien écraser.
+
+Preuve que le sombre n'a pas bougé : `npm run images` réécrit `avatar.webp` **octet pour octet identique** (md5 `4b1c1dbb5d79593d12d874c0479e2719` avant et après). `avatar-light.webp` sort à 23 Ko (q82). `scripts/build-og.js` continue de lire `avatar.webp` : l'image de partage reste la version sombre, non discutée ici.
+
+**Sélection** : en JS (`hero.avatar.srcLight`, lu par `HeroAvatar`), pas en CSS. Un `<picture>` + `prefers-color-scheme` n'aurait vu que la préférence **système** et raté le choix explicite stocké par le bouton — le cas exact de la mère de Xav qui force le clair sur une machine en sombre. Deux `<img>` superposés commutés en CSS auraient, eux, fait télécharger les deux images. Repli `onError` vers le tirage sombre si `avatar-light.webp` manque, pour que l'image cassée ne soit jamais le résultat visible.
+
+### Le bug de fond : `useTheme` n'avait pas d'état partagé
+
+En branchant l'avatar, la bascule s'est mise à mentir. Mesuré en CDP, aux deux largeurs et dans les deux sens : au clic, `data-theme` passait bien à `light`, la page se repeignait — et l'`<img>` restait sur `avatar.webp`. Elle ne se corrigeait qu'**au rechargement**.
+
+Cause racine : `useTheme` gardait le thème dans un `useState` **par instance**. `toggle()` appelait `applyTheme` (le document, donc toute la CSS) puis `setTheme` — mais *son* `setTheme`, celui de l'instance du bouton. Aucun canal ne reliait les instances. Tant qu'un seul composant consommait le hook, rien ne pouvait le révéler : le bouton s'occupait du document et de lui-même, et cela suffisait. Le défaut était présent depuis la Phase 9c ; l'avatar n'a fait que devenir le second consommateur.
+
+Correction : `src/lib/theme/themeStore.ts`, source de vérité unique, sans React — donc testable sans DOM ni moteur de rendu, comme le reste de `src/lib/`. `useTheme` s'y branche par `useSyncExternalStore` et se réduit à quatre lignes. L'écoute de `prefers-color-scheme` y migre aussi : elle était dupliquée à chaque appel du hook, elle est désormais attachée au premier abonné et détachée avec le dernier. `theme.ts` (fonctions pures, `applyTheme`, `storeTheme`) n'a pas été touché, ni ses 6 tests.
+
+5 tests de non-régression (`themeStore.test.ts`) : diffusion à **tous** les abonnés et pas seulement au premier, instantané stable (une valeur identique ne notifie personne — exigence de `useSyncExternalStore`), désabonnement, et désabonnement survenant *pendant* une diffusion.
+
+### Vérifié à l'écran et à la mesure
+
+- **12 combinaisons CDP** : 2 largeurs (375, 1280) × 2 préférences système × {au chargement, après clic, après rechargement}. La bonne image à chaque fois, `naturalWidth` 512 partout (donc chargée, pas de 404), `alt` identique dans les deux thèmes.
+- **Captures de l'avatar seul** aux deux thèmes : capuche blanche lumineuse en clair, capuche sombre en sombre, cadrage symétrique entre les deux tirages.
+- **D4 tenue** : `npm run audit:theme` → **0 px** sur les 48 captures, deux fois — une fois après le changement de pipeline, une fois après la réécriture de `useTheme`.
+- `npm run audit:contrast` → 0 violation. `npm run test` **104/104** (99 + 5 neufs), `lint` 0, `build` OK.
+
+### Limites de cette session
+
+- Chrome headless uniquement, comme toute l'Phase 9c : ni Firefox, ni Safari, ni vrai appareil.
+- Le cadrage de la version claire est celui que produit un `cover` centré sur une source 896 × 1200 : il tombe juste, mais il n'a pas été choisi. Si Xav veut un recadrage précis, il faudra un paramètre de position, pas un réglage à l'œil.
+- **`avatar-light.webp` n'est pas dans l'image OG ni dans le CV PDF** : les deux restent sur la version sombre. Ce n'est pas un oubli — un aperçu de partage n'a pas de thème — mais c'est un choix, pas une évidence.
+- L'**[ARRÊT XAV]** de la Phase 9c (vérification PC, push, Galaxy A04, relecture par sa mère) reste **ouvert** : cette session s'y ajoute au lieu de le lever. La relecture portera donc sur le thème clair **avec** le nouvel avatar.
+
+---
+
 ## 2026-09-22 — Phase 9c : thème clair / sombre (spec 12)
 
 Cause racine du chantier : le site n'existait qu'en blanc sur noir, et une lectrice a dû abandonner. La contrainte maîtresse de la spec est donc asymétrique — ajouter un thème clair **sans déplacer d'un pixel** le rendu sombre (D4).
