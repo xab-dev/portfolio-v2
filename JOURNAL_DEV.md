@@ -4,6 +4,57 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 — Phase 9c : thème clair / sombre (spec 12)
+
+Cause racine du chantier : le site n'existait qu'en blanc sur noir, et une lectrice a dû abandonner. La contrainte maîtresse de la spec est donc asymétrique — ajouter un thème clair **sans déplacer d'un pixel** le rendu sombre (D4).
+
+### Ce qui a été livré
+
+- `index.html` : script inline de thème posé **avant** celui de `data-perf`, donc avant le premier rendu (aucun flash, point d'attention n° 1 de Xav) ; deux `<meta name="theme-color">` avec `media`, réécrites à chaque bascule ; `<noscript>` doté de deux règles `@media (prefers-color-scheme)`.
+- `tokens.css` : `:root` = clair, `:root[data-theme="dark"]` = sombre (valeurs d'avant, à l'identique), bloc allégé en dernier. Nouveaux tokens `--accent-*-fg` (accent en rôle de texte), `--accent-solid`/`--on-accent`, `--scrim`, plus deux non prévus par la spec (voir « Écarts »).
+- `src/lib/theme/` : `theme.ts` (fonctions pures), `useTheme.ts`, `theme.test.ts` — tests écrits en premier, les 6 cas de la spec.
+- `ThemeToggle.tsx` dans `Navbar.tsx` via `flex flex-1 justify-center` (D2), 44 × 44, `aria-label` depuis `site.ts`, icône animée sauf en `reduced-motion` et en allégé.
+- Phase 2 : 13 fichiers `text-neon-*` → `text-accent-*-fg`, le voile de `Modal.tsx` → `--scrim`, `NeonButton` → `--accent-solid`/`--on-accent`, `legal.ts` §4 (D11, mention du `localStorage`).
+- Outillage neuf, en CDP brut (pas de Puppeteer, §9) : `scripts/lib/audit-harness.js` (socle commun, 12 points de contrôle), `audit-theme-diff.js` (48 captures, diff `sharp`), `audit-contrast.js` (`axe-core` injecté, règle `color-contrast` seule).
+
+### Ce qui a cassé, et pourquoi
+
+**1. Le mode allégé avait cessé de gagner en thème sombre.** D9 annonçait le piège mais se trompait sur sa nature : elle supposait `:root[data-theme="dark"]` et `html[data-perf="lite"]` à égalité de spécificité, l'ordre d'écriture tranchant. En réalité `:root[data-theme="dark"]` pèse **(0,2,0)** — `:root` est une pseudo-classe (0,1,0) plus un attribut (0,1,0) — contre **(0,1,1)** pour `html[data-perf="lite"]` (un type + un attribut). Le bloc allégé ne pouvait donc **jamais** l'emporter, quelle que fût sa position. Mesuré en sombre + allégé : `--glow-blue` valait `0 0 40px rgba(59,130,246,.35)` au lieu de `none`, et `--scrim` 0,6 au lieu de 0,9. `--ambient-opacity` s'en sortait par accident, le bloc sombre ne le redéfinissant pas. Corrigé en écrivant le bloc allégé `:root[data-perf="lite"]`, lui aussi en (0,2,0) : l'ordre redevient ce qui tranche, comme le décrivait D9.
+
+**Conséquence sur la méthode** : la référence pixel D4, prise en fin de Phase 1, avait **figé ce défaut**. Elle rendait 0 px sur les quatre combinaisons tout en photographiant un mode allégé cassé — un audit qui se compare à lui-même ne détecte rien. Preuve utilisée à la place des pixels : les cinq tokens que pose le bloc allégé valent désormais, en sombre, exactement ce qu'ils valaient avant la Phase 9c (`git show HEAD:src/styles/tokens.css` : glows `none`, ambiance 0 ; voile `lite:bg-black/90` = le `--scrim` à 0,9 d'aujourd'hui). La référence a ensuite été reprise sur le code corrigé.
+
+**2. Les modales étaient illisibles en thème clair.** La carte de modale utilisait `bg-bg-panel`, soit noir 4 % — du verre translucide. En sombre, posée sur une page assombrie par le voile, elle reste lisible. En clair, le voile (noir 60 % sur blanc) donne `#666` : la carte devenait gris foncé sous du texte quasi noir, mesuré **3,13:1** par axe-core, et tout son contenu (titres, puces, chips) tombait entre 1,16:1 et 3,13:1. Corrigé par un token `--bg-modal` : carte **blanche opaque** en clair — voile sombre plus carte blanche, la convention des thèmes clairs — et strictement l'ancienne valeur en sombre, donc 0 px.
+
+**3. Numéros de ligne du panneau de prompt** : `text-text-muted/50` donnait 2,27:1 en clair. Corrigé en clair seulement (token `--text-gutter`), le sombre étant gelé par D4 → DETTE-41.
+
+### Écarts assumés avec la spec
+
+- **Deux tokens hors table §4** : `--bg-modal` et `--text-gutter`, tous deux nécessaires pour tenir le critère « 0 violation `color-contrast` en clair », tous deux neutres en sombre par construction. Les valeurs de la table §4 restent inchangées ; à ratifier par Xav.
+- **`theme-color` ne vivait pas dans `index.html`** mais était injectée en dur (`#0B0F19`) par le plugin SEO de `vite.config.ts`. Une balise sans `media` injectée après les deux balises `media` les aurait emportées au premier rendu : l'injection a été retirée du plugin.
+- **Le formulaire de contact est un stepper** : ses champs n'existent qu'à l'étape 3. Le point de contrôle §7 traverse type → budget → délai avant de poser le focus, sinon il photographiait un écran sans champ.
+- **`decoration-neon-blue` et le `<text>` SVG du radar** ont été migrés en `--accent-*-fg` au même titre que les `text-neon-*` : ils portent respectivement le soulignement d'un lien et les libellés d'axes, donc du texte au sens de la règle de tri de la Phase 2.
+
+### Vérifié à l'écran et à la mesure
+
+- **Sombre : 0 px** sur les 48 captures (12 points de contrôle × {full, lite} × {375, 1280}), tolérance 2/255 par canal. Masques comme en 6b : le `HeroGlow` (repéré par son `background` à `38rem`) et les `<iframe>` sont passés en `visibility: hidden` **avant** la capture.
+- **Déterminisme de l'outil** — piège coûteux : à la toute première visite d'une instance de Chrome, les polices arrivent **après** le premier rendu, et seule la première combinaison capturée divergeait, jusqu'à **35 237 px** pour un rendu pourtant identique. `gotoControlPoint` attend désormais `document.fonts.ready`. Deux exécutions à vide donnent 0 px.
+- **Clair : 0 violation** `color-contrast` (axe-core) sur les 12 points de contrôle, à 375 et 1280 px.
+- **D9** : en sombre + allégé, `--glow-*` = `none`, `--ambient-opacity` = 0, `--scrim` = 0,9 ; en sombre + plein, valeurs néon intactes.
+- **Bouton** : 44 × 44 aux deux largeurs ; 1280 px → 181 px de la marque et 181 px de la nav ; 375 px → 116 px / 116 px du burger. 1 animation d'icône en mouvement normal, **0** sous `reduced-motion`.
+- **Comportement** : sans clé, suit le navigateur dans les deux sens et **à chaud** (`Emulation.setEmulatedMedia`) ; avec la clé `dark` et le système qui passe en clair, reste sombre ; au clic, stocké et survit au rechargement ; `theme-color` et `color-scheme` suivent.
+- **Voile mesuré au pixel** dans la capture claire : `#666` autour de la carte, carte `#fff`, panneau interne `#f5f5f5`.
+- `npm run test` 99/99, `lint` 0, `build` OK, `npm run cv` OK ; PDF, OG, `faq.ts`, `Hero.tsx`, `motion.ts` : diff git vide (D10).
+
+### Limites de cette session
+
+- Le diff pixel tourne sur Chrome headless uniquement : ni Firefox ni Safari, ni vrai appareil. Le rendu sur Galaxy A04 reste à la charge de l'ARRÊT XAV.
+- Les captures de référence ne sont pas committées (`/audit/` dans `.gitignore`) : toute reprise du chantier doit refaire `audit-theme-diff.js --ref` sur du code réputé sain, et se souvenir qu'une référence prise sur un défaut le rend invisible.
+- Le contraste du thème **sombre** n'a pas été audité (hors spec) : `audit-contrast.js` force le clair. DETTE-41 en garde la trace pour la gouttière.
+
+**[ARRÊT XAV]** — critère de clôture de la spec 12 : vérification en local sur PC (deux thèmes, bascule, rechargement, allégé), push sur `main`, Galaxy A04, puis relecture de la version claire par sa mère. Lecture possible sans gêne = clôture. Rien n'a été committé.
+
+---
+
 ## 2026-09-17 (suite) — ARRÊT XAV levé : mesure Galaxy A04 validée
 
 Xav a testé `?perf=lite` puis `?perf=full` sur le Galaxy A04 / Firefox Android (URL déployée) : bulles de badge (§1 du patch tooltip-rag) et rendu général validés dans les deux modes. Critère du patch `PATCHES_2026-09-17_skills-tooltip-rag.md` levé, plus aucun ARRÊT XAV en attente sur les trois correctifs skills de la journée (`d6e628d`, `6a8db3c`, `4a51b1b`). Session close.
