@@ -1,8 +1,16 @@
 // Convertit images-src/projects/<id>/raw/*.{png,jpg,jpeg} en
 // public/images/projects/<id>/<id>-NN.webp (1600px max, ~200 Ko max), et
-// images-src/avatar/raw/* (une seule image, DETTE-02) en public/images/avatar.webp
-// (carré 512px, ~100 Ko max). Les originaux vivent hors de public/ (jamais copiés
+// images-src/avatar/raw/* en public/images/avatar.webp + avatar-light.webp
+// (carrés 512px, ~100 Ko max). Les originaux vivent hors de public/ (jamais copiés
 // dans le build) et hors du repo (voir .gitignore, DETTE-14).
+//
+// Convention de nommage de l'avatar (Phase 9c/4) : un fichier source dont le nom
+// contient `mode-clair` alimente `avatar-light.webp` (affiché en thème clair) ;
+// le premier des fichiers restants, par ordre alphabétique, alimente
+// `avatar.webp` (thème sombre, et seule image utilisée par l'OG et le CV).
+// Le tri par nom seul ne suffisait plus : `avatar_mode-clair.jpg` passe *après*
+// `20230603_001451.png`, mais s'appuyer sur cet ordre aurait fait dépendre le
+// rendu sombre — gelé par D4, spec 12 — du nom d'un fichier qu'on ne contrôle pas.
 //
 // Convention de dossier : `avatar/` est un pair de `projects/` sous `images-src/`
 // (pas un sous-dossier de `projects/`) car ce n'est pas une fiche projet — évite
@@ -15,7 +23,9 @@ import sharp from "sharp";
 const SOURCE_DIR = join(process.cwd(), "images-src", "projects");
 const PROJECTS_DIR = join(process.cwd(), "public", "images", "projects");
 const AVATAR_SOURCE_DIR = join(process.cwd(), "images-src", "avatar", "raw");
-const AVATAR_OUTPUT = join(process.cwd(), "public", "images", "avatar.webp");
+const AVATAR_OUTPUT_DIR = join(process.cwd(), "public", "images");
+/** Marqueur, dans le nom du fichier source, de la variante « thème clair ». */
+const AVATAR_LIGHT_MARKER = "mode-clair";
 const AVATAR_SIZE = 512;
 const AVATAR_MAX_BYTES = 100 * 1024;
 const MAX_WIDTH = 1600;
@@ -56,24 +66,32 @@ async function encodeUnderBudget(pipeline, maxBytes = MAX_BYTES) {
   return { buffer: lastBuffer, quality: QUALITY_STEPS.at(-1) };
 }
 
-function listAvatarSource() {
+/**
+ * Répartit les sources de `images-src/avatar/raw/` entre les deux variantes.
+ * Renvoie `{ dark, light }`, chaque entrée étant un chemin ou `null`.
+ */
+function listAvatarSources() {
+  let names;
   try {
-    const [first] = readdirSync(AVATAR_SOURCE_DIR)
+    names = readdirSync(AVATAR_SOURCE_DIR)
       .filter((name) => SOURCE_EXTENSIONS.has(extname(name).toLowerCase()))
       .sort((a, b) => a.localeCompare(b, "fr"));
-    return first ? join(AVATAR_SOURCE_DIR, first) : null;
   } catch {
-    return null;
+    return { dark: null, light: null };
   }
+
+  const isLight = (name) => name.toLowerCase().includes(AVATAR_LIGHT_MARKER);
+  const light = names.find(isLight) ?? null;
+  const dark = names.find((name) => !isLight(name)) ?? null;
+
+  return {
+    dark: dark ? join(AVATAR_SOURCE_DIR, dark) : null,
+    light: light ? join(AVATAR_SOURCE_DIR, light) : null,
+  };
 }
 
-async function processAvatar() {
-  const sourcePath = listAvatarSource();
-  if (!sourcePath) {
-    console.log("Aucune image source trouvée sous images-src/avatar/raw/.");
-    return;
-  }
-
+/** Encode une source en carré 512px sous budget et l'écrit dans public/images/. */
+async function writeAvatarVariant(sourcePath, outputName) {
   const pipeline = sharp(sourcePath).resize({
     width: AVATAR_SIZE,
     height: AVATAR_SIZE,
@@ -81,12 +99,39 @@ async function processAvatar() {
   });
   const { buffer, quality } = await encodeUnderBudget(pipeline, AVATAR_MAX_BYTES);
 
-  mkdirSync(join(process.cwd(), "public", "images"), { recursive: true });
-  await sharp(buffer).toFile(AVATAR_OUTPUT);
+  mkdirSync(AVATAR_OUTPUT_DIR, { recursive: true });
+  await sharp(buffer).toFile(join(AVATAR_OUTPUT_DIR, outputName));
 
   const kb = (buffer.byteLength / 1024).toFixed(0);
   const overBudget = buffer.byteLength > AVATAR_MAX_BYTES ? "  ⚠ au-dessus de 100 Ko" : "";
-  console.log(`avatar.webp ← ${basename(sourcePath)} (q${quality}, ${kb} Ko)${overBudget}`);
+  console.log(`${outputName} ← ${basename(sourcePath)} (q${quality}, ${kb} Ko)${overBudget}`);
+}
+
+async function processAvatar() {
+  const { dark, light } = listAvatarSources();
+
+  if (!dark && !light) {
+    console.log("Aucune image source trouvée sous images-src/avatar/raw/.");
+    return;
+  }
+
+  if (dark) {
+    await writeAvatarVariant(dark, "avatar.webp");
+  } else {
+    console.log(
+      "Aucune source pour avatar.webp (thème sombre) : tous les fichiers portent le marqueur " +
+        `\`${AVATAR_LIGHT_MARKER}\`. avatar.webp est laissé en l'état.`,
+    );
+  }
+
+  if (light) {
+    await writeAvatarVariant(light, "avatar-light.webp");
+  } else {
+    console.log(
+      `Aucune source \`${AVATAR_LIGHT_MARKER}\` : avatar-light.webp est laissé en l'état ` +
+        "(le Hero retombe sur avatar.webp si le fichier n'existe pas).",
+    );
+  }
 }
 
 async function run() {
