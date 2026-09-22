@@ -4,6 +4,27 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 (suite) — DETTE-45 : circuit de déploiement recâblé
+
+Xav a posé la contrainte avant l'étude : garder la structure à trois dépôts et **rester sur GitHub Pages** ; si la scission imposait un autre hébergement, tout était annulé. Elle ne l'impose pas.
+
+**Une ambiguïté levée d'abord.** « Construire en public » au sens littéral — que le build tourne dans le dépôt public — suppose que le code y soit, c'est-à-dire défaire la scission. Un montage existe pourtant : un workflow public qui récupère le dépôt privé avec un jeton. Il a été écarté et la raison est dite à Xav — le jeton d'accès au code privé vivrait comme secret **dans un dépôt public**, dont tous les logs d'exécution sont publics ; une étape en échec qui affiche un fichier suffirait à sortir le code. Ce qui a été retenu, c'est *publier* depuis le dépôt public, pas y construire.
+
+**Le circuit câblé.** Le dépôt privé construit (`npm run deploy`) et recopie `dist/` dans la copie de travail du dépôt public ; `dist/` y est commité — c'est le site publié, plus un artefact, d'où son retrait du `.gitignore` avec un commentaire explicite ; `.github/workflows/pages.yml` s'y contente de le servir. Trois propriétés voulues : **aucun secret dans le dépôt public**, aucun accès au code privé depuis un workflow public, et la source Pages qui reste réglée sur « GitHub Actions » — donc rien à changer dans les réglages GitHub. Le workflow n'écoute que `dist/` et lui-même : un commit de journal ou de spec ne redéploie pas. Un garde-fou vérifie `dist/index.html` avant publication, pour échouer franchement plutôt que mettre en ligne un site vide.
+
+Point rappelé à Xav parce qu'il conditionne l'acceptabilité du montage : commiter `dist/` dans un dépôt public **ne divulgue rien de neuf**. Le bundle minifié est téléchargeable par tout visiteur du site depuis le premier jour ; ce que le dépôt privé protège, ce sont les sources lisibles — commentaires, structure, décisions.
+
+**Le script de déploiement** refuse d'écrire tant que la cible n'est pas un dépôt git contenant `process/JOURNAL_DEV.md` (sans quoi 500 Ko partiraient dans le mauvais dossier), et supprime le `dist/` cible avant copie au lieu de fusionner — un chunk d'une version précédente ne doit pas survivre. Il ne commite ni ne pousse : les deux restent des gestes de Xav.
+
+**Une erreur de l'agent, et ce qu'elle apprend.** Le premier correctif de la dépréciation DEP0190 (`shell: true`) remplaçait l'appel par `npm.cmd` sans shell : sous Windows le script ne se lançait plus du tout. Il a été **committé en vert**, parce que la vérification passait la sortie dans un `tail` — un pipe renvoie le code de sortie du dernier maillon, donc l'échec était masqué. Corrigé par `execSync` sur une commande littérale, et revérifié sans pipe, code de sortie lu explicitement. La leçon tient en une ligne : *ne jamais valider une commande à travers un pipe*. Les deux commits sont conservés tels quels plutôt qu'amendés.
+
+**Vérifié avant de commiter le site** : base `/portfolio-v2/` correcte dans `index.html` (le dépôt public ayant gardé son nom, `vite.config.ts` n'a pas eu à bouger), présence des sept fichiers qui ne viennent pas du bundle (CV PDF, og.png, favicon, sitemap, robots, les deux tirages de l'avatar), et intégrité binaire des trois plus sensibles — blob indexé comparé octet pour octet au fichier de travail. 41 fichiers, 1,9 Mo. Le contenu est identique au site déjà en ligne : cette publication ne change rien pour un visiteur, elle rétablit la capacité à déployer, perdue avec le retrait de `deploy.yml`.
+
+**DETTE-45 n'est pas close** : le circuit est écrit et vérifié localement, jamais exécuté par GitHub. Elle ne se lèvera qu'au premier push, sur un déploiement réellement vert.
+
+---
+
+
 ## 2026-09-22 (suite) — Scission du dépôt : public / privé / déploiement
 
 Session hors phase, décidée par Xav après un échange sur ce qui, dans le dépôt, est open source et ce qui est commercialisable. Sa hiérarchie de valeur, posée par lui : (1) ce qui n'est pas dans le dépôt — jugement, application, transmission ; (2) le code du site. Il veut la première publique et la seconde privée, packageable.
