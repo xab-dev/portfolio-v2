@@ -4,6 +4,21 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-22 (clôture) — Premier déploiement par le nouveau circuit : DETTE-45 close
+
+Push du dépôt public (`4f383cd..601944b`, 7 commits) après go de Xav. Le workflow `pages.yml` s'est déclenché sur le bon commit et a conclu **success** — première exécution réelle du circuit issu de la scission, chez GitHub et non en local.
+
+**Vérifié sur le site en ligne, pas sur le statut du workflow.** Un workflow vert dit seulement qu'il n'a pas planté ; ce qui compte est ce qui est servi. Le bundle référencé par `https://xab-dev.github.io/portfolio-v2/` porte le hash `index-DXJNwSvN.js`, identique au fichier commité dans `dist/assets/` — c'est donc bien notre publication qui est en ligne, pas la précédente restée en cache. Cinq URL contrôlées en 200 : la racine, le CV PDF, l'image Open Graph, le sitemap et l'avatar clair (le tirage ajouté en Phase 9c/4, servi depuis `dist/` et non plus depuis un build d'Actions).
+
+**Ce que ce déploiement prouve.** Le montage tient sans hébergeur supplémentaire, sans secret dans le dépôt public, sans accès au code privé depuis un workflow public, et sans toucher aux réglages Pages — la contrainte posée par Xav (« si on ne peut pas sans passer par un autre hébergement, on annule ») est tenue. `base: "/portfolio-v2/"` reste juste parce que le dépôt public a gardé son nom : c'est ce choix, fait avant les déplacements, qui a évité de reprendre `site.ts`, l'OG, le sitemap et le lien du CV.
+
+**DETTE-45 close.** Restent ouvertes : DETTE-46 (résidus physiques et jonction `node_modules`), DETTE-47 (aucune licence des deux côtés alors que le README annonce « open-source »), DETTE-48 (le lien « Code source » du site mène à un dépôt sans code).
+
+**Le dépôt privé n'est pas poussé** : `gh` n'est pas installé sur cette machine, l'agent ne peut donc pas créer le dépôt distant. Les 46 commits n'existent que sur le disque de Xav — avec, il est vrai, le même code toujours lisible dans l'historique public (option A). Marche à suivre transmise à Xav ; tant qu'elle n'est pas faite, le circuit de déploiement n'est jouable que depuis cette machine.
+
+---
+
+
 ## 2026-09-22 (suite) — DETTE-45 : circuit de déploiement recâblé
 
 Xav a posé la contrainte avant l'étude : garder la structure à trois dépôts et **rester sur GitHub Pages** ; si la scission imposait un autre hébergement, tout était annulé. Elle ne l'impose pas.
