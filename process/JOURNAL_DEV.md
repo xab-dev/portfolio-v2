@@ -19,6 +19,8 @@ Demande de Xav : un nouvel avatar (`avatar_latest.jpg`, 2048×2048) pour le site
 - Pas vu sur un vrai téléphone ni dans un aperçu de partage réel (LinkedIn, WhatsApp) : les scrapers gardent l'ancienne image en cache un moment.
 - **Non déployé** : `dist/` du dépôt public n'a pas changé, il attend le go de Xav.
 
+**Suite, même jour** : Xav a vérifié en preview, go (« déploie et pousse »). `npm run deploy` puis `8adb962` poussé ; workflow `pages.yml` **success** ; `og.png` servi en ligne à 231 530 octets, identique au fichier commité. Le CV PDF apparaît modifié dans `dist/` à taille égale (régénéré par le `prebuild`, l'avatar n'y est pas imprimé).
+
 ---
 
 ## 2026-10-02 (clôture) — Mise en ligne vérifiée, correctif du bandeau en attente
