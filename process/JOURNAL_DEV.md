@@ -4,6 +4,37 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-02 (hors phase) — Mise à jour de contenu : RPG-v2 en ligne, Harness engineering, section Jouer
+
+Session de contenu, dictée par Xav au fil de l'eau (pas de patch écrit, pas de spec). Point de départ : quinze jours après la mise en ligne, le site décrivait encore RPG-v2 comme « en développement » et la section Jouer embarquait haTD. Le dossier du jeu (`RPGv2`, dépôt privé) a été ouvert **en lecture seule** pour en tirer l'état réel ; rien n'y a été modifié. Commits du dépôt privé : `38f94af` (Jouer), `f4c03eb` (contenu), `eae52ba` (navigation). ROADMAP **0.10.2 → 0.11.0**.
+
+**État vérifié avant d'agir.** Dépôt public propre mais en avance d'un commit non poussé (`dfd89c2`) ; dépôt privé propre et **toujours sans distant** (le code n'existe que sur le disque de Xav) ; jeu synchronisé avec son distant, en ligne (`xab-dev.github.io/RPGv2`, 200) en `v1.2.13` du 01/10.
+
+**Décisions et pourquoi**
+- **Fiche RPG-v2 réécrite depuis la ROADMAP et le `CLAUDE.md` du jeu**, pas seulement son statut : l'ancienne fiche contredisait des décisions révisées depuis (« médiéval-fantastique », « gratuit + dons », « bande son au piano », périmètre Château → Boss 1, « pas de lien public », « jeu commercialisable »). Statut `"en ligne"` ajouté à `ProjectStatus` — « en production » se lit « en cours de fabrication » pour un jeu.
+- **« Terminé » non écrit pour le jeu.** Xav le dit terminé ; la ROADMAP du jeu dit qu'il reste l'Annexe 2 avant la fin de M1. La fiche dit « en ligne et jouable » et pose la limite « le jeu n'est pas fini ». Signalé à Xav, non contesté.
+- **Chiffres du jeu relevés dans son dépôt** (36 specs, 351 fichiers de tests → « plus de 300 », 1 159 commits du 15/09 au 01/10, v1.2). Dépôt privé : rien n'est repris de `prive/`, ni du contenu de jeu (politique anti-spoil). Signalé à Xav, qui a validé (« rien à modifier »).
+- **Compétences — niveaux tranchés par Xav en session** : Architecture logicielle **3** (nouvelle bulle), Harness engineering **3** (nouvelle bulle), ligne de commande Claude Code sans bulle propre (mention dans la note de Harness engineering). **Prompt engineering 4 → 5** : Xav a posé la question (« est-ce que je ne mérite pas un +1 ? »), l'agent a répondu oui au regard de la définition du 5 (« méthode documentée et réutilisable » : les 6 templates) et l'a appliqué ; validé ensuite. RAG remontée à côté de Make / n8n (ordre du tableau, rien d'autre).
+- **Radar** : « LLMs & agents » reste à **4,0** (le +1 de Prompt engineering est compensé par Harness engineering à 3 : 20/5) ; « Développement » reste à **3,0** (19/6 = 3,17) ; « No-code » inchangé (2,5).
+- **Section Jouer : RPG-v2 remplace haTD.** Sur PC, cadre embarqué (`allow="fullscreen; gamepad"`). Au tactile, **un bouton qui ouvre le jeu dans son onglet** plutôt qu'un cadre : dans une page qui défile, le cadre capterait les gestes du joueur. Le teaser haTD (`TeaserOverlay.tsx`, 18 s) n'a plus d'usage : supprimé, ainsi que son étape dans `audit-reduced-motion.js`. **Écart assumé avec la spec 07 (T12).**
+- **Mentions légales** : haTD → RPG-v2, et une phrase ajoutée — le jeu, servi sur la même origine, enregistre sa sauvegarde en IndexedDB. Date de mise à jour au 02/10. À relire par Xav (texte légal écrit par l'agent).
+- **Harness engineering** (libellé choisi par Xav) : fiche projet, type de contact (sans parenthèse, à sa demande), bulle, 7e question de FAQ, 6e puce de l'agent. L'audit privé du 28/09 a été lu avec l'accord de Xav, **sans rien en recopier** ; deux règles en sont tirées : montrer la preuve, pas la recette (la fiche ne nomme ni skills, ni forme de produit, ni prix), et pas de « Claude » dans un nom d'offre (« fonctionne avec Claude Code » en description seulement). **Formulation de l'agent, validée par Xav** : méthode et mise en place disponibles sur devis, outillage packagé « en préparation » — Xav disait « je vends mon framework ».
+- **Carte « + »** en fin de grille des projets (→ Contact), hors compteur, hors filtres, hors CV. **Bouton « FAQ »** dans le bandeau (PC et menu mobile) : un lien `#faq`, le deep link de la spec 10 déjà écouté par la section Jouer — aucune logique neuve.
+- **FAQ : écart assumé avec la spec 10**, dont les textes étaient fixés mot pour mot : 7 questions au lieu de 6 (test mis à jour), « onze specs » → « douze », thème clair/sombre ajouté aux phases, « 38 lignes de dette » → « 48 ». Le bilan des trois jours (89 tests, onze phases) est laissé tel quel : c'est un récit daté.
+- **Fiche Portfolio v2** : 12 specs, 105 tests ; le lien « Code source » devient « Méthode et journal (dépôt public) » — **DETTE-48 partiellement réglée**.
+
+**Le build a joué son rôle.** La première version des notes de compétences faisait déborder le CV PDF sur 2 pages : build refusé. Notes raccourcies (levier « texte », rien de retiré), CV relu par l'agent en PDF : 1 page.
+
+**Vérifié** : `npm run test` (**105 tests** ; +1, la puce `offre` de l'agent), `lint`, `build` verts ; CV PDF 1 page, relu ; le jeu en ligne répond en 200 et n'envoie ni `X-Frame-Options` ni `frame-ancestors`.
+
+**Limites de vérification — rien n'a été regardé à l'écran par l'agent.** Aucune capture, ni `vite preview`, ni Chrome : la règle de vérification visuelle réelle n'est **pas** tenue pour cette session. Xav a donné le go de mise en ligne (« parfait ») ; ce qu'il a effectivement vu n'est pas consigné. Non vérifiés : RAG réellement sur la même ligne que Make / n8n, le jeu dans le cadre et la manette, le bandeau à huit entrées vers 770 px, la carte « + », le thème clair, le mode allégé. **DETTE-53.**
+
+**Hors scope, laissé tel quel** : la bulle Godot et les mentions « test UX en cours » de la fiche haTD (DETTE-50) ; le bandeau Positionnement IA6/IA7 (DETTE-52) ; les flèches « ↔ » rendues en guillemets dans le CV PDF (DETTE-54, antérieur à cette session) ; le chiffre « huit arrêts humains » de la FAQ, non vérifiable par l'agent ; la création du distant du dépôt privé.
+
+**Dette** : DETTE-50 à 54 ouvertes, DETTE-48 et DETTE-49 annotées (§D).
+
+---
+
 ## 2026-09-24 (hors phase) — Vitrine du profil GitHub `xab-dev`
 
 Session hors du code du site : mise en forme du profil GitHub, à la demande de Xav, avec trois axes imposés — professionnalisme, conseil en IA, recherche de mission en cours — et quelques projets perso en exemple. Tout en français.
