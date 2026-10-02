@@ -12,6 +12,8 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 **Un défaut trouvé par Xav à l'écran** : sur certaines tablettes en portrait, le bouton FAQ du bandeau est rogné de moitié ; jamais en paysage. Cause : avec ce huitième élément, le bandeau complet demande environ 880 px, et il s'affichait dès 768 px (`md`). L'agent l'avait signalé comme risque sans le mesurer. **Correctif** : la bascule bandeau complet / menu burger passe de `md` à `lg` (1024 px) dans `Navbar.tsx` — une tablette en portrait a le menu burger, qui contient déjà le bouton FAQ. Tests (105), lint, build verts. **Commité dans le dépôt privé, pas encore déployé** : il attend le go de Xav, et n'a pas été vu à l'écran.
 
+**Suite, même jour** : go de Xav (« oui, déploie et pousse »). Correctif `5bb3107` (dépôt privé) construit et déployé. Toujours pas vu à l'écran par l'agent : à confirmer par Xav sur une tablette en portrait.
+
 ---
 
 ## 2026-10-02 (hors phase) — Mise à jour de contenu : RPG-v2 en ligne, Harness engineering, section Jouer
