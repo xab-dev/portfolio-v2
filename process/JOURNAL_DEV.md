@@ -4,6 +4,23 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-02 (hors phase) — Nouvel avatar, site et image de partage
+
+Demande de Xav : un nouvel avatar (`avatar_latest.jpg`, 2048×2048) pour le site et l'image de partage, **le même pour les deux thèmes**.
+
+**Où vivent les sources.** `images-src/` n'existait plus que dans la copie de travail du dépôt public (résidu non suivi depuis la scission du 22/09). Or `scripts/process-images.js` lit `process.cwd()/images-src`, donc dans le dépôt privé, où le dossier manquait. Créé `portfolio-v2-src/images-src/avatar/raw/` (gitignoré) avec **deux copies** du fichier : `avatar_latest.jpg` (→ `avatar.webp`) et `avatar_latest_mode-clair.jpg` (→ `avatar-light.webp`). La convention de nommage de la Phase 9c/4 est conservée telle quelle, le script n'a pas été touché. Le dossier du dépôt public n'a pas été modifié : il garde les deux anciennes sources à côté de la nouvelle et produirait l'ancien avatar sombre si on y relançait le pipeline.
+
+**Produit.** `npm run images` : `avatar.webp` et `avatar-light.webp` à 33 Ko chacun (q82, budget 100 Ko). `npm run og` : `og.png` à **226 Ko**, au-delà du budget de 150 Ko de la spec 09 (l'ancien faisait 128 Ko). Cause : une peinture détaillée en dégradés se compresse mal en PNG. Deux options proposées (quantification de palette, ou relèvement du budget) ; **Xav a choisi de relever le budget à 250 Ko** dans `scripts/build-og.js`. La spec 09 garde « ≤ 150 Ko » comme trace de la spec d'origine.
+
+**Vérifié.** Rendu de `og.png` regardé à l'œil (cercle, nom, titre, filet bleu). Hero capturé en CDP headless (harnais d'audit) aux deux thèmes, à 375 et 1280 px : `avatar.webp` en sombre, `avatar-light.webp` en clair, chargés (512 px). Le JPEG n'a pas de transparence, contrairement à l'ancien dessin : en thème clair, l'avatar est un disque sombre sur fond clair, net dans son médaillon — lisible, mais c'est un changement de rendu.
+
+**Limites**
+- Thème sombre : le rendu du Hero change, ce qui casse volontairement la référence pixel D4 (`audit-theme-diff.js`). À reprendre (`--ref`) si l'audit doit resservir.
+- Pas vu sur un vrai téléphone ni dans un aperçu de partage réel (LinkedIn, WhatsApp) : les scrapers gardent l'ancienne image en cache un moment.
+- **Non déployé** : `dist/` du dépôt public n'a pas changé, il attend le go de Xav.
+
+---
+
 ## 2026-10-02 (clôture) — Mise en ligne vérifiée, correctif du bandeau en attente
 
 **Push refusé, puis fait par Xav.** Le premier push de l'agent a été rejeté par GitHub (`push declined due to email privacy restrictions`) : les trois commits en attente portaient l'adresse Gmail de Xav, que son réglage de compte interdit désormais d'exposer. L'agent a proposé de réécrire l'auteur de ces commits non poussés ; la réécriture d'historique lui a été refusée par le mode de permission, et il s'est arrêté là. Xav a fait la correction lui-même : le dépôt public commite désormais sous l'adresse `noreply` du compte, et les trois commits ont été refaits — `da82abe` (ex-`dfd89c2`), `1dc532e` (ex-`537e115`), `474a250` (ex-`ee90fc6`). Le dépôt privé garde son ancienne adresse : le même refus se posera le jour où il aura un distant.
