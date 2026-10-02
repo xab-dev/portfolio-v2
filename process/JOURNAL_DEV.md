@@ -4,6 +4,27 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-09-24 (hors phase) — Vitrine du profil GitHub `xab-dev`
+
+Session hors du code du site : mise en forme du profil GitHub, à la demande de Xav, avec trois axes imposés — professionnalisme, conseil en IA, recherche de mission en cours — et quelques projets perso en exemple. Tout en français.
+
+**Accès vérifié avant d'annoncer quoi que ce soit.** `gh` 2.101 est désormais installé et connecté au compte `xab-dev` (il ne l'était pas le 2026-09-22, cf. entrée de clôture ci-dessous). Les droits de départ (`repo`, `gist`, `read:org`) ne permettaient pas de modifier le profil : Xav a ajouté le droit `user` lui-même (`gh auth refresh -s user`, validation dans son navigateur).
+
+**Fait côté GitHub (aucun fichier de ce dépôt touché, hors ce journal et la dette) :**
+- **Dépôt `xab-dev/xab-dev` créé** (public) : c'est le dépôt spécial dont le README s'affiche en tête du profil. Contenu : accroche, disponibilité pour missions, offre de conseil, méthode en 4 étapes, tableau de 5 projets (Portfolio v2, RPG-v2, haTD, miniCiel, templates de spec), outils, contact. **Aucun texte inventé** : accroche, sous-titre, statuts et résumés de projets repris du bundle en ligne (`site.ts`, `hero.ts`, `projects.ts`, `timeline.ts` tels que servis), méthode reprise du README de ce dépôt. Liens vérifiés en 200 avant publication (site, CV PDF, haTD, RPGv2). Deux commits : `fe28ff6`, `8320a07`.
+- **Profil** : nom `Xav` → **`Xavier Joseph Bou`** (nom officiel, demandé par Xav après un premier passage à « Xavier Bou ») ; bio = l'adresse `phenomenxx@gmail.com` remplacée par une accroche professionnelle (l'adresse était publique et exposée au spam) ; localisation **Provence, France**. Lien du site inchangé.
+- **Descriptions** : `portfolio-v2` (description, lien du site, 6 topics repris de la section « Mots-clés » du README) ; `cv-portfolio` marqué « [Archive] » dans sa description, lien vers `portfolio-v2`.
+
+**Contact sans e-mail en clair.** Le README renvoie au formulaire du portfolio (`#contact`, Formspree) plutôt qu'à une adresse. LinkedIn **non mis** : lien vide côté site (DETTE-04, masqué tant que vide), Xav doit d'abord mettre le profil à jour.
+
+**Une suppression évitée.** Xav proposait de supprimer `cv-portfolio`, remplacé par ce dépôt. Vérifié avant d'agir : le site en ligne embarque haTD depuis `xab-dev.github.io/cv-portfolio/haTD_V1` (section Jouer, `site.hatdUrl` dans le bundle servi), et le Pages de `cv-portfolio` est actif. Supprimer — voire archiver, dont l'effet sur Pages n'a pas été vérifié — risquait de casser la section Jouer. Seule la description a changé. **DETTE-49 ouverte.**
+
+**Non fait :** épingler `portfolio-v2` et `RPGv2` sur le profil. Pas d'API pour les épingles, et l'extension Claude in Chrome n'était pas connectée cette session. Laissé à Xav (« Customize your pins », 30 s).
+
+**Pour la prochaine session :** `gh` étant maintenant disponible, la création du dépôt distant privé (bloquée le 2026-09-22) devient faisable par l'agent — non engagée, elle attend le go de Xav.
+
+---
+
 ## 2026-09-22 (clôture) — Premier déploiement par le nouveau circuit : DETTE-45 close
 
 Push du dépôt public (`4f383cd..601944b`, 7 commits) après go de Xav. Le workflow `pages.yml` s'est déclenché sur le bon commit et a conclu **success** — première exécution réelle du circuit issu de la scission, chez GitHub et non en local.
