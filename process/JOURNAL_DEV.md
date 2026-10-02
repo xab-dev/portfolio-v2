@@ -19,6 +19,8 @@ Demande de Xav : « Xavier Bou uniquement (enlève Joseph partout où il est men
 - Les aperçus de lien déjà générés (LinkedIn, WhatsApp, Facebook) gardent l'ancienne image et l'ancien titre tant que leur cache n'a pas expiré ou n'a pas été forcé (outil d'inspection de chaque plateforme).
 - Pas de passage de version ROADMAP : changement de contenu d'une ligne, traité comme le changement d'avatar du même jour.
 
+**Mise en ligne** : `d738e09` poussé, workflow `pages.yml` **success**. En ligne : `<title>` et `og:title` à « Xavier Bou », bundle servi `index-DU7UGd01.js` (celui du `dist/` commité), `og.png` à 228 770 octets et CV PDF identiques aux fichiers commités, aucune occurrence de « Joseph ». README du profil servi avec le nouveau titre.
+
 ---
 
 ## 2026-10-02 (hors phase) — Nouvel avatar, site et image de partage
