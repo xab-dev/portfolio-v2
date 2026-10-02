@@ -4,6 +4,16 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-02 (clôture) — Mise en ligne vérifiée, correctif du bandeau en attente
+
+**Push refusé, puis fait par Xav.** Le premier push de l'agent a été rejeté par GitHub (`push declined due to email privacy restrictions`) : les trois commits en attente portaient l'adresse Gmail de Xav, que son réglage de compte interdit désormais d'exposer. L'agent a proposé de réécrire l'auteur de ces commits non poussés ; la réécriture d'historique lui a été refusée par le mode de permission, et il s'est arrêté là. Xav a fait la correction lui-même : le dépôt public commite désormais sous l'adresse `noreply` du compte, et les trois commits ont été refaits — `da82abe` (ex-`dfd89c2`), `1dc532e` (ex-`537e115`), `474a250` (ex-`ee90fc6`). Le dépôt privé garde son ancienne adresse : le même refus se posera le jour où il aura un distant.
+
+**Vérifié en ligne.** Par l'agent : workflow `pages.yml` conclu **success** sur `474a250` ; le bundle servi (`index-CDJ1lAXM.js`) est celui du `dist/` commité. Par Xav, dans son navigateur (F12, appareils émulés) : la mise en ligne est effective, « all good ». La liste détaillée de DETTE-53 n'a pas été cochée point par point — elle reste ouverte pour ce qui n'a pas été nommé (manette dans le cadre, thème clair, mode allégé, relectures).
+
+**Un défaut trouvé par Xav à l'écran** : sur certaines tablettes en portrait, le bouton FAQ du bandeau est rogné de moitié ; jamais en paysage. Cause : avec ce huitième élément, le bandeau complet demande environ 880 px, et il s'affichait dès 768 px (`md`). L'agent l'avait signalé comme risque sans le mesurer. **Correctif** : la bascule bandeau complet / menu burger passe de `md` à `lg` (1024 px) dans `Navbar.tsx` — une tablette en portrait a le menu burger, qui contient déjà le bouton FAQ. Tests (105), lint, build verts. **Commité dans le dépôt privé, pas encore déployé** : il attend le go de Xav, et n'a pas été vu à l'écran.
+
+---
+
 ## 2026-10-02 (hors phase) — Mise à jour de contenu : RPG-v2 en ligne, Harness engineering, section Jouer
 
 Session de contenu, dictée par Xav au fil de l'eau (pas de patch écrit, pas de spec). Point de départ : quinze jours après la mise en ligne, le site décrivait encore RPG-v2 comme « en développement » et la section Jouer embarquait haTD. Le dossier du jeu (`RPGv2`, dépôt privé) a été ouvert **en lecture seule** pour en tirer l'état réel ; rien n'y a été modifié. Commits du dépôt privé : `38f94af` (Jouer), `f4c03eb` (contenu), `eae52ba` (navigation). ROADMAP **0.10.2 → 0.11.0**.
