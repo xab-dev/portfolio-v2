@@ -4,6 +4,23 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-02 (hors phase) — Nom public : « Xavier Bou »
+
+Demande de Xav : « Xavier Bou uniquement (enlève Joseph partout où il est mentionné), maj de l'og ». Commit du dépôt privé : `f4ee569`.
+
+**Site.** Le nom ne vit qu'à un endroit qui compte, `site.name` dans `src/content/site.ts` : les balises de partage, les données structurées (`vite.config.ts`), le CV PDF et les initiales en dépendent. Remplacés à la main en plus : `site.legal.publisher` (directeur de la publication), `index.html` (titre, description, contenu de secours `<noscript>`), le titre de la page des mentions légales, un commentaire de `hero.ts` et les attentes de `buildCvModel.test.ts`. `npm run og` relancé : `og.png` à 223 Ko (budget 250 Ko), regardé à l'œil.
+
+**Profil GitHub** (go de Xav) : nom du compte passé à « Xavier Bou » (`gh api -X PATCH user`) ; README du dépôt `xab-dev/xab-dev` corrigé (`ef0934f`) — titre, et au passage la ligne RPG-v2, restée « En développement » avec l'ancienne description, alignée sur la fiche du site (« en ligne (v1.2) », lien de jeu), et le lien « Jouable » de haTD retiré (il pointait `#jouer`, qui embarque RPG-v2 depuis la 0.11.0) ; descriptions des dépôts `xab-dev` et `portfolio-v2` corrigées.
+
+**Vérifié.** Lint, 105 tests, build verts. Plus aucune occurrence de « Joseph » dans `dist/` (HTML, bundles, CV PDF — métadonnées `Title`/`Author` lues : « Xavier Bou »). En Chrome headless sur `vite preview` : titre de l'onglet, Hero, et `#mentions-legales` (« Directeur de la publication : Xavier Bou. »).
+
+**Limites**
+- **Historique laissé tel quel, sur décision de Xav** (« tant pis pour l'historique ») : les specs, les entrées passées de ce journal, les lignes datées de `dette_suivi.md` et l'historique Git public gardent « Xavier Joseph Bou ». Seule la valeur de référence de DETTE-01 est mise à jour.
+- Les aperçus de lien déjà générés (LinkedIn, WhatsApp, Facebook) gardent l'ancienne image et l'ancien titre tant que leur cache n'a pas expiré ou n'a pas été forcé (outil d'inspection de chaque plateforme).
+- Pas de passage de version ROADMAP : changement de contenu d'une ligne, traité comme le changement d'avatar du même jour.
+
+---
+
 ## 2026-10-02 (hors phase) — Nouvel avatar, site et image de partage
 
 Demande de Xav : un nouvel avatar (`avatar_latest.jpg`, 2048×2048) pour le site et l'image de partage, **le même pour les deux thèmes**.
