@@ -4,6 +4,52 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (retouches de relecture) — CV et site
+
+Consignes de Xav après sa relecture du CV, appliquées dans le dépôt privé `portfolio-v2-src`. Un commit par consigne, dans l'ordre CV puis site, du plus simple au plus délicat : chaque étape s'annule seule par `git revert <commit>`. Rien n'est poussé ni déployé. ROADMAP 0.12.0 → 0.13.0, `package.json` aligné.
+
+### Livré (commits du dépôt privé)
+
+| Commit | Consigne |
+|---|---|
+| `147421b` | CV, « La suite » : Purple team en dernier ; « Rendre service au plus grand nombre ». La limite des feuilles larges passe de 34 à 35 caractères, après vérification sur le rendu (la ligne tient dans la pastille). |
+| `937b243` | CV : « Français » sans niveau, « Anglais très bon » inchangé. Le niveau devient facultatif dans les deux CV. |
+| `4217437` | CV page 2 : Templates de spec en premier, RPG-v2 en quatrième. |
+| `febbf20` | miniCiel : « 30 min d'intervention » et « −10 min au démarrage, Pentium 2 Go, Windows 7 » à la place du « 0 » de SafeFolder (qui reste sur le site) ; accroche sans le doublon « en 30 min ». |
+| `8739640` | CV page 2 : l'étiquette « prod » passe avant les points, la colonne des points reste alignée. |
+| `5711bd0` | Site : « Qualifier votre besoin » mène au Simulateur. |
+| `2c8fb7c` | Make / n8n : niveau 1 → 2, pour la bibliothèque automatique (Make, Notion, Drive). Note détaillée sur le site, réponse « outils » de l'agent de poche alignée. |
+| `32bad9f` | Site : frise 2026 retirée (`Timeline.tsx` supprimé) ; `timeline.ts` reste la source des deux CV. |
+| `9c0e61c` | Site : sections et menu dans l'ordre Accueil → Contact → Compétences → Projets → Simulateur → Playground → Jouer. |
+| `c117682` | Version 0.13.0 (`package-lock.json` réaligné au passage, il était resté à 0.11.0). |
+
+### Décisions de l'agent, à relire
+
+- **Chiffres de miniCiel marqués vérifiés** sur la parole de Xav (le CV refuse toute métrique non vérifiée). L'ancienne métrique « Temps de diagnostic visé : 0-30 min », non vérifiée, est remplacée. La limite « Pas encore testé en conditions réelles chez un client » reste affichée sur le site.
+- **Condensé** : les deux nouveaux chiffres le faisaient passer à deux pages. Le levier 3 de la spec 09 §4 (deux métriques vérifiées par projet) est désormais appliqué automatiquement, **seulement en cas de débordement**, et la sortie le signale. Les chiffres de miniCiel sont placés en tête pour être ceux qu'on garde.
+- **Note courte `shortNote`** (sur le modèle de `shortName`) : la note complète de Make / n8n faisait encore déborder le condensé, levier 3 compris. Le site garde la note complète, le condensé lit la note courte.
+- **Légende sur deux lignes** sur la carte miniCiel (retour à la ligne dans `cvMap.ts`) : le moteur PDF n'a pas su réduire la légende tout seul. Les valeurs des chiffres clés sont désormais alignées par le haut, sans effet visible sur les autres cartes.
+
+### Vérifié
+
+- **CV** : 2 pages, 85 Ko ; condensé : 1 page, 34 Ko (levier 3 annoncé). Le contrôle de chevauchement a bloqué deux fois la légende de miniCiel tant qu'elle débordait sur la carte voisine, puis l'a laissée passer une fois corrigée. Chaque retouche a été contrôlée sur le rendu réel (pages rendues en PNG).
+- **Site** (`vite preview`, Chrome headless, 1280 et 375 px, thèmes sombre et clair) : sections et menu dans le nouvel ordre ; le bouton « Qualifier votre besoin » amène le Simulateur sous le bandeau ; plus aucune trace de la frise ; blocs « Avant 2026 » et « La suite » présents ; nouveaux chiffres dans la modale de miniCiel ; infobulle de Make lisible à 375 px ; aucun débordement horizontal ; console vide. Audit reduced-motion conforme sur tous les arrêts, dans le nouvel ordre.
+- **axe sur la page entière** : deux défauts, mesurés à l'identique sur `cdbd837` (avant les retouches), donc antérieurs → DETTE-59.
+- `lint` vert, **132 tests** (+2), `build` vert ; types des scripts vérifiés à part (DETTE-57).
+
+### Limites
+
+- Les renvois « plus haut » / « ci-dessous » du contenu ont été relus un par un : ils restent justes dans le nouvel ordre. Le parcours « Simulateur → Contact » remonte désormais la page au lieu de la descendre ; il n'a été vérifié que par le code.
+- La référence pixel D4 n'a pas été rejouée : l'ordre des sections change par construction.
+
+### Dette
+
+DETTE-59 ouverte. DETTE-58 étendue aux specs 06 et 13.
+
+**[ARRÊT XAV]** : relecture des retouches, puis go pour pousser et déployer.
+
+---
+
 ## 2026-10-04 (Phase 9d exécutée) — CV carte mentale, deux pages
 
 Exécution de `specs/13_cv-carte-mentale.md` (commitée en `6024ba4`), sur le « go » de Xav. Tout le code est dans le dépôt privé `portfolio-v2-src`, **rien n'y est commité** ; ROADMAP 0.11.0 → 0.12.0, `package.json` aligné.
