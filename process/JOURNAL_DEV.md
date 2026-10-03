@@ -4,6 +4,51 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (Phase 9d exécutée) — CV carte mentale, deux pages
+
+Exécution de `specs/13_cv-carte-mentale.md` (commitée en `6024ba4`), sur le « go » de Xav. Tout le code est dans le dépôt privé `portfolio-v2-src`, **rien n'y est commité** ; ROADMAP 0.11.0 → 0.12.0, `package.json` aligné.
+
+### Livré
+
+- **Contenu** (`src/content/`) : `story.ts` (sept étapes d'avant 2026, cinq feuilles et quatre paragraphes « La suite »), `cvMap.ts` (six branches de la carte et six cartes projets, chaque feuille pointant vers sa source), `logo.ts` (tirage choisi par Xav), `shortTitle` dans `timeline.ts`, `shortName` dans `skills.ts`, libellés du gabarit dans `cv.ts`.
+- **Logo** : générateur porté en TypeScript (`scripts/logo/logoGenerator.ts`). Il redonne **au caractère près** le tracé de référence du prototype (`scripts/logo/reference-60538.svg`, test dédié). Rendu en PNG par `sharp`, parce que `<Svg>` de `@react-pdf/renderer` ne gère pas les masques qui creusent les traînées sèches.
+- **CV deux pages** : modèle pur `buildCvMapModel.ts`, puis rendu `CvMapDocument.tsx` en millimètres, d'après la maquette. Les chiffres sont lus dans `projects.ts` au build (`{{metric:…}}`), jamais recopiés.
+- **Contrôles qui font échouer `npm run cv`** : référence absente, métrique non vérifiée, feuille trop longue, projet en cadrage (`CvMapError`, avec le nom de la feuille fautive) ; nombre de pages ; **chevauchement de texte et marges** (`checkPdfLayout.ts`, `pdfjs-dist` sans navigateur) ; poids.
+- **Condensé** : l'ancien CV, une page, dans `out/` (gitignoré, jamais publié), par `npm run cv:condense` ou un double-clic sur `CV-condense.cmd`.
+- **Site** : blocs « Avant 2026 » et « La suite » autour de la frise (`StoryBlocks.tsx`), avec les cartes existantes ; sous-titre de la section, « Un parcours court et daté », devenu « Un parcours daté ».
+
+### Cause racine du défaut du CV en ligne (§4 de la spec)
+
+La marge basse de la page (7 mm) était plus petite que le haut du pied de page fixe (bas à 4 mm, deux lignes et un filet, soit environ 11 mm). Le texte coulait dessous sans créer de seconde page : le contrôle « 1 page » ne pouvait pas le voir. Le premier contrôle de chevauchement ne l'a pas vu non plus, car la ligne croisait le **filet**, pas le texte du pied de page. D'où une règle de plus : aucun texte du corps dans la zone du pied de page. Lancée sur le PDF du 02/10, elle signale bien la ligne fautive, les guillemets de DETTE-54 et un pied de page à 4 mm du bord (sous la zone imprimable courante). Corrigé dans le condensé : pied de page à 5,5 mm, marge basse à 13 mm. Le premier levier de la spec 09 (espacements resserrés, tailles de texte inchangées) suffit à rester sur une page.
+
+### Vérifié
+
+- **PDF lus en rendu réel**, pas seulement testés, à chaque itération. Trois défauts trouvés ainsi et corrigés : « Python » qui touchait sa légende (interligne 1,05 trop serré pour un jambage) ; la césure de `@react-pdf/renderer`, qui coupait le français avec des règles anglaises (« dic-tée »), désactivée pour le nouveau CV seulement ; la carte décentrée entre l'en-tête et le bandeau.
+- **Preuves par l'échec**, chaque fois annulées après coup : feuille trop longue (« 50 caractères, 34 au plus », code 1) ; débordement de la page 2 (« 3 pages générées, 2 attendue(s) », code 1) ; défaut de mise en page du condensé avant correction.
+- **Non-divergence** : accroche du hero et nombre de tests modifiés temporairement ; le PDF régénéré contient les nouvelles valeurs et plus l'ancienne. Sources restaurées, `git diff` vide.
+- **Noir et blanc** : pages rendues en niveaux de gris (pdfjs + `@napi-rs/canvas` + `sharp`) ; pastilles et points lisibles, les verts sont les plus pâles.
+- **Site** (`vite preview`, Chrome headless par le socle CDP) : 1280 et 375 px, sombre et clair, et allégé à 375 px. Aucun débordement horizontal, axe-core **0 violation** (toutes règles) sur les deux blocs dans les deux thèmes, aucune erreur ni avertissement en console sur un défilement complet. Deux retouches nées des captures : la colonne des dates trop large à 375 px (date au-dessus de l'intitulé sur mobile), et « X-Men » ou « « Personne » coupés en fin de ligne (trait d'union et espaces insécables).
+- `lint` vert, **130 tests** (+25), `build` vert. Types des nouveaux scripts vérifiés à part (voir DETTE-57). CV : 2 pages, 85 Ko. Condensé : 1 page, 35 Ko. `dist/cv/` ne contient que le nouveau CV.
+
+### Limites
+
+- Le **double-clic** sur `CV-condense.cmd` n'a pas pu être fait à la souris : le lanceur a été exécuté par `cmd /c`, ce qui est le même chemin (le PDF s'est ouvert).
+- Le **404 du condensé en ligne** reste à constater après déploiement : `vite preview` répond 200 avec la page d'accueil (repli SPA), GitHub Pages répondra 404.
+- La référence pixel du thème sombre (D4) n'a pas été rejouée : la section Parcours change par construction.
+- Le logo n'existe que sur le CV (DETTE-56).
+
+### Hors scope
+
+Déploiement (pas demandé, et la relecture imprimée doit passer avant), logo ailleurs que sur le CV, version anglaise (Phase 10), annotation de la spec 09 (DETTE-58).
+
+### Dette
+
+DETTE-54 close. DETTE-35 résolue (à cocher par Xav), DETTE-17 annotée. DETTE-56 (logo hors CV), DETTE-57 (`tsc -b` ne couvre pas `scripts/`), DETTE-58 (spec 09 à annoter) ouvertes.
+
+**[ARRÊT XAV]** : relecture du CV imprimé par Xav et par la relectrice (§9.7 de la spec), puis go pour commiter et déployer.
+
+---
+
 ## 2026-10-03 → 04 (cadrage) — Spec 13 : CV carte mentale, logo, parcours d'avant 2026
 
 Demande de Xav, sur un retour de la relectrice du dossier : le CV PDF est « un des points faibles », trop chargé, « pas au goût du jour ». Cette session n'a touché **aucun code** : elle produit la spec `specs/13_cv-carte-mentale.md` (Phase 9d), une maquette, un générateur de logo et leurs références dans `specs/assets/`.

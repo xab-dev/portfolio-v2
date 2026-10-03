@@ -2,8 +2,8 @@
 projet: portfolio-v2
 episode/session: Phase 9d — CV carte mentale (spec 13)
 type: spec
-version: 1.0.0
-statut: relu — Phase 0 close (« ok » de Xav sur la maquette le 2026-10-04)
+version: 1.1.0
+statut: exécutée le 2026-10-04 — ARRÊT XAV final ouvert (relecture imprimée, §9.7)
 catégorie: Spec
 date: 2026-10-03
 genere_par: claude
