@@ -1,0 +1,286 @@
+<title>Logo TO au pinceau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout : grand tirage à gauche, réglages à droite ; puis mises en situation et autres tirages. */
+:root {
+  --bg: #eceae6;
+  --fg: #1a1917;
+  --muted: #5f5b55;
+  --panel: #f7f6f3;
+  --line: #d6d2cb;
+  --accent: #3b5bdb;
+  --paper: #ffffff;
+  --ink: #141210;
+  --disk: #16181d;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #161513; --fg: #ecebe8; --muted: #a39f98; --panel: #201f1c; --line: #34322e; --accent: #8ea4ff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #161513; --fg: #ecebe8; --muted: #a39f98; --panel: #201f1c; --line: #34322e; --accent: #8ea4ff; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--body); line-height: 1.5; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 40px 64px; display: grid; gap: 40px; }
+h1 { font-family: var(--display); font-weight: 600; font-size: 1.8rem; margin: 0 0 6px; letter-spacing: -.01em; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 1.1rem; margin: 0 0 14px; }
+.lead { margin: 0; color: var(--muted); max-width: 64ch; }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 760px) { .stage { grid-template-columns: 1fr; } }
+.sheet { background: var(--paper); color: var(--ink); border-radius: 6px; box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 10px 30px rgb(0 0 0 / .08); padding: 6%; }
+.sheet svg { display: block; width: 100%; height: auto; }
+.seedline { margin: 10px 0 0; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.controls { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 18px; }
+.row { display: grid; gap: 6px; }
+.row label, .row legend { font-weight: 500; font-size: .92rem; display: flex; justify-content: space-between; gap: 12px; }
+.row output { color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 400; }
+.seedbox { display: flex; gap: 8px; }
+input[type="number"] { width: 7.5em; font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; }
+fieldset.row label { font-weight: 400; justify-content: flex-start; gap: 8px; font-size: .92rem; }
+button { font: inherit; font-weight: 500; padding: 7px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code { display: block; font-size: .78rem; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; overflow-x: auto; white-space: pre; color: var(--muted); }
+.hint { font-size: .8rem; color: var(--muted); margin: -8px 0 0; }
+
+.ctx { display: flex; flex-wrap: wrap; gap: 28px; align-items: end; }
+.ctx figure { margin: 0; display: grid; gap: 8px; justify-items: center; }
+.ctx figcaption { font-size: .8rem; color: var(--muted); text-align: center; }
+.disk { width: 150px; height: 150px; border-radius: 50%; display: grid; place-items: center; }
+.disk svg { width: 70%; height: 70%; }
+.disk.dark { background: var(--disk); color: #ffffff; }
+.disk.light { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 3px var(--ink); }
+.tiny { display: flex; gap: 14px; align-items: end; background: var(--paper); color: var(--ink); padding: 14px; border-radius: 8px; }
+.tiny svg { display: block; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+.thumb { padding: 10px; background: var(--paper); color: var(--ink); border-radius: 8px; border: 2px solid transparent; display: grid; gap: 4px; }
+.thumb svg { width: 100%; height: auto; display: block; }
+.thumb span { font-size: .75rem; color: #6b665e; font-variant-numeric: tabular-nums; }
+.thumb[aria-pressed="true"] { border-color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) { .thumb { transition: transform .15s; } .thumb:hover { transform: translateY(-2px); } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Logo TO au pinceau</h1>
+    <p class="lead">Un T et un O entrelacés, tracés au pinceau large. Le T de gauche à droite puis de haut en bas, le O moitié moins haut, qui dépasse juste au-dessus du croisement. Chaque tirage est calculé par le code : le même numéro redonne toujours le même logo.</p>
+  </header>
+
+  <section class="stage">
+    <div>
+      <div class="sheet" id="big"></div>
+      <p class="seedline">Tirage n° <span id="seedOut"></span></p>
+    </div>
+
+    <form class="controls" id="controls">
+      <div class="row">
+        <label for="seed">Tirage</label>
+        <div class="seedbox">
+          <input type="number" id="seed" min="1" max="99999" value="7">
+          <button type="button" class="primary" id="reroll">Autre tirage</button>
+        </div>
+      </div>
+      <div class="row">
+        <label for="width">Épaisseur du pinceau <output id="widthOut"></output></label>
+        <input type="range" id="width" min="7" max="14" step="0.5" value="10.5">
+      </div>
+      <div class="row">
+        <label for="dry">Pinceau sec <output id="dryOut"></output></label>
+        <input type="range" id="dry" min="0" max="1" step="0.05" value="0.55">
+      </div>
+      <p class="hint">Les traînées blanches en fin de trait, quand l'encre s'épuise.</p>
+      <div class="row">
+        <label for="rough">Irrégularités <output id="roughOut"></output></label>
+        <input type="range" id="rough" min="0" max="2" step="0.1" value="1">
+      </div>
+      <fieldset class="row">
+        <legend>Entrelacs, en bas du O</legend>
+        <label><input type="radio" name="weave" id="weave-front" value="front" checked> Le O passe devant la tige</label>
+        <label><input type="radio" name="weave" id="weave-back" value="back"> La tige passe devant le O</label>
+        <label><input type="radio" name="weave" id="weave-none" value="none"> Sans entrelacs</label>
+      </fieldset>
+      <div class="row">
+        <button type="button" id="copy">Copier les réglages</button>
+        <code id="settings"></code>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <h2>En situation</h2>
+    <div class="ctx">
+      <figure><div class="disk dark" id="ctxDark"></div><figcaption>Centre du CV, disque foncé</figcaption></figure>
+      <figure><div class="disk light" id="ctxLight"></div><figcaption>Centre du CV, disque clair</figcaption></figure>
+      <figure><div class="tiny" id="ctxTiny"></div><figcaption>En petit : 64, 32 et 16 px</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Autres tirages avec ces réglages</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+
+<script>
+/* ---------- Générateur (fonctions pures, portables telles quelles vers Node) ---------- */
+const TAU = Math.PI * 2;
+const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const gauss = (t, c, s) => Math.exp(-(((t - c) / s) ** 2));
+const f2 = (v) => Math.round(v * 100) / 100;
+const poly = (pts) => "M" + pts.map((p) => f2(p[0]) + " " + f2(p[1])).join("L") + "Z";
+
+function rngFrom(seed) {
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function noise(rng, layers) {
+  const L = layers.map(([f, a]) => ({ f, a, v: Array.from({ length: f + 2 }, () => rng() * 2 - 1) }));
+  return (t) => {
+    t = Math.min(1, Math.max(0, t));
+    let s = 0;
+    for (const l of L) { const x = t * l.f, i = Math.floor(x), u = x - i, k = u * u * (3 - 2 * u); s += l.a * (l.v[i] * (1 - k) + l.v[Math.min(i + 1, l.f + 1)] * k); }
+    return s;
+  };
+}
+const bez = (p0, p1, p2, p3) => (t) => {
+  const m = 1 - t, a = m * m * m, b = 3 * m * m * t, c = 3 * m * t * t, d = t * t * t;
+  return [a * p0[0] + b * p1[0] + c * p2[0] + d * p3[0], a * p0[1] + b * p1[1] + c * p2[1] + d * p3[1]];
+};
+function frame(center, t) {
+  const h = 1e-3, a = center(Math.max(0, t - h)), b = center(Math.min(1, t + h));
+  let dx = b[0] - a[0], dy = b[1] - a[1]; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
+  return { c: center(t), d: [dx, dy], n: [-dy, dx] };
+}
+
+/* Un trait de pinceau : contour irrégulier + traînées sèches (soustraites par masque). */
+function stroke({ center, width, rng, rough, dry, dryLen, capStart = 1, capEnd = 1, n = 160 }) {
+  const eL = noise(rng, [[4, 0.06], [13, 0.03], [37, 0.012]]);
+  const eR = noise(rng, [[4, 0.06], [13, 0.03], [37, 0.012]]);
+  const S = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, F = frame(center, t), w = Math.max(0.25, width(t));
+    const amp = rough * (1 + 2.2 * dry * smooth(1 - dryLen, 1, t));
+    S.push({ ...F, t, w, wl: (w / 2) * (1 + amp * eL(t)), wr: (w / 2) * (1 + amp * eR(t)) });
+  }
+  const cap = (s, sign, k, steps = 12) => {
+    const R = (s.wl + s.wr) / 2, off = (s.wl - s.wr) / 2;
+    const cc = [s.c[0] + s.n[0] * off, s.c[1] + s.n[1] * off], pts = [];
+    for (let j = 0; j <= steps; j++) {
+      const phi = sign > 0 ? Math.PI / 2 - (j / steps) * Math.PI : -Math.PI / 2 + (j / steps) * Math.PI;
+      const r = R * (1 + rough * 0.1 * (rng() - 0.5));
+      pts.push([cc[0] + sign * s.d[0] * Math.cos(phi) * r * k + s.n[0] * Math.sin(phi) * r, cc[1] + sign * s.d[1] * Math.cos(phi) * r * k + s.n[1] * Math.sin(phi) * r]);
+    }
+    return pts;
+  };
+  const out = [...cap(S[0], -1, capStart)];
+  for (let i = 1; i < n; i++) { const s = S[i]; out.push([s.c[0] + s.n[0] * s.wl, s.c[1] + s.n[1] * s.wl]); }
+  out.push(...cap(S[n], 1, capEnd));
+  for (let i = n - 1; i >= 1; i--) { const s = S[i]; out.push([s.c[0] - s.n[0] * s.wr, s.c[1] - s.n[1] * s.wr]); }
+
+  const streaks = [], K = Math.round(dry * 18);
+  for (let k = 0; k < K; k++) {
+    const off = (rng() * 2 - 1) * 0.8, ts = 1 - dryLen * (0.25 + 0.75 * rng());
+    const te = rng() < 0.3 ? ts + (1 - ts) * (0.5 + 0.4 * rng()) : 1.06, rel = 0.012 + 0.04 * rng();
+    const A = [], B = [], m = 40;
+    for (let j = 0; j <= m; j++) {
+      const t = ts + ((te - ts) * j) / m, tc = Math.min(1, t), F = frame(center, tc);
+      let c = F.c; if (t > 1) c = [c[0] + F.d[0] * (t - 1) * 30, c[1] + F.d[1] * (t - 1) * 30];
+      const w = Math.max(0.25, width(tc));
+      const hw = w * rel * smooth(ts, ts + 0.1 * (1 - ts) + 0.02, t) * (1 - 0.5 * smooth(te - 0.05, te, t));
+      const p = [c[0] + (F.n[0] * off * w) / 2, c[1] + (F.n[1] * off * w) / 2];
+      A.push([p[0] + F.n[0] * hw, p[1] + F.n[1] * hw]); B.push([p[0] - F.n[0] * hw, p[1] - F.n[1] * hw]);
+    }
+    streaks.push(poly(A.concat(B.reverse())));
+  }
+  return { d: poly(out), streaks };
+}
+
+let uid = 0;
+function logoSvg(p, size) {
+  const rng = rngFrom(p.seed * 7919 + 13), J = (a) => (rng() * 2 - 1) * a;
+  const W = p.width, R = p.rough;
+  // T : la barre de gauche à droite (légère montée), puis la tige de haut en bas.
+  const rise = 2 + J(3);
+  const bar = bez([12 + J(3), 23.5 + rise + J(2)], [33 + J(4), 22.5 + rise / 2 + J(3)], [64 + J(4), 21 + J(3)], [87 + J(3), 21 - rise + J(2)]);
+  const yJ = bar(0.5)[1], sx = 50 + J(1);
+  const lean = J(3);
+  const stem = bez([sx + 0.5, yJ - 1.5], [sx + J(2.5), 45], [sx + lean * 0.6 + J(2.5), 70], [sx + lean + J(1.5), 93 + J(2)]);
+  // O : diamètre extérieur = moitié de la hauteur du T ; sommet un peu au-dessus du croisement.
+  const Wo = W * 0.74, Dout = (stem(1)[1] - (yJ - W / 2)) / 2, r = (Dout - Wo) / 2;
+  const cy = yJ - 6.5 + J(1.2) + r, cx = sx + J(1.5);
+  const th0 = ((-150 + J(28)) * Math.PI) / 180, sweep = ((350 + J(22)) * Math.PI) / 180;
+  const ph = rng() * TAU, drift = 1 + J(1.6), tilt = J(0.12);
+  const ring = (t) => {
+    const th = th0 - t * sweep, rr = r * (1 + 0.05 * Math.sin(2 * th + ph)) + drift * t * 0.9;
+    const x = Math.cos(th) * rr * 1.03, y = Math.sin(th) * rr * 0.97;
+    return [cx + x * Math.cos(tilt) - y * Math.sin(tilt), cy + x * Math.sin(tilt) + y * Math.cos(tilt)];
+  };
+  const wBar = (t) => W * (0.92 + 0.22 * gauss(t, 0, 0.07) - 0.12 * Math.sin(Math.PI * t) + 0.13 * gauss(t, 0.9, 0.06)) * (1 - 0.35 * smooth(0.96, 1, t));
+  const wStem = (t) => W * (1.02 + 0.3 * gauss(t, 0, 0.06) - 0.05 * Math.sin(Math.PI * t)) * (1 - Math.pow(smooth(0.6, 1, t), 1.2) * 0.97);
+  const wO = (t) => Wo * (0.88 + 0.35 * gauss(t, 0.03, 0.07) + 0.12 * Math.sin(TAU * t + ph)) * (1 - 0.55 * smooth(0.8, 1, t));
+  const sBar = stroke({ center: bar, width: wBar, rng, rough: R, dry: p.dry * 0.6, dryLen: 0.35, capStart: 0.75, capEnd: 0.9 });
+  const sStem = stroke({ center: stem, width: wStem, rng, rough: R, dry: p.dry, dryLen: 0.5, capStart: 0.7, capEnd: 0.6 });
+  const sO = stroke({ center: ring, width: wO, rng, rough: R, dry: p.dry * 0.9, dryLen: 0.45, capStart: 0.8, capEnd: 0.7, n: 200 });
+
+  // Gouttes d'encre près de l'attaque de la barre.
+  let dots = "";
+  const nd = Math.round(R * 1.6 * rng());
+  for (let i = 0; i < nd; i++) { const b = bar(0.02 * rng()); dots += `<circle cx="${f2(b[0] - 3 - 5 * rng())}" cy="${f2(b[1] + J(5))}" r="${f2(0.3 + 0.6 * rng())}"/>`; }
+
+  const id = "L" + ++uid, gap = 0.9 + W * 0.06;
+  const tb = (th0 + 1.5 * Math.PI) / sweep, [bx, by] = ring(tb);
+  const knock = (d) => `<g clip-path="url(#${id}c)"><path d="${d}" fill="#000" stroke="#000" stroke-width="${f2(gap * 2)}" stroke-linejoin="round"/></g>`;
+  const mask = (name, streaks, k) => `<mask id="${id}${name}" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120"><rect x="-10" y="-10" width="120" height="120" fill="#fff"/>${streaks.map((d) => `<path d="${d}" fill="#000"/>`).join("")}${k ? knock(k) : ""}</mask>`;
+  const defs = `<clipPath id="${id}c"><circle cx="${f2(bx)}" cy="${f2(by)}" r="${f2(W * 1.5)}"/></clipPath>`
+    + mask("b", sBar.streaks) + mask("s", sStem.streaks, p.weave === "front" ? sO.d : null) + mask("o", sO.streaks, p.weave === "back" ? sStem.d : null);
+  const dim = size ? ` width="${size}" height="${size}"` : "";
+  return `<svg viewBox="0 0 100 100"${dim} xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo : un T et un O entrelacés, tracés au pinceau"><defs>${defs}</defs><g fill="currentColor"><path d="${sBar.d}" mask="url(#${id}b)"/><path d="${sStem.d}" mask="url(#${id}s)"/><path d="${sO.d}" mask="url(#${id}o)"/>${dots}</g></svg>`;
+}
+
+/* ---------- Interface ---------- */
+const $ = (id) => document.getElementById(id);
+const params = () => ({
+  seed: Math.max(1, Math.min(99999, parseInt($("seed").value, 10) || 1)),
+  width: +$("width").value, dry: +$("dry").value, rough: +$("rough").value,
+  weave: document.querySelector('input[name="weave"]:checked').value,
+});
+const fmt = (v) => String(v).replace(".", ",");
+
+function render() {
+  const p = params();
+  $("seedOut").textContent = p.seed;
+  $("widthOut").textContent = fmt(p.width);
+  $("dryOut").textContent = Math.round(p.dry * 100) + " %";
+  $("roughOut").textContent = fmt(p.rough);
+  $("big").innerHTML = logoSvg(p);
+  $("ctxDark").innerHTML = logoSvg(p);
+  $("ctxLight").innerHTML = logoSvg(p);
+  $("ctxTiny").innerHTML = logoSvg(p, 64) + logoSvg(p, 32) + logoSvg(p, 16);
+  $("settings").textContent = JSON.stringify(p);
+  const base = Math.floor((p.seed - 1) / 8) * 8;
+  $("grid").innerHTML = Array.from({ length: 8 }, (_, i) => {
+    const s = base + i + 1;
+    return `<button type="button" class="thumb" data-seed="${s}" aria-pressed="${s === p.seed}" aria-label="Tirage ${s}">${logoSvg({ ...p, seed: s })}<span>n° ${s}</span></button>`;
+  }).join("");
+}
+
+$("controls").addEventListener("input", render);
+$("controls").addEventListener("submit", (e) => e.preventDefault());
+$("reroll").addEventListener("click", () => { $("seed").value = 1 + Math.floor(Math.random() * 99999); render(); });
+$("grid").addEventListener("click", (e) => { const b = e.target.closest(".thumb"); if (b) { $("seed").value = b.dataset.seed; render(); } });
+$("copy").addEventListener("click", () => {
+  const text = $("settings").textContent, btn = $("copy");
+  const done = (ok) => { btn.textContent = ok ? "Réglages copiés" : "Sélectionnez le texte ci-dessous"; setTimeout(() => (btn.textContent = "Copier les réglages"), 2000); };
+  try {
+    navigator.clipboard.writeText(text).then(() => done(true), () => { getSelection().selectAllChildren($("settings")); done(false); });
+  } catch { getSelection().selectAllChildren($("settings")); done(false); }
+});
+render();
+</script>

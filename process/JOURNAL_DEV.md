@@ -4,6 +4,28 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-03 → 04 (cadrage) — Spec 13 : CV carte mentale, logo, parcours d'avant 2026
+
+Demande de Xav, sur un retour de la relectrice du dossier : le CV PDF est « un des points faibles », trop chargé, « pas au goût du jour ». Cette session n'a touché **aucun code** : elle produit la spec `specs/13_cv-carte-mentale.md` (Phase 9d), une maquette, un générateur de logo et leurs références dans `specs/assets/`.
+
+**Constat sur le CV en ligne** (généré le 02/10, relu en rendu réel) : corps de 9 pt et marges de 10 mm, conséquence de la règle « une page » (D7) ; notes entre parenthèses qui répètent le niveau (« notions (notions — axe de consolidation) ») ; « Vous l'avez sous les yeux » imprimé sur un PDF ; pied de page « CV généré automatiquement ». Et un **défaut visible** : la dernière ligne du parcours passe sous le pied de page. Le contrôle « exactement 1 page » ne l'a pas vu, puisque le pied de page est en position fixe. La spec impose un contrôle de chevauchement de texte qui couvre ce cas.
+
+**Décisions de Xav** (détail dans la spec, §2) : code et non Canva ; aucune photo ; deux pages (carte mentale, puis détail) ; l'ancien CV gardé comme version condensée, **pour lui seul** (non publié, `npm run cv:condense` ou double-clic sur `CV-condense.cmd`) ; **D6 rouvert** : son parcours d'avant 2026 (dicté le 04/10, sept entrées de 2012 à 2026) et « La suite » apparaissent sur le CV **et** sur le site. Règle de composition demandée par Xav : sur la carte, l'ordre de lecture (gauche → droite, haut → bas) suit l'ordre du temps, d'« Avant 2026 » à « La suite ».
+
+**Logo.** À la demande de Xav, généré par le code comme les décors de RPG-v2 : un T et un O au pinceau large, en traits irréguliers (contour bruité, traînées sèches, gouttes), entièrement déterminé par un numéro de tirage et quatre réglages. Xav a choisi `{"seed":60538,"width":7,"dry":0.1,"rough":2,"weave":"none"}`. Tracé de référence figé dans `specs/assets/13_logo-to-60538.svg` ; la spec exige que le générateur porté le redonne à l'identique.
+
+**« La suite »** : texte mis en forme par l'agent à la demande de Xav, à partir de ce qu'il a dit en séance, puis relu et corrigé par lui (référence au professeur Xavier retirée de la carte, « malaise grave » plutôt que le nom médical, clin d'œil sur le prénom refusé). Le dossier `04_Formation` a été lu pour le contexte ; il est marqué personnel et **rien n'en est repris**.
+
+**Vérifié.** Chaque version de la maquette regardée en rendu Chrome headless. Trois défauts de maquette trouvés et corrigés ainsi : page 2 qui débordait (deux fois), puces collées au texte, et le logo plaqué dans le coin du disque, parce que la règle de positionnement des traits de la carte (`.map svg`) s'appliquait aussi à lui.
+
+**Limites**
+- La maquette est en HTML. Le PDF sera fait avec `@react-pdf/renderer` : même composition et mêmes polices, mais pas au pixel près.
+- À 16 px, le logo n'est qu'une tache : il ne fera pas une icône d'onglet sans version simplifiée (hors scope, §10 de la spec).
+- Deux affirmations de l'agent rattrapées en cours de route : « haTD, premier jeu » (non vérifié, remplacé par « prototype de jeu ») et le résumé « Négoce agricole » (remplacé par les mots de Xav).
+- Pas de passage de version ROADMAP : il se fera à l'exécution (0.11.0 → 0.12.0, §« Patches à reporter » de la spec).
+
+---
+
 ## 2026-10-02 (hors phase) — Nom public : « Xavier Bou »
 
 Demande de Xav : « Xavier Bou uniquement (enlève Joseph partout où il est mentionné), maj de l'og ». Commit du dépôt privé : `f4ee569`.
