@@ -4,6 +4,72 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (audit RGAA) — accessibilité, DETTE-59
+
+Demande de Xav : auditer le site contre le RGAA et corriger ce qui n'y répond pas. Grille complète des 106 critères, méthode et limites dans **`process/audit_rgaa.md`** ; cette entrée n'en garde que les décisions. Travail dans le dépôt privé `portfolio-v2-src`, un commit par étape, chacun annulable par `git revert`. **Rien n'est poussé ni déployé.** ROADMAP 0.13.0 → 0.13.1 (correctif de l'agent), `package.json` aligné.
+
+### Résultat
+
+| | Version en ligne (0.13.0) | Après correction (0.13.1) |
+|---|---|---|
+| Critères conformes | 42 | 66 |
+| Critères non conformes | 24 | 2 |
+| Taux | 64 % | 97 % |
+
+35 critères sont sans objet, 2 en dérogation (jeu embarqué), 1 non testé. **C'est le taux d'un auto-audit, pas une déclaration de conformité** : aucun lecteur d'écran réel n'a été utilisé.
+
+### Livré (commits du dépôt privé)
+
+| Commit | Contenu |
+|---|---|
+| `b2dce6d` | `npm run audit:rgaa` : axe-core complet, contrôles de structure, redistribution, espacement du texte, parcours au clavier. |
+| `a46f126` | Les deux défauts de DETTE-59 : « Positionnement » passe de `h4` à `h3` ; les zones à défilement interne reçoivent le focus. |
+| `c6f09cf` | Lien « Aller au contenu » ; menu mobile dans une zone de navigation, fermé par Échap, focus retenu tant qu'il recouvre la page ; « Mentions légales » souligné. |
+| `c82e88a` | Cartes projet : seul le titre est un bouton (un `<button>` ne peut pas contenir un titre). Même surface de clic, même rendu. |
+| `8824f11` | Contrastes : violet de texte et numéros de ligne en sombre, bordure des champs, prompt atténué. |
+| `aa8eb8b` | Formulaires : champs obligatoires annoncés, `autocomplete`, exemple de format, focus repris à chaque étape, confirmation d'envoi annoncée. |
+| `6b27d37` | Bulles : survolables, fermées par Échap, liens de sources atteignables au clavier. Hook commun `useTooltip`. |
+| `804723e` | Messages de statut (Playground, Simulateur, agent), alternative textuelle du radar, liens vers un nouvel onglet annoncés. |
+| `8c083f3` | Titre d'accueil lisible mot à mot, `lang="en"` sur les titres d'articles et les paliers, Échap sur le bandeau Positionnement. |
+| `653f1e4`, `2d48f13`, `404d078` | Onze scénarios de comportement ; mode allégé ajouté aux passages d'axe-core. |
+| `1248f43` | Version 0.13.1. |
+
+### Décisions de l'agent, à relire
+
+- **Le thème sombre n'est plus identique au pixel à la référence de la Phase 9c** (D4 de la spec 12). Le violet de texte passe de `#8b5cf6` à `#a78bfa` en sombre : mesuré à 4,15:1 sur un panneau et 3,76:1 sur une puce violette, sous le seuil de 4,5:1. La Phase 9c avait écarté ces corrections pour tenir D4 (DETTE-40, DETTE-41) ; un audit d'accessibilité ne peut pas les écarter une seconde fois. Le violet de décor (bordures, halos) ne bouge pas.
+- **Nouveau token `--border-control`**, hors table de la spec 12 : bordure des champs et rail des curseurs à 3:1 au moins. `--border-glass` reste à 1,25:1 mais ne délimite plus aucun champ.
+- **Cartes projet restructurées sans changement visuel** : le bouton n'enveloppe plus la carte, son pseudo-élément la recouvre. La hauteur des cartes est volontairement laissée telle quelle.
+- **Bulles : un hook commun** plutôt que quatre copies de la même logique. La justification de chaque brique de la stack, jusqu'ici dans un attribut `title`, devient une bulle : c'est le seul endroit où un élément change de nature (un `<span>` devient un bouton).
+- **Texte de l'agent doublé hors écran** : la frappe lettre à lettre, dans une zone annoncée en direct, aurait été lue par fragments. Le texte complet est donné d'emblée aux lecteurs d'écran, la version animée leur est masquée, et un `select-none` évite le doublon au copier-coller.
+- **Deux textes ajoutés au formulaire**, écrits par l'agent : « Tous les champs sont obligatoires. » et « Une adresse e-mail valide est requise, par exemple nom@exemple.fr. » (`content/contact.ts`). Plus « Aller au contenu » et « (nouvelle fenêtre) », ce dernier hors écran (`content/site.ts`).
+- **Version 0.13.1 et non 0.14.0** : correctif à l'initiative de l'agent, pas une itération dictée par Xav. À renuméroter si Xav en juge autrement.
+
+### Vérifié
+
+- `npm run audit:rgaa` : 0 défaut axe-core sur 118 passages (20 écrans, sombre et clair, 375 px en rendu allégé puis complet, 1280 px) ; aucun défaut de structure ; aucun débordement à 320 px ni à 640 px ; aucun texte rogné avec la feuille d'espacement ; 104 arrêts de tabulation à 1280 px et 97 à 375 px, tous avec un contour visible ; 11 scénarios sur 11.
+- Les scénarios ont trouvé un défaut que la lecture du code avait manqué : la bulle du bandeau Positionnement, ouverte au seul survol, ne se fermait pas à Échap. Corrigé (`8c083f3`).
+- 134 tests (+1), lint et build verts ; `audit:contrast` (thème clair) et `audit-reduced-motion` toujours conformes.
+- À l'écran, Chrome sans écran, 22 captures prises (1280 et 375 px, sombre et clair), 14 relues une à une : lien d'évitement au premier Tab, contour de focus autour d'une carte projet, formulaire en erreur, Playground en cours d'analyse, bulles du Simulateur et des compétences, parcours « Avant 2026 », menu mobile.
+
+### Limites
+
+- **Aucun test avec NVDA, JAWS ou VoiceOver.** Noms, rôles et états relus dans l'arbre d'accessibilité de Chrome, pas écoutés → DETTE-63.
+- **Chrome seul**, sans écran ; ni Firefox, ni Safari, ni téléphone réel. Les 375 px sont émulés.
+- **Jeu embarqué non audité** : un jeu dessiné dans un canevas n'est pas restituable par un lecteur d'écran. Dérogation, sa fiche projet le décrit en texte. Vérifié seulement qu'il ne retient pas le clavier.
+- **Pas de validation W3C** du HTML généré.
+- **Référence pixel du thème sombre** (`audit/ref-phase1`) absente de ce poste : `audit:theme` n'a pas pu tourner. Elle serait de toute façon à reprendre, le sombre ayant changé.
+- **Défaut de l'outillage corrigé au passage** : le socle d'audit ne rechargeait pas la page entre deux écrans de même adresse, l'état du précédent restait en place. Les audits de thème et de contraste de la Phase 9c ont donc tourné avec ce défaut ; `audit:contrast` relancé après correction reste à 0 violation.
+
+### Hors scope
+
+- Balisage `lang` du vocabulaire anglais du métier → DETTE-61.
+- CV PDF balisé, ou mention explicite d'une version accessible → DETTE-62.
+- Déclaration d'accessibilité en ligne : pas obligatoire pour un indépendant, choix de Xav.
+
+**[ARRÊT XAV]** : relire les trois changements visibles (violet de texte en sombre, bordure des champs, numéros de ligne du Playground), puis go pour pousser et déployer la 0.13.1.
+
+---
+
 ## 2026-10-04 (déploiement 0.13.0) — en ligne
 
 Go de Xav après son `vite preview`. `npm run deploy` dans le dépôt privé (build, CV régénéré), `dist/` commité dans le dépôt public (`33be1c1`, adresse noreply) et poussé avec les commits de specs, de journal et de dette en attente (`6024ba4` → `b266258`). Workflow « Publier dist/ sur GitHub Pages » : succès.
