@@ -17,7 +17,9 @@ Demande de Xav : ajouter la bibliothèque automatique aux projets (filtre Automa
 
 **Limite** : le condensé repasse à deux pages (environ cinq lignes de Parcours en trop), leviers 1 à 3 de la spec 09 §4 déjà appliqués, et la spec interdit de retirer un projet → DETTE-60, décision de Xav attendue. Nom de compte Make et noms de fichiers vus dans les scénarios laissés hors du site.
 
-**[ARRÊT XAV]** : choix pour le condensé ; relecture de la fiche.
+**Suite, même jour** : choix de Xav, le condensé retire les jeux. Règle `cv.condensedExcludedTags = ["Jeu"]` (commit privé `c661ea2`), appliquée au seul condensé : haTD et RPG-v2 restent sur le site, sur le CV deux pages et dans le Parcours du condensé. Condensé : 1 page, 34 Ko, toutes les métriques (le levier 3 ne se déclenche plus). 133 tests (+1), lint, types des scripts et CV deux pages inchangés. DETTE-60 close.
+
+**[ARRÊT XAV]** : relecture de la fiche et du condensé, puis go pour pousser et déployer.
 
 ---
 
