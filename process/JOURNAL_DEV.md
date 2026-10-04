@@ -4,6 +4,23 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (fiche Bibliothèque automatique) — Projets
+
+Demande de Xav : ajouter la bibliothèque automatique aux projets (filtre Automations). Fonctionnement relevé dans ses deux scénarios Make, en lecture seule (« 1-Drive to Notion » : surveillance d'un dossier Drive, fiche Notion, tri en 6 catégories par le nom de fichier ; « 2-Rangement Drive » : chaque nuit à 4 h 30, déplacement dans le dossier du projet). Chiffres et limites donnés par Xav : plus de 300 documents rangés, scénarios en pause faute de crédits Make. L'en-tête YAML ne sert pas au tri (Xav) : retiré de la note Make / n8n. Rien de poussé ni de déployé ; version inchangée (0.13.0, pas encore publiée).
+
+| Commit (dépôt privé) | Contenu |
+|---|---|
+| `a419383` | Fiche « Bibliothèque automatique — Drive vers Notion », étiquettes Automations et Outils, image tirée de la capture du scénario fournie par Xav (46 Ko). |
+| `cdf5b2f` | Note Make / n8n sans « en-tête YAML » ni « en service », avec le chiffre de 300 ; réponse « outils » de l'agent de poche alignée. |
+
+**Vérifié** : 132 tests, lint et build verts ; CV deux pages inchangé (2 pages, 85 Ko : ses projets sont choisis dans `cvMap.ts`). Chrome headless, 1280 et 375 px, sombre et clair : la carte apparaît sous le filtre Automations, la modale montre les chiffres, la limite et l'image ; ni débordement horizontal ni erreur console.
+
+**Limite** : le condensé repasse à deux pages (environ cinq lignes de Parcours en trop), leviers 1 à 3 de la spec 09 §4 déjà appliqués, et la spec interdit de retirer un projet → DETTE-60, décision de Xav attendue. Nom de compte Make et noms de fichiers vus dans les scénarios laissés hors du site.
+
+**[ARRÊT XAV]** : choix pour le condensé ; relecture de la fiche.
+
+---
+
 ## 2026-10-04 (retouches de relecture) — CV et site
 
 Consignes de Xav après sa relecture du CV, appliquées dans le dépôt privé `portfolio-v2-src`. Un commit par consigne, dans l'ordre CV puis site, du plus simple au plus délicat : chaque étape s'annule seule par `git revert <commit>`. Rien n'est poussé ni déployé. ROADMAP 0.12.0 → 0.13.0, `package.json` aligné.
