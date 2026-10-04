@@ -152,3 +152,4 @@ Légende : ☑ résolu (valeur reportée dans la spec indiquée) · ☐ en réfl
 - 2026-10-04 (retouches de relecture) — Consignes de Xav appliquées en dix commits séparés, chacun annulable par `git revert` (détail dans `JOURNAL_DEV.md`). ROADMAP 0.13.0. **DETTE-59 ouverte** (axe, page entière, défauts antérieurs) ; DETTE-58 étendue aux specs 06 et 13. Rien de poussé ni de déployé.
 - 2026-10-04 (fiche Bibliothèque automatique) — Fiche projet ajoutée, note Make corrigée (détail dans `JOURNAL_DEV.md`). **DETTE-60 ouverte** (condensé sur deux pages). Rien de poussé ni de déployé.
 - 2026-10-04 (condensé sans les jeux) — Projets étiquetés « Jeu » exclus du condensé seulement (haTD, RPG-v2), à la demande de Xav. **DETTE-60 close.** Rien de poussé ni de déployé.
+- 2026-10-04 (déploiement 0.13.0) — En ligne et vérifié (`33be1c1`). Aucune dette ouverte ni close par le déploiement ; DETTE-59 reste le point d'entrée de l'audit RGAA à venir.

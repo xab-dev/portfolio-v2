@@ -4,6 +4,16 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (déploiement 0.13.0) — en ligne
+
+Go de Xav après son `vite preview`. `npm run deploy` dans le dépôt privé (build, CV régénéré), `dist/` commité dans le dépôt public (`33be1c1`, adresse noreply) et poussé avec les commits de specs, de journal et de dette en attente (`6024ba4` → `b266258`). Workflow « Publier dist/ sur GitHub Pages » : succès.
+
+**Vérifié en ligne** (`curl` sur `xab-dev.github.io/portfolio-v2`) : la page sert le nouveau bundle (`index-BHps_y_0.js`), qui contient la fiche « Bibliothèque automatique — Drive vers Notion », le chiffre de 300 documents et le lien `#simulateur` ; l'image de la fiche répond 200 ; le CV en ligne est identique, octet pour octet, à celui de `dist/` (deux pages) ; le condensé n'est pas publié (404, voulu, D7). Le contrôle visuel complet (sections, thèmes, 375 px) a été fait en local avant le déploiement, sur le même build.
+
+Suite annoncée par Xav : audit RGAA dans une nouvelle session (DETTE-59, axe sur la page entière, en est un point d'entrée).
+
+---
+
 ## 2026-10-04 (fiche Bibliothèque automatique) — Projets
 
 Demande de Xav : ajouter la bibliothèque automatique aux projets (filtre Automations). Fonctionnement relevé dans ses deux scénarios Make, en lecture seule (« 1-Drive to Notion » : surveillance d'un dossier Drive, fiche Notion, tri en 6 catégories par le nom de fichier ; « 2-Rangement Drive » : chaque nuit à 4 h 30, déplacement dans le dossier du projet). Chiffres et limites donnés par Xav : plus de 300 documents rangés, scénarios en pause faute de crédits Make. L'en-tête YAML ne sert pas au tri (Xav) : retiré de la note Make / n8n. Rien de poussé ni de déployé ; version inchangée (0.13.0, pas encore publiée).
