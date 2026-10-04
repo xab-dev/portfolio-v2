@@ -4,6 +4,18 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (déploiement 0.13.1) — en ligne
+
+Go de Xav après le compte-rendu de l'audit RGAA. Les documents de l'audit (grille, journal, dette, ROADMAP), laissés non commités en fin de session faute de demande, sont commités dans le dépôt public (`8cbe96d`). `npm run deploy` dans le dépôt privé (build, CV régénéré : 2 pages, 85 Ko), `dist/` commité (`16c28db`, adresse noreply) et poussé. Workflow « Publier dist/ sur GitHub Pages » : succès.
+
+**Vérifié en ligne** (`curl` sur `xab-dev.github.io/portfolio-v2`) : la page sert le nouveau bundle (`index-B3pgy29L.js`), identique octet pour octet à celui de `dist/` ; il contient le lien « Aller au contenu », la mention « Tous les champs sont obligatoires » et l'alternative du radar ; la feuille de style porte `--border-control` et le violet de texte éclairci ; le CV en ligne est identique à celui de `dist/`. Les 11 scénarios de comportement relancés en local sur ce même build : 11 sur 11.
+
+**Limite** : l'audit complet (axe-core, clavier, redistribution) a tourné en local, sur le même code, pas contre l'adresse en ligne. Les limites de l'audit lui-même restent celles de l'entrée ci-dessous (aucun lecteur d'écran réel, Chrome seul).
+
+Restent ouvertes : DETTE-61 (langues), DETTE-62 (CV PDF), DETTE-63 (tests à l'oreille), DETTE-64 (référence pixel du sombre, à reprendre maintenant que Xav a validé le rendu).
+
+---
+
 ## 2026-10-04 (audit RGAA) — accessibilité, DETTE-59
 
 Demande de Xav : auditer le site contre le RGAA et corriger ce qui n'y répond pas. Grille complète des 106 critères, méthode et limites dans **`process/audit_rgaa.md`** ; cette entrée n'en garde que les décisions. Travail dans le dépôt privé `portfolio-v2-src`, un commit par étape, chacun annulable par `git revert`. **Rien n'est poussé ni déployé.** ROADMAP 0.13.0 → 0.13.1 (correctif de l'agent), `package.json` aligné.

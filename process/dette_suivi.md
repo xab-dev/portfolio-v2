@@ -158,3 +158,4 @@ Légende : ☑ résolu (valeur reportée dans la spec indiquée) · ☐ en réfl
 - 2026-10-04 (condensé sans les jeux) — Projets étiquetés « Jeu » exclus du condensé seulement (haTD, RPG-v2), à la demande de Xav. **DETTE-60 close.** Rien de poussé ni de déployé.
 - 2026-10-04 (déploiement 0.13.0) — En ligne et vérifié (`33be1c1`). Aucune dette ouverte ni close par le déploiement ; DETTE-59 reste le point d'entrée de l'audit RGAA à venir.
 - 2026-10-04 (audit RGAA) — Audit des 106 critères et corrections (détail dans `process/audit_rgaa.md` et `JOURNAL_DEV.md`) : 24 critères non conformes avant, 2 après. **DETTE-40, DETTE-41 et DETTE-59 closes** ; **DETTE-61 à 64 ouvertes** (langues, CV PDF, tests à l'oreille, référence pixel). ROADMAP 0.13.1. Rien de poussé ni de déployé.
+- 2026-10-04 (déploiement 0.13.1) — En ligne et vérifié (`16c28db`). Aucune dette ouverte ni close par le déploiement ; DETTE-61 à 64 restent ouvertes.
