@@ -4,6 +4,26 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (en-tête du CV) — mentions de positionnement
+
+Demande de Xav, après un échange avec Google : dans l'en-tête du CV deux pages, remplacer « indépendant » par « AI Product Engineer, Solutions Architect (prompt/context), Autodidacte indépendant à haute vélocité », en gardant la mise en forme grise ; place de « Tarascon, Provence » laissée au choix de l'agent (même ligne ou fin).
+
+**Décision** : la mention ne tient pas sur une ligne. La colonne de gauche fait 221 pt ; en Inter 9, « AI Product Engineer · Solutions Architect (prompt/context) » en mesure 247 et « Autodidacte indépendant à haute vélocité · Tarascon, Provence » 269 (mesures `fontkit`). Laissée au repli automatique, elle se couperait (d'après ces mesures, non rendu) entre « Solutions Architect » et sa parenthèse. Trois lignes grises écrites à la main, de largeurs voisines (177, 155, 177 pt), le lieu en tête comme avant :
+
+> Tarascon, Provence · AI Product Engineer
+> Solutions Architect (prompt/context)
+> Autodidacte indépendant à haute vélocité
+
+Même style que l'ancienne ligne (Inter 9, gris `INK_3`), aucun changement de géométrie : l'en-tête gagne deux lignes (23 pt) et reste loin de la carte.
+
+**Livré** (dépôt privé, `8dda208`, puis version `211fb8c`) : `cv.map.statusShort` devient `cv.map.headerLines`, une entrée par ligne imprimée, `{{location}}` reprenant `site.location` ; déplacer le lieu ou recouper les lignes se fait dans `src/content/cv.ts` seul. `header.place` du modèle passe de `string` à `string[]`. Un test ajouté (le lieu vient de `site.ts`, aucun jeton non résolu).
+
+**Vérifié** : `npm run cv` vert (2 pages, 85,2 Ko, contrôle de chevauchement et de marges compris), 135 tests verts, types de `scripts/` vérifiés à part (DETTE-57), en-tête relu sur un rendu image de la page 1.
+
+**Limites** : pas de relecture imprimée. Le CV condensé (pour Xav seul) et le site ne portaient pas « indépendant » dans leur en-tête : inchangés. Le titre bleu « Consultant outils et solutions IA » reste, la demande ne portait que sur la ligne grise. Disposition validée par Xav sur le rendu (« parfait »), go pour commit et déploiement : ROADMAP 0.13.1 → 0.14.0 (contenu visible validé par Xav, incrément de Y).
+
+---
+
 ## 2026-10-04 (déploiement 0.13.1) — en ligne
 
 Go de Xav après le compte-rendu de l'audit RGAA. Les documents de l'audit (grille, journal, dette, ROADMAP), laissés non commités en fin de session faute de demande, sont commités dans le dépôt public (`8cbe96d`). `npm run deploy` dans le dépôt privé (build, CV régénéré : 2 pages, 85 Ko), `dist/` commité (`16c28db`, adresse noreply) et poussé. Workflow « Publier dist/ sur GitHub Pages » : succès.
