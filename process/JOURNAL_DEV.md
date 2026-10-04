@@ -4,6 +4,16 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-04 (déploiement 0.14.0) — en ligne
+
+Go de Xav après relecture du rendu de l'en-tête du CV. `npm run deploy` dans le dépôt privé (build, CV régénéré : 2 pages, 85 Ko), documents commités (`905b9f5`), `dist/` commité (`9797630`, adresse noreply) et poussé. Workflow de publication GitHub Pages terminé sans erreur.
+
+**Vérifié en ligne** (`curl` sur `xab-dev.github.io/portfolio-v2`) : la page sert le nouveau bundle (`index-DWLWs3ID.js`), identique octet pour octet à celui de `dist/` ; le CV en ligne est identique à celui de `dist/`, et son en-tête, relu sur un rendu image du fichier téléchargé, porte les trois lignes grises.
+
+**Limite** : pas de relecture imprimée ; le site lui-même n'a pas été rouvert dans un navigateur (seul le CV change à l'écran, le bundle ne change que parce qu'il importe `cv.ts`).
+
+---
+
 ## 2026-10-04 (en-tête du CV) — mentions de positionnement
 
 Demande de Xav, après un échange avec Google : dans l'en-tête du CV deux pages, remplacer « indépendant » par « AI Product Engineer, Solutions Architect (prompt/context), Autodidacte indépendant à haute vélocité », en gardant la mise en forme grise ; place de « Tarascon, Provence » laissée au choix de l'agent (même ligne ou fin).
