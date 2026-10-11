@@ -4,6 +4,20 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-11 (Hero) — mentions de positionnement sur le site
+
+Demande de Xav : ajouter « AI Product Engineer », « Solutions Architect (prompt/context) », « Autodidacte indépendant à haute vélocité » dans le Hero, avant la phrase « Je conçois des workflows… ».
+
+**Décision** : une mention par ligne, comme sur l'en-tête du CV (0.14.0), entre le titre et la phrase d'accroche. Liste `<ul>` en Space Grotesk 18 px, graisse 500, couleur du texte principal : un cran sous le titre, au-dessus de la phrase en gris. Même apparition que la phrase (`fadeUp`, ou sa variante réduite). Sans la ville : « Tarascon, Provence » est déjà dans l'eyebrow, juste au-dessus.
+
+**Livré** (dépôt privé, `5db4f74`, puis version `a926ba3`) : `hero.positioning` dans `src/content/hero.ts`, rendu dans `src/sections/Hero.tsx`. Le libellé est recopié de `cv.map.headerLines`, pas partagé : la première ligne du CV porte le lieu, pas celle du site.
+
+**Vérifié** : build vert, 135 tests verts, `oxlint` sans remarque, `npm run audit:rgaa` sans défaut automatisable. Captures CDP headless du Hero en sombre et en clair, à 375 et 1280 px : trois lignes affichées, opacité 1 après animation, pas de défilement horizontal à 375 px. À 375 px, « Autodidacte indépendant à haute vélocité » passe sur deux lignes.
+
+**Limites** : pas de vérification sur un vrai téléphone ni dans un navigateur ouvert à la main ; pas de test avec un lecteur d'écran (DETTE-63).
+
+---
+
 ## 2026-10-04 (déploiement 0.14.0) — en ligne
 
 Go de Xav après relecture du rendu de l'en-tête du CV. `npm run deploy` dans le dépôt privé (build, CV régénéré : 2 pages, 85 Ko), documents commités (`905b9f5`), `dist/` commité (`9797630`, adresse noreply) et poussé. Workflow de publication GitHub Pages terminé sans erreur.
