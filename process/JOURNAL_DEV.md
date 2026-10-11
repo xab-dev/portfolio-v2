@@ -4,6 +4,16 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-11 (déploiement 0.15.0) — en ligne
+
+Go de Xav. `npm run deploy` et `git push` refusés à l'agent par le mode automatique de Claude Code (catégorie « Production Deploy ») : lancés par Xav lui-même. `dist/` commité par l'agent (`6c0f514`, adresse noreply). Workflow « Publier dist/ sur GitHub Pages » : succès.
+
+**Vérifié en ligne** (`curl` sur `xab-dev.github.io/portfolio-v2`) : la page sert `index-Clz2cFhw.js`, identique octet pour octet à celui de `dist/`, et ce bundle contient les trois mentions. Le CV PDF est régénéré par le build (2 pages, 85,2 Ko), son contenu n'a pas changé.
+
+**Limite** : le site en ligne n'a pas été rouvert dans un navigateur ; le rendu a été vérifié avant déploiement, sur `vite preview`.
+
+---
+
 ## 2026-10-11 (Hero) — mentions de positionnement sur le site
 
 Demande de Xav : ajouter « AI Product Engineer », « Solutions Architect (prompt/context) », « Autodidacte indépendant à haute vélocité » dans le Hero, avant la phrase « Je conçois des workflows… ».
