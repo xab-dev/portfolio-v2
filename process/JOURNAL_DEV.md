@@ -4,6 +4,28 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-12 (Phase 9e) — deux projets venus de la base privée
+
+Spec `14_base-privee-hud.md`, écrite le 2026-10-11 depuis la base personnelle de Xav (lecture : la base, le code de son interface, l'historique git, le compte rendu de l'audit ; le dossier privé pour sa forme seulement). Chaque fait public remonte à une preuve vérifiée (code, git, fichiers), pas à l'affirmation d'une fiche.
+
+**Contre-lecture** : les textes de la v1.0.0 relus par un agent Claude Fable 5.1, en lecture seule. Sept points bloquants, tous vérifiés puis corrigés (v1.1.0) : une fuite (ce qui restait faible sur le PC, avec sa date), « 12 réglés » recopié d'une fiche au lieu d'être recompté (9 corrigés, 3 expliqués, 2 ouverts), « je corrige » faux pour quelques corrections faites par l'agent, un filet de sécurité présenté comme un résultat (deux sauvegardes perdues), des garde-fous survendus, le partage du travail flou. Validée par Xav le 2026-10-12 : textes tels quels, Harness à 4 (option A, avec une note qui dit que l'agent écrit les fichiers), P1 à P3.
+
+**Captures du HUD** : sur une copie factice, jamais sur la vraie base. Le code de l'interface copié dans le dossier de travail de l'agent, un titre « HUD », une liste d'interlocuteurs réécrite, des données inventées ; serveur lancé sur un autre port, sans fenêtre, captures par Chrome headless (600 × 740 et 600 × 540, échelle 2). `git status` de la base vide après coup. Captures validées par Xav avant d'entrer dans le site.
+
+**Livré** (dépôt privé) :
+- `db18ca1` : les deux fiches dans `projects.ts` (la base après Harness engineering, l'audit après miniCiel), deux images, un test : les deux identifiants existent, et leurs textes ne contiennent ni chemin, ni adresse e-mail, ni le nom interne de l'interface.
+- `3f4fcaa` : Harness engineering 3 → 4, avec une note courte pour le CV.
+- `a93ebe3` : CV condensé, exclusions par identifiant (`cv.condensedExcludedMilestoneIds`, `condensedExcludedProjectIds`), jalon haTD retiré.
+- `e8f2e9b` : version 0.16.0.
+
+**CV condensé** (pour Xav seul) : passé à deux pages. Xav : « Retire les éléments qui ont la plus ancienne chronologie (soit avant 2026, soit les 1er projet brouillon) ». Rien n'y date d'avant 2026 ; l'agent a retiré haTD, puis Régie Maison, puis le bilan de compétences, sans effet. Le diagnostic, refait sur le PDF, montrait la colonne des compétences en débordement : la note de Harness, plus longue, poussait « Langues » en page 2. Une note courte (prévue par la spec, §6) a réglé cette colonne ; la colonne de gauche débordait alors d'une entrée, et le seul jalon haTD (01/08/2026, le premier prototype) a suffi. Régie Maison et le bilan sont revenus. Le levier 3 de la spec 09 (deux métriques par projet) s'applique désormais au condensé, annoncé par le script. Le CV deux pages ne change que par le niveau de Harness (D6).
+
+**Vérifié** : 137 tests verts (2 nouveaux), `oxlint` sans remarque, build vert (CV deux pages : 2 pages, contrôle de mise en page sans défaut ; condensé : 1 page), `npm run audit:rgaa` sans défaut automatisable. Captures CDP headless de la grille et des deux modales, en sombre et en clair, à 375 et 1280 px : pas de défilement horizontal, les deux images chargées (1200 px), textes complets jusqu'aux limites.
+
+**Limites** : pas de vérification sur un vrai téléphone ni de test avec un lecteur d'écran (DETTE-63). Les chiffres de la fiche base sont datés du 11 octobre 2026 et vieilliront. La fiche audit n'a ni lien ni image tant que la vidéo n'est pas refaite (DETTE-65).
+
+---
+
 ## 2026-10-11 (déploiement 0.15.0) — en ligne
 
 Go de Xav. `npm run deploy` et `git push` refusés à l'agent par le mode automatique de Claude Code (catégorie « Production Deploy ») : lancés par Xav lui-même. `dist/` commité par l'agent (`6c0f514`, adresse noreply). Workflow « Publier dist/ sur GitHub Pages » : succès.

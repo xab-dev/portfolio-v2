@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 9e — Deux projets venus de la base privée (spec 14)
 type: spec
 version: 1.2.0
-statut: validée par Xav le 2026-10-12 (textes §4 et §5 tels quels, option A au §6, P1 à P3) — exécution en cours
+statut: validée par Xav le 2026-10-12 (textes §4 et §5 tels quels, option A au §6, P1 à P3) — exécutée le 2026-10-12 (version 0.16.0), en attente du déploiement par Xav
 catégorie: Spec
 date: 2026-10-11
 genere_par: claude
