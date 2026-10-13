@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 9f — Livret A3 (spec 15)
 type: spec
 version: 1.0.0
-statut: validée par Xav le 2026-10-13 (P1 à P4 tels quels) — en exécution
+statut: validée par Xav le 2026-10-13 (P1 à P4 tels quels) — exécutée le 2026-10-13 (version 0.18.0), ARRÊT XAV dû (impression d'essai, QR code)
 catégorie: Spec
 date: 2026-10-13
 genere_par: claude

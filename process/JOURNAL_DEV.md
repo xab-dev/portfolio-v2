@@ -4,6 +4,34 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-13 (Phase 9f, spec 15) — le livret A3
+
+Spec `15_livret-a3.md`, écrite après quatre choix de Xav (couverture sobre sur fond blanc, Atelier IA développé en page 4, pages intérieures à l'identique, QR code), validée telle quelle (P1 à P4) le même jour.
+
+**Livré** (dépôt privé) :
+- `e682204` (phase A) : `src/content/offers.ts`, les quatre offres recopiées de `offres.md` sans ses parties privées, l'Atelier IA avec son détail mot pour mot. Le formulaire de contact en dérive ses tarifs : un test fige les valeurs affichées depuis 0.17.0, et les 16 captures de l'étape 2 (quatre catégories, deux thèmes, 1280 et 375 px) sont identiques au pixel avant et après. Seules les captures de l'étape 1, qui n'affiche aucun tarif, diffèrent : la barre de menu fixe, superposée à la capture, y bouge d'un pixel.
+- `cfbb1da` (phase B) : `LivretDocument.tsx`, la couverture et « Ce que je propose » ; option `hidePageCounters` du CV (P1) ; marge minimale réglable dans `checkPdfLayout` ; `qrcode` 1.5.4 figé. Le CV du site, rendu en image, est identique au pixel.
+- `989bc14` (phase C) : `imposeBooklet.ts` (fonction pure, testée pour 4 et 8 pages), assemblage par `pdf-lib`, commande `npm run cv:livret`, contrôles (pages, dimensions, marges de 10 mm sur les pages 1 et 4, poids).
+- `0d18e99` : version 0.18.0.
+
+**Sorties** : `out/livret/cv-xavier-bou-livret-a4.pdf` (4 pages A4, 172 Ko) et `cv-xavier-bou-livret-a3.pdf` (2 pages A3 paysage, recto 4 | 1, verso 2 | 3, 196 Ko). Jamais publiés. Le site ne change pas : pas de déploiement nécessaire pour cette phase.
+
+**Écart de l'agent, corrigé avant commit** : en recopiant l'Atelier, l'agent avait passé deux tournures au « vous » (« tirés de votre métier », « à votre charge ») ; remises mot pour mot, la fiche validée fait foi. Un défaut vu au rendu : « problème. » seul sur la dernière ligne de la couverture ; le bloc de la phrase élargi, elle tient sur une ligne.
+
+**Vérifié** : 144 tests verts (11 nouveaux), `oxlint` sans remarque, types des scripts sans erreur, CV deux pages et condensé inchangés. Les deux PDF du livret rendus en image et relus : ordre des pages, imposition, compteurs absents en pages 2 et 3, textes complets, rien sous 8 pt sur les pages 1 et 4.
+
+**Limites** : le QR code n'est pas décodé par un test (aucune bibliothèque de lecture dans le projet) : à scanner au téléphone par Xav. Pas d'impression réelle : le pli, les couleurs et le recto-verso restent à voir sur papier. Les exigences de l'imprimeur (fond perdu, traits de coupe, profil de couleur) ne sont pas connues ; le fichier A4 page à page est la valeur sûre.
+
+**ARRÊT XAV** : impression d'essai (A4 recto-verso chez lui, ou BAT de l'imprimeur), QR code scanné, puis go.
+
+---
+
+## 2026-10-13 (déploiements 0.17.0 et modèles) — en ligne
+
+0.17.0 déployée par Xav (`cecd4a4`), vérifiée en ligne par l'agent : le site sert le nouveau bundle (Coaching, « Un Autre Monde (formation) », v1.3.55), le fichier du radar répond 404, le CV en ligne est identique à `dist/`. Puis une modification faite par Xav lui-même, sur les lignes indiquées par l'agent (privé `33afc78`) : Fable 5.1 et Opus 5.5, Sonnet retiré, Mistral à la place de Mammouth (tuiles, carte du CV, agent de poche) ; `projects.ts` garde Fable 5.1 pour l'audit, fait daté. Déployée (`8841c33`) et vérifiée en ligne par Xav. La marche à suivre donnée par l'agent oubliait `npm run build` avant `npm run preview` (la preview sert `dist/`) : Xav n'a d'abord rien vu ; corrigée.
+
+---
+
 ## 2026-10-13 (relecture du CV et du site) — 0.17.0
 
 Session hors phase : Xav relit son CV imprimé, puis le site en `npm run preview`, et dicte ses corrections ; l'agent les exécute une par une, un commit par consigne dans le dépôt privé. Point de départ annoncé par Xav : la formation (l'Atelier IA, qui « regroupe et partage » ses propres formations) et un CV de quatre pages en livret A3 plié, à imprimer chez un imprimeur — le livret fera l'objet d'une spec 15, après ce déploiement. Le CV deux pages du site reste tel quel en attendant.

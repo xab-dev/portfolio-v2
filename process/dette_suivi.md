@@ -164,3 +164,4 @@ Légende : ☑ résolu (valeur reportée dans la spec indiquée) · ☐ en réfl
 - 2026-10-04 (déploiement 0.13.1) — En ligne et vérifié (`16c28db`). Aucune dette ouverte ni close par le déploiement ; DETTE-61 à 64 restent ouvertes.
 - 2026-10-12 (Phase 9e, spec 14) — Deux projets venus de la base privée, Harness engineering à 4, jalon haTD retiré du condensé (détail dans `JOURNAL_DEV.md`). ROADMAP 0.16.0. **DETTE-65 ouverte** (lien de la vidéo de l'audit, à refaire). Rien de poussé ni de déployé.
 - 2026-10-13 (relecture du CV et du site) — Dix-neuf commits dans le dépôt privé, un par consigne de Xav (détail dans `JOURNAL_DEV.md`). ROADMAP 0.17.0. **DETTE-66 et DETTE-67 ouvertes** (fiche Un Autre Monde, specs à annoter). Rien de poussé ni de déployé.
+- 2026-10-13 (Phase 9f, spec 15) — Livret A3 (détail dans `JOURNAL_DEV.md`). ROADMAP 0.18.0. Aucune dette ouverte ni close ; l'ARRÊT XAV (impression d'essai, QR code au téléphone) reste dû. Le site ne change pas.
