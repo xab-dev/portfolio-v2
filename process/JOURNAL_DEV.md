@@ -4,6 +4,40 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-13 (relecture du CV et du site) — 0.17.0
+
+Session hors phase : Xav relit son CV imprimé, puis le site en `npm run preview`, et dicte ses corrections ; l'agent les exécute une par une, un commit par consigne dans le dépôt privé. Point de départ annoncé par Xav : la formation (l'Atelier IA, qui « regroupe et partage » ses propres formations) et un CV de quatre pages en livret A3 plié, à imprimer chez un imprimeur — le livret fera l'objet d'une spec 15, après ce déploiement. Le CV deux pages du site reste tel quel en attendant.
+
+**CV** (relecture du papier) :
+- `4afac4a` : « La base privée et son HUD » remplace Régie Maison dans les projets de la page 2 (112 commits en 8 jours, 39 fiches au 11/10) ; Régie Maison reste sur le site et dans le Parcours.
+- `674d12e` : « Workflows humain, LLM, agent de code » passe de No-code / automatisation à Méthode IA, même niveau.
+- `18f6fc8` : « Créateur de contenu » dans Humain, **niveau 2 proposé par l'agent**, accepté par Xav : une vidéo publiée, relue par un professionnel, à refaire (DETTE-65). À revoir après la nouvelle version.
+- `0c72810`, `ae59e13` : quatre jalons d'octobre dans Reconversion 2026, dates lues dans les historiques git (RPG-v2 : D-406, D-449, D-457, D-487 ; la base : création le 04/10, HUD le 05/10) ou dictées : les quatre mini-jeux de RPG-v2 (01/10), la base privée (04/10), le HUD de l'assistant (05/10, lecture de « l'assistant » validée par Xav), « La psychologie et l'IA, où en sommes-nous ? » (10/10, intitulé de Xav, une vidéo d'Albert Moukheiber pour point de départ ; recherche personnelle, jamais présentée comme universitaire).
+- `e1c2746` : RPG-v2 en ligne en v1.3.55 (13/10) à la place de la v1.2, partout (section Jouer, fiche, métrique, Parcours, carte du CV). Vérifié : la publication GitHub Actions du commit « Version 1.3.55 » de RPG-v2 a réussi le 13/10 à 01:09 UTC. Les mini-jeux de la console sont sur une branche non poussée : le site ne les dit pas en ligne.
+
+**CV condensé** (pour Xav seul) : il a débordé deux fois. Diagnostic par colonne, comme le 12/10 : d'abord la colonne Compétences (la nouvelle ligne), réglée par une note courte (« une vidéo ») et le retrait de la ligne « Langues », doublon de la section Langues que le CV deux pages exclut déjà (`18f6fc8`) ; puis la colonne Parcours, à chaque ajout de jalons, réglée par la règle de Xav (les plus anciens d'abord) : Régie Maison, le bilan de compétences, miniCiel, puis le pivot du 10/09 (`d25a9ae`, `5775f01`). Régie Maison sort aussi de ses projets, comme sur le CV deux pages (`92e77fd`).
+
+**Site** (relecture en local, plan validé par Xav avant exécution) :
+- `f7986d5` : Contact repasse à la fin, après Jouer, dans le menu et sur la page (« conseil de ma cheffe de projet ») ; le bouton FAQ reste en dernier.
+- `e049c0e` : la tuile « Un Autre Monde (1AM) » devient « Un Autre Monde (formation) ».
+- `e4c07a8` : le radar et la grille IA1 → IA7 sont retirés (« pas très clair, ça fait une surcharge ») ; restent les tuiles et leur bulle (niveau x/7 et phrase, gardés à la demande de Xav). Code mort retiré avec : `SkillRadar.tsx`, `POSITIONING`, `computeRadarData`/`describeRadar` et leurs tests, la dépendance `recharts`.
+- `61a92d2` : « Avant 2026 » ouvre la section Compétences ; « La suite » descend sous les projets (l'ordre du temps).
+- `bb4a1d5` : à l'étape 2 du formulaire, les tarifs des offres de `offres.md` (base de Xav, validée le 13/10) selon la catégorie : Bilan PC et IA (70 € ; 150 à 299 €), Atelier IA (70 € ; 150 à 250 €), une tâche automatisée (sur devis, à partir de 300 €) pour Automatisation et Outil sur mesure, et une catégorie **Coaching** (« première séance gratuite, puis 35 € la séance » ; Xav : pas de « pilote », il en a déjà fait pour le poker). Sans offre : les fourchettes de D4 et « Sur devis. Comme le premier échange, le premier jet est gratuit. » « À partir de 25 €/h » est remplacé. Xav sait que l'activité de conseil n'est pas encore ajoutée à sa micro-entreprise : prix et déclaration avancent en parallèle, c'est son choix.
+- `d2e1df1` : à l'écran, la grille de familles laissait un grand vide sous No-code (2 tuiles) face à LLMs (5) ; passage en colonnes, section plus courte de 84 px à 1280 px.
+- `b711634` : le Playground s'ouvre sur le prompt court (« alléger le site »).
+- `5847b56` : le scénario d'audit de la bulle du bandeau Positionnement, retiré avec le bandeau.
+- `92ad721` : version 0.17.0.
+
+**Incident** : une commande de l'agent (Playground) a été interrompue par Xav, et l'outil l'a dite non exécutée ; elle l'était. Le changement est parti dans le commit de la version RPG-v2, repéré à l'étape suivante (le texte attendu n'était plus là) et séparé en deux commits avant toute suite. Leçon : après une interruption, relire l'état du fichier avant de refaire.
+
+**Vérifié** : 133 tests verts, `oxlint` sans remarque, build vert, CV deux pages (2 pages, contrôle de mise en page sans défaut) et condensé (1 page), rendus en image et relus. Captures CDP headless du site compilé, en sombre et en clair, à 1280 et 375 px : ordre du menu et des sections, Contact juste avant le bas de page, pas de défilement horizontal, encarts de tarifs (Diagnostic, Coaching, Intervention IT, Automatisation), Playground sur « Prompt court », Jouer en v1.3.55. `npm run audit:rgaa` : aucune violation axe (contrastes « incomplets » sur les fonds en verre, comme avant), pas de débordement à 320 px, 10 scénarios sur 10.
+
+**Limites** : pas de vrai téléphone ni de lecteur d'écran (DETTE-63) ; la référence pixel du thème sombre (DETTE-64) est encore plus loin du site. Les chiffres de la base (11/10) et les commits de RPG-v2 (au 01/10) sont datés et vieillissent. La fiche « Un Autre Monde » dit encore « pas encore de contenu publié » (DETTE-66). Les specs 04, 06, 07 et 13 décrivent un état dépassé (DETTE-67).
+
+**Hors scope, prévu** : le livret A3 (couverture, CV deux pages en double page intérieure, quatrième de couverture, développement de l'activité formation), spec 15, tiré hors de `public/` (prix sur papier seulement si Xav le décide).
+
+---
+
 ## 2026-10-12 (Phase 9e) — deux projets venus de la base privée
 
 Spec `14_base-privee-hud.md`, écrite le 2026-10-11 depuis la base personnelle de Xav (lecture : la base, le code de son interface, l'historique git, le compte rendu de l'audit ; le dossier privé pour sa forme seulement). Chaque fait public remonte à une preuve vérifiée (code, git, fichiers), pas à l'affirmation d'une fiche.
