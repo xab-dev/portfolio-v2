@@ -4,6 +4,32 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-14 (Phase 9g, spec 16) — la boîte à outils « Portfolio », palier 2
+
+Feu vert de Xav après le correctif de « Quitter » : « go palier 2 ».
+
+**Livré** (dépôt privé, `b13ed61`) :
+- **📊 État du portfolio**, en lecture seule (`depots.mjs`) : la version de `package.json` et celle du ROADMAP (en rouge si elles diffèrent), le dernier commit de chaque dépôt et le dernier déploiement (dernier commit qui touche `dist/`), les fichiers non commités, les commits pas encore poussés d'après la dernière synchronisation (aucun `fetch`), les 33 dettes ouvertes (lignes `| ☐ |` des tableaux, pas la légende), les specs dont le statut dit « ARRÊT XAV » (13 et 15 aujourd'hui), les notes en attente.
+- **🚀 Publier**, quatre étapes, chacune ouverte par la précédente : vérifier (tests, lint, types) ; déployer (`npm run deploy -- <dépôt public>`), avec la liste en rouge et un bouton « Déployer quand même » si du code privé n'est dans aucun commit (P3) ; relire (la version, les fichiers de `dist/` qui changent) ; commiter `dist/` seul. Le commit passe par `git add -A -- dist` puis `git commit --only -- dist` : rien d'autre déjà indexé n'est emporté (P2). Il est refusé si l'adresse git du dépôt public n'est pas la noreply, ou si le message proposé (« Déploiement x.y.z :  (privé abc1234) ») ne dit pas ce qui change. Ensuite, en tête de page : le commit, ses fichiers, un bouton « Ouvrir un terminal sur portfolio-v2 » et la commande `git push` à taper. La boîte s'arrête là (D3).
+- **🧪 Vérifications** : tests, lint, types en un clic, un voyant par commande. Contraste et RGAA s'ajoutent : essayés avant d'écrire le code, ils tournent sans préparation sur le dernier build (`dist/` du dépôt privé), en 57 s et 9 min 30, avec 0 violation et aucun défaut automatisable. La page donne la date du build et prévient s'il est plus ancien que le dernier commit. Pas de ligne de dette, donc (spec, tuile 6).
+- `taches.mjs` : `enchainer()` fait tourner plusieurs commandes dans un même journal, chacune jusqu'au bout, et garde le code du premier échec.
+
+**Défaut du palier 1, corrigé en passant** : quand une deuxième commande démarrait (deux CV d'affilée), l'Aperçu demandait la suite de son journal à partir du rang atteint par la première, et en perdait le début. La page dit maintenant au serveur quelle commande elle suit ; une nouvelle commande repart de sa première ligne. Vérifié : deux CV d'affilée, le second reçoit ses 7 lignes.
+
+**Vérifié** :
+- Tests : 10 nouveaux, dont le commit de `dist/` sur un dépôt git jetable (suppressions comprises, un fichier déjà indexé hors de `dist/` reste hors du commit, refus sans noreply, sans message, sans changement), soit 168 au total, verts. `oxlint` et `tsc -b` sans remarque.
+- « Publier » de bout en bout sur une **copie** du dépôt public (`git clone` dans le dossier temporaire de la session), par l'interface dans Chrome sans écran : vérifier (6 s), « Déployer » refusé puis « Déployer quand même » (11 fichiers privés non commités à ce moment-là), déploiement (8 s), relecture, message proposé refusé tel quel, commit `3c4a058` en noreply avec 6 fichiers, terminal demandé sur la copie. Avant cela, sur la même copie, le commit avait été refusé avec l'adresse personnelle (la configuration globale). Le vrai dépôt public n'a pas bougé.
+- Refus : écriture venue d'une autre origine, déployer avant de vérifier, commiter avant d'avoir relu, vérification inconnue.
+- Les pages État, Publier et Vérifications vues à 760 × 820.
+
+**Limites** :
+- Juste après la copie de `dist/`, `git status` peut annoncer « modifié » un fichier qui ne diffère que par ses fins de ligne. Vu une fois sur la copie (la feuille CSS) : `git add` l'écarte. La relecture peut donc annoncer un fichier de trop, jamais en oublier un, et l'étape finale montre la liste réelle du commit.
+- Où en est « Publier » vit dans la mémoire du serveur : relancer la boîte repart de la vérification.
+- Le terminal ouvert après le commit n'a été vérifié que jusqu'à la demande faite à Windows (mode essai).
+- Le déploiement d'essai montre que le premier vrai « Publier » de Xav aura quelque chose à publier : deux fichiers JavaScript du site ont changé depuis le dernier déploiement (8841c33, 13/10) — le code de la 0.18.0 (`offers.ts`) n'a jamais été déployé —, et le PDF du CV change à chaque build.
+
+---
+
 ## 2026-10-14 (Phase 9g, spec 16) — la boîte à outils « Portfolio », palier 1
 
 Point de départ : Xav voulait changer une date dans son CV et n'a pas trouvé où. Le portfolio était le seul projet important sans boîte à outils sur son bureau. Spec `16_boite-a-outils-portfolio.md`, validée le même soir (P1 à P6 et P8 tels quels ; P7 corrigé par Xav : version 1.1.1 au lieu de 0.19.0), livrée en trois paliers.
