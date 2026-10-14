@@ -31,6 +31,8 @@ Point de départ : Xav voulait changer une date dans son CV et n'a pas trouvé o
 - VS Code demande une confirmation la première fois qu'un lien `vscode://` lui arrive.
 - Fermer la fenêtre par la croix, au lieu de « Quitter », laisse tourner le serveur, et le site local s'il est lancé. Relancer l'icône rouvre alors la même boîte.
 
+**Correctif après l'essai de Xav** (privé `e4c95d6`) : « Quitter » arrêtait le serveur sans fermer la fenêtre. Feu de camp a la même panne ; la boîte de RPG-v2 ne l'a pas. Cause vérifiée dans Chrome sans écran : Chrome n'accepte `window.close()` que si l'historique de la fenêtre tient en une page. Or un aller-retour vers une sous-page (`location.href`, puis le lien « ← Retour ») le porte à 3. Les boîtes changent désormais de page par `location.replace` (`aller()` dans `commun.js`, qui intercepte aussi les liens internes). Un parcours réel (deux tuiles, deux retours, puis « Quitter ») ferme la fenêtre et arrête le serveur. Si Chrome refuse quand même, un message le dit. Le papyrus sert aussi d'icône d'onglet. La procédure pour Feu de camp est déposée dans l'inbox de la base (`2026-10-14_2131_procedure-quitter-fdc.md`), à sa demande. Le code de Feu de camp n'est pas modifié.
+
 **Ports** (P8, hors de cette spec) : deux doublons relevés chez les autres boîtes, 8094 (la base et le Piano de RPG-v2) et 8095 (le Scriptorium et les Réponses de Trouble in Order).
 
 ---
