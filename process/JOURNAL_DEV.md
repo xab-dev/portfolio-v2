@@ -4,6 +4,37 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-14 (Phase 9g, spec 16) — la boîte à outils « Portfolio », palier 1
+
+Point de départ : Xav voulait changer une date dans son CV et n'a pas trouvé où. Le portfolio était le seul projet important sans boîte à outils sur son bureau. Spec `16_boite-a-outils-portfolio.md`, validée le même soir (P1 à P6 et P8 tels quels ; P7 corrigé par Xav : version 1.1.1 au lieu de 0.19.0), livrée en trois paliers.
+
+**Livré** (dépôt privé, `727cc12`, dossier `tools/boite/`) :
+- Le socle, sur le modèle des boîtes de RPG-v2 et de la base : un serveur Node sur `127.0.0.1:8097`, une fenêtre Chrome en mode application, des tuiles tirées de `outils.json`. Les écritures exigent l'en-tête de la page et refusent toute autre origine ou tout autre nom d'hôte. Les commandes viennent d'une table fermée (`taches.mjs`).
+- **npm sans blocage** (D5) : la boîte lance `npm-cli.js` avec le Node qui la fait tourner. Vérifié sur ce PC : `npm.cmd` lancé par Node sans shell échoue (`EINVAL`), et la politique d'exécution de PowerShell n'est réglée nulle part (donc `npm.ps1` est bloqué hors de la boîte).
+- **🔎 Où changer quoi** : la recherche dans les 19 fichiers de `src/content/`, sans accents ni majuscules. Un clic ouvre la ligne dans VS Code (`vscode://file/…`). Au-dessus, quinze réglages fréquents (`carte.json`), repérés par un texte ou un motif, jamais par un numéro de ligne. On y trouve la date des mentions légales, qui est `site.ts:31`, `lastUpdated: "2026-10-02"`.
+- **👁️ Aperçu** : « Voir le site » lance `npm run dev`, lit l'adresse annoncée par Vite et l'ouvre ; « Arrêter » coupe l'arbre de processus (par son numéro, `taskkill /PID … /T`, jamais par nom). Trois boutons génèrent puis ouvrent le CV, le condensé et le livret, avec la sortie en direct.
+- **⌨️ Claude Code** : un terminal sur `portfolio-v2`.
+- L'icône papyrus, un rouleau de papier dessiné en SVG (`icone.mjs`), rendu par `sharp` en 16, 32, 48 et 256 px dans `portfolio.ico`. Le raccourci `Portfolio.lnk` est créé sur le bureau par `creer_raccourci.ps1`.
+- `CV-condense.cmd` est retiré (P6), une fois la tuile qui le remplace essayée.
+
+**Écart avec la spec, assumé** : la spec disait que chaque résultat de recherche indiquerait où il se voit (site, CV, condensé, livret), déduit des imports. Les imports ne donnent que le niveau du fichier, et `build-cv.tsx` lit les mêmes fichiers pour les trois PDF. Chaque résultat dit donc « site » et/ou « CV et livret ». Le détail précis (par exemple « CV condensé ») n'est donné que pour les réglages fréquents, écrit à la main dans `carte.json` après vérification dans le code.
+
+**Vérifié** :
+- Tests : 14 nouveaux (recherche, repères de la carte tous trouvés, imports, table des commandes et noms de fichiers de `cv.ts`, adresse de Vite, icône), soit 158 au total, verts. `oxlint` sans remarque.
+- Serveur essayé sur un port à part, sans fenêtre : en mode essai, rien ne s'ouvre et la boîte note ce qu'elle aurait ouvert.
+- Refus vérifiés : requête sans en-tête, autre origine, autre hôte, action inconnue, fichier hors du contenu.
+- Le condensé a été généré par la boîte (1 page, 34 Ko). Le site local a démarré sur `localhost:5173` (réponse 200), puis s'est arrêté (plus de réponse). Le lancement par la commande exacte du raccourci (PowerShell caché) répond aussi.
+- Les quatre écrans (accueil, réglages, recherche « mentions », aperçu) ont été vus dans Chrome sans écran, à 760 × 820 : l'extension Claude in Chrome n'était pas connectée.
+
+**Limites** :
+- La vraie fenêtre (Chrome en mode application, lancée par l'icône) n'a pas été ouverte par l'agent, pour ne pas surgir sur l'écran de Xav. Pour la même raison, les tuiles qui ouvrent VS Code, un PDF ou un terminal n'ont été vérifiées que jusqu'à l'adresse qu'elles confient à Windows.
+- VS Code demande une confirmation la première fois qu'un lien `vscode://` lui arrive.
+- Fermer la fenêtre par la croix, au lieu de « Quitter », laisse tourner le serveur, et le site local s'il est lancé. Relancer l'icône rouvre alors la même boîte.
+
+**Ports** (P8, hors de cette spec) : deux doublons relevés chez les autres boîtes, 8094 (la base et le Piano de RPG-v2) et 8095 (le Scriptorium et les Réponses de Trouble in Order).
+
+---
+
 ## 2026-10-13 (Phase 9f, spec 15) — le livret A3
 
 Spec `15_livret-a3.md`, écrite après quatre choix de Xav (couverture sobre sur fond blanc, Atelier IA développé en page 4, pages intérieures à l'identique, QR code), validée telle quelle (P1 à P4) le même jour.
