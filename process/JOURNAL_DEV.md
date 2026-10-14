@@ -4,6 +4,34 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-10-14 (Phase 9g, spec 16) — la boîte à outils « Portfolio », palier 3 et version 1.1.1
+
+Feu vert de Xav après sa première publication par la boîte : « ma modif à la main faite et publié. mvp validé. go palier 3 ».
+
+**Livré** (dépôt privé, `9061ed2`) :
+- **📥 Note pour la prochaine session** : un champ, un bouton (ou Ctrl+Entrée). Le texte part tel quel dans `notes/AAAA-MM-JJ_HHMM.md` du dépôt privé, sous un en-tête daté qui dit à la session quoi en faire. Deux notes dans la même minute prennent `-2`, `-3` : rien n'est jamais écrasé. La page montre les notes en attente, dépliables pour les relire.
+- **📋 Dettes** : les dettes ouvertes de `process/dette_suivi.md`, une par une (boutons ou flèches ← →, comme l'outil Dettes de RPG-v2) ou toutes en liste. « Répondre… » dépose `notes/…_DETTE-xx.md`, avec le texte de la dette cité ; la dette affiche ensuite « réponse en attente ». La boîte ne modifie jamais le suivi (P5). Les cinq dettes anciennes sans numéro se désignent par leur ligne (`…_dette-ligne-58.md`). Une dette fermée entre-temps est refusée.
+- **✏️ Demander une retouche** : dépose `notes/…_retouche.md`, puis ouvre Claude Code sur `portfolio-v2` avec une demande courte qui renvoie au fichier. Elle est en ASCII, sans guillemet ni point-virgule : le texte de Xav ne traverse pas le terminal.
+- `notes.mjs` (nouveau) : le nom, l'en-tête, le dépôt et la lecture des notes.
+- `CLAUDE.local.md` à la racine de `portfolio-v2`, exclu de git par `.git/info/exclude` (P4) : la consigne aux sessions. En début de session, lister `notes/` ; appliquer ou demander ; ranger dans `notes/traite/` ; pour une dette, reporter la réponse dans le suivi sans supprimer de ligne.
+- **Publier** : les fichiers de `notes/` ne comptent plus dans le « code privé non commité » de l'étape 2 (P3). Ils ne changent pas le site, et sans ce tri une simple note aurait déclenché l'alerte rouge à chaque publication.
+- Version **1.1.1** (P7) : `package.json`, `package-lock.json`, ROADMAP.
+
+**Vérifié** :
+- Tests : 6 nouveaux (le nom des notes, l'en-tête et le texte gardé tel quel, jamais d'écrasement, `notes/traite/` ignoré, la demande de retouche en ASCII, `notes/` hors du code non commité, une page pour chaque tuile), soit 174 au total, verts. `oxlint` et `tsc -b` sans remarque.
+- Les trois pages par l'interface, dans Chrome sans écran, en mode essai (aucune fenêtre ouverte) : une note, une réponse à une dette et une retouche déposées avec accents, `;` et guillemets, puis relues telles quelles ; la commande qui aurait ouvert Claude Code pour la retouche ; refus d'une dette inconnue (409) et d'une écriture sans l'en-tête de la boîte (403). Les trois notes d'essai sont supprimées, le dossier `notes/` aussi.
+- Une session `claude -p` lancée dans `portfolio-v2`, sans outil, cite le dossier des notes : `CLAUDE.local.md` est bien chargé.
+- Deux défauts vus sur les captures, corrigés avant le commit : le texte des dettes sortait avec un « | » entre chaque lettre (une expression abîmée par le shell à l'écriture) ; les flèches ne réagissaient pas à un événement venu du document lui-même.
+
+**Limites** :
+- L'ouverture réelle de Claude Code avec la demande de retouche (Windows Terminal, un argument avec des espaces) n'est vérifiée que jusqu'à la commande composée. La première vraie retouche le montrera.
+- `CLAUDE.local.md` n'existe que sur ce PC (exclu de git). Son rôle est décrit dans la spec 16 (P4) et son contenu dans ce journal, de quoi le refaire.
+- La modification de Xav sur `src/content/story.ts` (« suppr Enza »), publiée par la boîte (`245272b`), n'est dans aucun commit du dépôt privé. Elle reste hors du commit de ce palier : c'est la sienne.
+
+**ARRÊT XAV final** (spec 16, §7) : l'icône, une recherche, les CV et un premier « Publier » sont faits par Xav. Reste à essayer les trois nouvelles tuiles, dont une vraie retouche.
+
+---
+
 ## 2026-10-14 (Phase 9g, spec 16) — la boîte à outils « Portfolio », palier 2
 
 Feu vert de Xav après le correctif de « Quitter » : « go palier 2 ».

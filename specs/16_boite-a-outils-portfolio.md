@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 9g — Boîte à outils « Portfolio » (spec 16)
 type: spec
 version: 1.0.0
-statut: validée par Xav le 2026-10-14 (P1 à P6 et P8 tels quels, P7 corrigé : version 1.1.1)
+statut: exécutée le 2026-10-14 (paliers 1 à 3, version 1.1.1) — ARRÊT XAV final : essayer Note, Dettes et une vraie retouche
 catégorie: Spec
 date: 2026-10-14
 genere_par: claude
