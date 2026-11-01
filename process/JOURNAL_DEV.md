@@ -4,6 +4,35 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-01 (Phase 11, spec 17) — refonte, étape 1 : quatre modules retirés du site, gardés dans `retire/`
+
+Xav ouvre la refonte (« qu'il me ressemble un peu plus, plutôt que d'être seulement une vitrine professionnelle. Un mélange entre un jeu et un "CV interactif" »), par étapes, en commençant par les retraits, et demande que les modules restent récupérables. Première consigne : « on enlève : Agent de poche, La Suite, Simulateur, Playground ».
+
+**Avant de commencer** (préparation des deux dépôts) :
+- Dépôt privé : `TEMPLATES_SPEC.md` retiré de l'index à la demande de Xav (doublon de `docs/` du public) ; ses retouches de contenu déjà en ligne en 1.1.1 commitées (`727d725`) ; `deploy.yml` d'avant la scission supprimé par Xav et commité avec le ménage du `.gitignore` (`467cc0b`). **Le dépôt privé n'avait aucun remote** : Xav a créé `xab-dev/portfolio-v2-src` (privé) et poussé `main`.
+- Dépôt public : specs 13 et 16 passées « livrée » par Xav (`63f1a0d`) ; résidus physiques de la scission supprimés (`audit/` 34 Mo, `images-src/`, `public/`, `node_modules/` 303 Mo — aucune jonction, vérifié), `.gitignore` allégé, règle LF ajoutée à `.gitattributes` (renormalisation : aucun fichier suivi n'a changé) (`e8550d4`).
+- Tag `v1.1.1-avant-refonte` sur les deux dépôts.
+
+**Livré** (dépôt privé, `8335c76`) :
+- `retire/` à la racine du dépôt privé, un sous-dossier par module, les fichiers déplacés par `git mv` **en gardant leur chemin sous `src/`** : rebrancher, c'est le déplacement inverse plus les lignes d'appel, toutes listées dans `retire/README.md`. Hors build, hors tests (`test.exclude`), hors lint (`--ignore-pattern=retire`).
+- **Agent de poche** → `retire/agent-de-poche/` (`AgentPanel`, `lib/agent/*`, `content/agent.ts`). `AgentMessage` et `TypingText` restent dans `src/` : la FAQ les utilise (découvert par `tsc` après le déplacement, remis en place).
+- **Simulateur** → `retire/simulateur/` (section, composants, `AnimatedCounter`, `lib/simulator`, `simulator.ts`, `references.ts`, `readSimulator.ts`). Le pré-remplissage du formulaire de contact part avec lui : effet `syncFromSimulator`, bannière, champs `source` / `simulatorSelection` du payload, `simulatorProjectType`.
+- **Playground** → `retire/playground/` (section, composants, `playground.ts`).
+- **« La suite »** → `retire/la-suite/NextBlock.tsx` (extrait de `StoryBlocks.tsx` avec `frenchSpacing`). `story.after` reste dans `story.ts` : **le CV carte mentale l'affiche toujours**, seul le site ne le montre plus.
+- Hero sur une colonne ; « Qualifier votre besoin » → `#contact` ; nav à cinq entrées plus FAQ ; fiche « Portfolio v2 — ce site » et FAQ corrigées là où elles citaient les modules ; scripts d'audit délestés des points et scénarios des trois sections (numéros restants inchangés).
+- Version **1.2.0** (`package.json`, `package-lock.json`, ROADMAP) : comportement visible modifié, incrément de Y.
+
+**Vérifié** : `tsc -b`, `oxlint`, 136 tests verts (174 moins les 38 partis dans `retire/`), `npm run build` (bundle 464 → 418 Ko). Dans Chrome sur `vite preview` : Hero sur une colonne, bandeau, texte complet de la page sans aucune trace des quatre modules.
+
+**Limites** :
+- Rendu mobile et thème clair non regardés après le retrait ; audits contraste et RGAA non relancés (les scénarios touchés sont retirés, pas réécrits). Tuile « Vérifications ».
+- Les specs 02, 03, 04 et 13 ne sont pas réécrites : elles décrivent des modules qui existent toujours, dans `retire/`. La spec 17 est écrite après coup, le jour même, pour fixer la mécanique commune aux retraits de la refonte.
+- Rien de déployé ni poussé par l'agent (DETTE-45) : Xav publie avec la tuile « Publier ». Au dépôt privé, le commit `8335c76` et le tag restent à pousser.
+
+**ARRÊT XAV** (spec 17 §7) : publier, relire en ligne (Hero sur téléphone), dire ce que devient « Qualifier votre besoin ».
+
+---
+
 ## 2026-10-14 (Phase 9g, spec 16) — la boîte à outils « Portfolio », palier 3 et version 1.1.1
 
 Feu vert de Xav après sa première publication par la boîte : « ma modif à la main faite et publié. mvp validé. go palier 3 ».
