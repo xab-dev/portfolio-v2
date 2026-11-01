@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 9g — Boîte à outils « Portfolio » (spec 16)
 type: spec
 version: 1.0.0
-statut: exécutée le 2026-10-14 (paliers 1 à 3, version 1.1.1) — ARRÊT XAV final : essayer Note, Dettes et une vraie retouche
+statut: livrée
 catégorie: Spec
 date: 2026-10-14
 genere_par: claude
