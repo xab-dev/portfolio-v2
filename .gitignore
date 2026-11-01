@@ -1,16 +1,9 @@
 # Dépôt de méthode et de journal depuis la scission du 2026-09-22 : le code
-# est parti dans un dépôt privé. Les règles ci-dessous ne protègent plus un
-# build, elles couvrent les **résidus physiques** encore présents dans la
-# copie de travail locale (le `git rm` a retiré les fichiers suivis, pas les
-# dossiers qui ne l'étaient pas). Ne pas les supprimer à l'aveugle :
-# `node_modules/` sert de cible à une jonction créée dans le dépôt privé.
-# Nettoyage physique à faire après un vrai `npm install` côté privé.
-# `dist/` n'est PAS ignoré ici : c'est le site publié, commité depuis le dépôt
-# privé par `npm run deploy` et servi par .github/workflows/pages.yml.
-node_modules
-/images-src/
-/public/
-/audit/
+# vit dans le dépôt privé `portfolio-v2-src`. Ce dépôt ne construit rien.
+# `dist/` n'est PAS ignoré ici : c'est le site publié, produit par
+# `npm run deploy` côté privé, commité ici et servi par .github/workflows/pages.yml.
+# Les résidus physiques de la scission (audit/, images-src/, public/,
+# node_modules/) ont été supprimés le 2026-11-01.
 *.local
 
 # Documents personnels de cadrage (ménage du 2026-09-22) : restent en local,

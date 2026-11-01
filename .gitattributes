@@ -1,3 +1,8 @@
+# Même règle que le dépôt privé : LF pour tout ce qui est texte, quel que soit
+# le `core.autocrlf` du poste. Ajoutée le 2026-11-01 pour faire taire les
+# avertissements « LF will be replaced by CRLF » à chaque commit.
+* text=auto eol=lf
+
 # Sans cette règle, `core.autocrlf=true` (Windows) classe ce PDF comme du texte
 # — sa taille et son encodage le privent des octets nuls qui déclenchent la
 # détection binaire automatique de Git — et convertirait ses fins de ligne au
