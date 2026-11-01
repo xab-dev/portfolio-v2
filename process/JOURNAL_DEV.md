@@ -4,6 +4,27 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, spec 18) — le widget Orchestriya dans le Hero, premier ajout de la refonte
+
+Xav voulait remettre de l'ordre dans les projets ; l'inventaire des candidats absents du site (RPGv4, TryMe, TiO-idle, V3, Tonieer, boîte à outils, livret, Orchestriya, redditAuto) lui a « donné de nombreuses idées », à prendre une par une. Première : Orchestriya, « qui va venir au début du site », en widget à la place de l'agent scripté dans la colonne droite du Hero : lancer la musique, le break, les nuances, la progression, un volume. « Tu peux travailler directement dans le dépôt local et y ajouter un dossier widget […] si tu vois une meilleure méthode je te laisse faire preuve de diligence. »
+
+**Méthode** (spec 18 §2, écrite le jour même) : ni iframe (la page ne tient pas dans 45 %, capture le clavier), ni réécriture en TypeScript (deux moteurs qui divergent). Le moteur est **sorti de `index.html` en module ES sans DOM, dans le dépôt d'Orchestriya** (`widget/orchestriya-engine.js`, mot pour mot, les rendus remplacés par `onMessage` / `onChange` / `onStep`, plus `setVolume` et `dispose`), puis **copié** dans le portfolio par `npm run orchestriya:sync` (origine notée dans `SOURCE.md`). Une copie versionnée plutôt qu'une dépendance : le dépôt source est privé et local, le site se reconstruit sans lui.
+
+**Livré** :
+- Orchestriya, commit `6bbbbeb` (non poussé : son workflow Pages, Xav pousse) : `widget/` (moteur, `package.json` « module », README avec l'API et la règle de cohérence), `tests/widget.test.js` (même faux `AudioContext` que le harnais, session complète par l'API ; `npm test` enchaîne les deux), `CLAUDE.md`, `README.md`, `docs/ROADMAP.md` (ligne 0 : faire de `widget/` la seule source).
+- Portfolio, commit `35cd1e9`, version **1.6.0** : `scripts/sync-orchestriya.js`, `src/lib/orchestriya/` (copie, `engine.d.ts`, `SOURCE.md`, `engine.test.ts`, 6 tests), `src/content/orchestriya.ts`, `OrchestriyaWidget.tsx` dans le Hero (grille 55/45 rétablie). Moteur chargé au premier geste (chunk séparé de 13,5 Ko), aucune touche globale capturée, volume mémorisé dans le navigateur, état et dernier message du moteur annoncés aux lecteurs d'écran, seize traits pour la position dans la mesure.
+
+**Vérifié** : Orchestriya `npm test` vert (page et module) ; portfolio `tsc`, `oxlint` (le `engine.js` copié est exclu du lint : il appartient à Orchestriya), 142 tests, build (bundle principal 409 → 419 Ko). Dans Chrome sur `vite preview` : panneau à sa place en thème clair, lancement (« Orchestre lancé en break »), passage au drop (pastille violette, traits violets), nuance ff, progression « Andalouse au prochain accord », arrêt ; aucune erreur console.
+
+**Limites** :
+- **Le son n'est pas vérifié** : le faux `AudioContext` attrape les erreurs Web Audio, pas la musique. Première écoute par Xav (ARRÊT XAV de la spec 18).
+- Le son vit à deux endroits (page et module) jusqu'à la migration notée dans la feuille de route d'Orchestriya ; DETTE-71.
+- Mobile et thème sombre non regardés pour le widget ; audits contraste et RGAA non relancés depuis le début de la refonte (DETTE-72).
+- Pas de fiche projet Orchestriya dans la grille, pas de lien (dépôt privé, page non publiée). Tempo, brillance, pupitres, roulement, cymbale, solo : dans le module, pas dans le panneau.
+- Rien de déployé : Xav écoute d'abord (`npm run dev`, ou la tuile « Publier » s'il préfère écouter en ligne).
+
+---
+
 ## 2026-11-02 (Phase 11, spec 17) — publication 1.4.0 par l'agent, ligne grise de « Formation Claude Max », publication 1.5.0
 
 Xav a demandé la chaîne de publication complète et les push des deux dépôts (« si tu ne peux pas à cause des autorisations ou autre, dis le moi »). Faite sans refus : `npm run deploy`, commit de `dist/` seul en noreply (`ad42133`), push du public (dont son déploiement 1.3.0 en attente et le tag `v1.1.1-avant-refonte`), push du privé avec le tag (`git push -u`, la branche suit désormais `origin/main`). Workflow Pages en succès, bundle vérifié en ligne par `curl`.
