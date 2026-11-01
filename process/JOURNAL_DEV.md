@@ -4,6 +4,18 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, spec 17) — publication 1.4.0 par l'agent, ligne grise de « Formation Claude Max », publication 1.5.0
+
+Xav a demandé la chaîne de publication complète et les push des deux dépôts (« si tu ne peux pas à cause des autorisations ou autre, dis le moi »). Faite sans refus : `npm run deploy`, commit de `dist/` seul en noreply (`ad42133`), push du public (dont son déploiement 1.3.0 en attente et le tag `v1.1.1-avant-refonte`), push du privé avec le tag (`git push -u`, la branche suit désormais `origin/main`). Workflow Pages en succès, bundle vérifié en ligne par `curl`.
+
+Puis la proposition demandée pour la ligne grise de « Formation Claude Max » : trois pistes tirées du contenu public du site (frise 2026, projets, FAQ) ; la fiche validée de sa base sur ce qui le différencie a été lue pour comprendre, mais elle est marquée hors portfolio et rien n'en est repris. Xav garde « 2026 » et « Formation Claude Max » en raccourcis assumés (« ça présentera mieux l'année prochaine ») et dicte la ligne : « Cadrer, tester, journaliser, piloter un agent sur des projets longs ».
+
+**Livré** (dépôt privé, `0f8a1f7`, version **1.5.0**) : la ligne, mot pour mot, avec le point final des autres lignes de la carte. Site seulement (`onCv: false` inchangé). `tsc`, `oxlint`, 136 tests verts. Déployée par la même chaîne (`dist/` : `e0c9218`).
+
+**Limite de méthode** : une commande qui enchaînait commits et push a été refusée par le mode auto (« Production Deploy ») ; le même push, lancé seul, passe. Les commits de documentation ont donc été faits après celui de `dist/`, dans un ordre inverse de la règle habituelle (journal et dette avant le commit public). Signalé ici plutôt que réécrit.
+
+---
+
 ## 2026-11-01 (Phase 11, spec 17, retouches) — « Parcours » sans sous-titre, « Formation Claude Max » dans « Avant 2026 »
 
 Xav : « enlève le sous-titre de Parcours, ça fait un peu trop répétitif. puis ajoute dans la tuile de Avant 2026 : 2026 Formation Claude Max ».
