@@ -4,6 +4,18 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-01 (Phase 11, spec 17, retouches) — « Parcours » sans sous-titre, « Formation Claude Max » dans « Avant 2026 »
+
+Xav : « enlève le sous-titre de Parcours, ça fait un peu trop répétitif. puis ajoute dans la tuile de Avant 2026 : 2026 Formation Claude Max ».
+
+**Livré** (dépôt privé, `4d54ab9`, version **1.4.0**) : sous-titre retiré ; nouvelle entrée dans `story.ts` (`formation-claude-max`, période « 2026 », libellé tel que dicté, sans détail — `detail` devient facultatif et le paragraphe n'est rendu que s'il y a quelque chose). **Site seulement** : `onCv: false`, filtré dans `scripts/build-cv.tsx` avant `buildCvMapModel`, parce que le CV est hors refonte.
+
+**Vérifié** : `tsc`, `oxlint`, 136 tests, build. Le texte du CV PDF reconstruit, comparé page à page (pdfjs) au PDF publié dans `dist/` du dépôt public : identique, « Claude Max » absent. Chrome sur `vite preview` : la carte « Avant 2026 » avec sa huitième ligne, en thème clair cette fois (le thème système de l'onglet). Le `vite preview` a de nouveau survécu à l'arrêt de son shell : PID retrouvé par sa ligne de commande et arrêté seul.
+
+**Limites** : la carte s'intitule toujours « Avant 2026 » et contient une ligne 2026, à la demande de Xav. Mobile non regardé.
+
+---
+
 ## 2026-11-01 (Phase 11, spec 17, suite) — refonte, étape 2 : les compétences quittent le site, la section devient « Parcours »
 
 Xav, après l'étape 1 : le CV n'est pas touché par la refonte (« peut-être si on met à jour les projets en détail, mais pas pour l'instant ») ; « Qualifier votre besoin » → Contact est gardé (**DETTE-69 close**) ; « on enlève les compétences en gardant le bloc "avant 2026" ».

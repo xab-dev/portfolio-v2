@@ -47,6 +47,8 @@ Cette spec est écrite après coup, le jour même, pour cadrer la mécanique com
 
 La section `Skills.tsx` devient **`Parcours.tsx`** : `id="parcours"`, titre « Parcours », sous-titre « Un parcours daté, sans jalon inventé. » (la moitié de l'ancien, celle qui reste vraie). Navigation : Accueil, Parcours, Projets, Jouer, Contact, FAQ. Choix de l'agent, à confirmer par Xav : le nom « Parcours » et le sous-titre. Plus aucune bulle `role="tooltip"` sur le site : le scénario RGAA 10.13 part avec les tuiles. `tools/boite/carte.json` : « Compétences et niveaux » n'est plus marqué visible sur le site. Version 1.3.0. Bundle : 418 → 409 Ko.
 
+**Retouches de Xav, même session (1.4.0)** : le sous-titre de « Parcours » est retiré (« un peu trop répétitif ») ; une entrée « 2026 — Formation Claude Max » s'ajoute dans la carte « Avant 2026 », **site seulement** : `onCv: false` dans `story.ts`, filtrée dans `scripts/build-cv.tsx` (texte du PDF reconstruit comparé page à page au PDF publié : identique). `detail` devient facultatif dans `StoryStep`.
+
 ## 4. Conséquences sur ce qui reste
 
 - **Hero** : une seule colonne (l'agent occupait les 45 % de droite). Le bloc texte garde sa largeur de lecture (`max-w-2xl`). Le CTA « Qualifier votre besoin » mène à `#contact` au lieu de `#simulateur`.
@@ -68,4 +70,4 @@ Tout ajout. Les specs 02, 03, 04 et 13 ne sont pas réécrites : elles décriven
 
 ## 7. ARRÊT XAV
 
-Publier (tuile « Publier »), puis relire le site en ligne, surtout le Hero sur téléphone. Confirmer le nom « Parcours » et son sous-titre. (« Qualifier votre besoin » → Contact : tranché, on garde.)
+Publier (tuile « Publier »), puis relire le site en ligne, surtout le Hero sur téléphone. Confirmer le nom « Parcours » (le sous-titre est parti). (« Qualifier votre besoin » → Contact : tranché, on garde.)
