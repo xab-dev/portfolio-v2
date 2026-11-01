@@ -4,6 +4,22 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-01 (Phase 11, spec 17, suite) — refonte, étape 2 : les compétences quittent le site, la section devient « Parcours »
+
+Xav, après l'étape 1 : le CV n'est pas touché par la refonte (« peut-être si on met à jour les projets en détail, mais pas pour l'instant ») ; « Qualifier votre besoin » → Contact est gardé (**DETTE-69 close**) ; « on enlève les compétences en gardant le bloc "avant 2026" ».
+
+**Livré** (dépôt privé, `7146d33`, version **1.3.0**) :
+- `SkillBadges`, `PortalTooltip` et `useTooltip` → `retire/competences/` (les deux derniers n'avaient plus d'autre usage). `skills.ts` reste : les deux CV et le livret le lisent.
+- `Skills.tsx` → `Parcours.tsx` : `id="parcours"`, titre « Parcours », sous-titre « Un parcours daté, sans jalon inventé. », un seul enfant, `BeforeBlock`. Nav : Accueil, Parcours, Projets, Jouer, Contact, FAQ. Nom et sous-titre choisis par l'agent, à confirmer.
+- Scripts d'audit : point 18 et scénario 10.13 (bulles de compétence) retirés, point 05 pointe sur `parcours`, deux helpers devenus inutiles supprimés pour garder `oxlint` muet. `carte.json` de la boîte : « Compétences et niveaux » n'est plus « site ».
+- `retire/README.md` : section `competences`, décisions de Xav notées.
+
+**Vérifié** : `tsc -b`, `oxlint` (deux avertissements d'helpers orphelins vus et réglés), 136 tests, build (bundle 418 → 409 Ko). Chrome sur `vite preview` après rechargement forcé (le premier affichage venait du cache) : bandeau « Parcours », section réduite à la carte « Avant 2026 ».
+
+**Limites** : mêmes qu'à l'étape 1 (mobile, thème clair, audits non relancés). Le serveur `vite preview` de l'étape 1 avait survécu à l'arrêt de son shell (PID identifié par sa ligne de commande, arrêté seul, pas de `taskkill` large).
+
+---
+
 ## 2026-11-01 (Phase 11, spec 17) — refonte, étape 1 : quatre modules retirés du site, gardés dans `retire/`
 
 Xav ouvre la refonte (« qu'il me ressemble un peu plus, plutôt que d'être seulement une vitrine professionnelle. Un mélange entre un jeu et un "CV interactif" »), par étapes, en commençant par les retraits, et demande que les modules restent récupérables. Première consigne : « on enlève : Agent de poche, La Suite, Simulateur, Playground ».

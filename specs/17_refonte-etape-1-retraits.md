@@ -1,9 +1,9 @@
 ---
 projet: portfolio-v2
-episode/session: Phase 11 — Refonte jeu / CV interactif, étape 1 : retraits (spec 17)
+episode/session: Phase 11 — Refonte jeu / CV interactif, étapes 1 et 2 : retraits (spec 17)
 type: spec
 version: 1.0.0
-statut: exécutée le 2026-11-01 — ARRÊT XAV : relire le site en ligne après publication
+statut: étapes 1 et 2 exécutées le 2026-11-01 — ARRÊT XAV : relire le site en ligne après publication
 catégorie: Spec
 date: 2026-11-01
 genere_par: claude
@@ -35,6 +35,18 @@ Cette spec est écrite après coup, le jour même, pour cadrer la mécanique com
 | Playground | spec 04, Phase 3 | `playground/` : section, 5 composants, `content/playground.ts` | — |
 | « La suite » | spec 13, D6 | `la-suite/` : `NextBlock` et `frenchSpacing` extraits de `StoryBlocks.tsx` | `story.after` dans `story.ts` : le CV carte mentale l'affiche toujours |
 
+## 3 bis. Étape 2 — même session (décisions de Xav)
+
+- « On ne touche pas au CV. Peut-être si on met à jour les projets en détail, mais pas pour l'instant. » Règle 4 du §2 confirmée : le CV reste hors refonte.
+- « Bon choix pour le bouton "Qualifier votre besoin", on garde vers contact. » DETTE-69 close.
+- « On enlève les compétences en gardant le bloc "avant 2026". »
+
+| Module | Origine | Dans `retire/` | Reste en place |
+|---|---|---|---|
+| Tuiles de compétences | spec 06, Phase 5 (radar et grille déjà retirés le 2026-10-13) | `competences/` : `SkillBadges`, `PortalTooltip`, `useTooltip` (plus d'autre usage) | `skills.ts` (CV, livret), bloc « Avant 2026 » (`StoryBlocks.tsx`) |
+
+La section `Skills.tsx` devient **`Parcours.tsx`** : `id="parcours"`, titre « Parcours », sous-titre « Un parcours daté, sans jalon inventé. » (la moitié de l'ancien, celle qui reste vraie). Navigation : Accueil, Parcours, Projets, Jouer, Contact, FAQ. Choix de l'agent, à confirmer par Xav : le nom « Parcours » et le sous-titre. Plus aucune bulle `role="tooltip"` sur le site : le scénario RGAA 10.13 part avec les tuiles. `tools/boite/carte.json` : « Compétences et niveaux » n'est plus marqué visible sur le site. Version 1.3.0. Bundle : 418 → 409 Ko.
+
 ## 4. Conséquences sur ce qui reste
 
 - **Hero** : une seule colonne (l'agent occupait les 45 % de droite). Le bloc texte garde sa largeur de lecture (`max-w-2xl`). Le CTA « Qualifier votre besoin » mène à `#contact` au lieu de `#simulateur`.
@@ -47,7 +59,7 @@ Cette spec est écrite après coup, le jour même, pour cadrer la mécanique com
 ## 5. Vérification
 
 - `tsc -b`, `oxlint`, `vitest` (136 tests : 174 moins les 38 partis avec les modules), `npm run build` : verts.
-- Rendu vérifié dans Chrome sur `vite preview` : Hero sur une colonne, bandeau à cinq entrées plus FAQ, texte de la page sans aucune trace des quatre modules, Contact atteint depuis « Qualifier votre besoin ».
+- Rendu vérifié dans Chrome sur `vite preview` : Hero sur une colonne, bandeau à cinq entrées plus FAQ, texte de la page sans aucune trace des quatre modules, Contact atteint depuis « Qualifier votre besoin ». Étape 2 : bandeau avec « Parcours », section « Parcours » réduite à la carte « Avant 2026 ».
 - Non vérifié : le rendu mobile (375 px) et le thème clair après le retrait ; les audits contraste et RGAA n'ont pas été relancés (les scénarios touchés ont été retirés, pas réécrits). À relancer depuis la tuile « Vérifications » avant ou après publication.
 
 ## 6. Hors scope
@@ -56,4 +68,4 @@ Tout ajout. Les specs 02, 03, 04 et 13 ne sont pas réécrites : elles décriven
 
 ## 7. ARRÊT XAV
 
-Publier (tuile « Publier »), puis relire le site en ligne, surtout le Hero sur téléphone. Dire si « Qualifier votre besoin » doit rester, pointer ailleurs, ou disparaître.
+Publier (tuile « Publier »), puis relire le site en ligne, surtout le Hero sur téléphone. Confirmer le nom « Parcours » et son sous-titre. (« Qualifier votre besoin » → Contact : tranché, on garde.)
