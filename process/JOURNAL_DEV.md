@@ -4,6 +4,14 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, spec 18, retouche) — Hero : widget aligné sur « Consultant… », le plein sur « Qualifier votre besoin »
+
+Xav, après avoir écouté : « c'est très bien j'adore ». Puis deux retouches : en plein écran, le haut du widget doit commencer au niveau de « Consultant outils… » ; et c'est « Qualifier votre besoin » qui reçoit le bleu plein, pas « Voir mes projets ».
+
+**Livré** (privé `3b1b54c`, version **1.7.0**) : grille du Hero en `lg:items-start`, widget décalé de 7,5 rem (la hauteur de l'avatar plus l'écart qui le suit, ce qui met le bord haut de la carte sur la ligne de l'accroche) ; variantes des deux boutons inversées, l'ordre de lecture inchangé. Vérifié dans Chrome en plein écran, thème sombre : bord haut du widget sur la ligne « Consultant… », « Qualifier votre besoin » en plein. Lint, types, build verts. Non déployé.
+
+---
+
 ## 2026-11-02 (Phase 11, spec 18) — le widget Orchestriya dans le Hero, premier ajout de la refonte
 
 Xav voulait remettre de l'ordre dans les projets ; l'inventaire des candidats absents du site (RPGv4, TryMe, TiO-idle, V3, Tonieer, boîte à outils, livret, Orchestriya, redditAuto) lui a « donné de nombreuses idées », à prendre une par une. Première : Orchestriya, « qui va venir au début du site », en widget à la place de l'agent scripté dans la colonne droite du Hero : lancer la musique, le break, les nuances, la progression, un volume. « Tu peux travailler directement dans le dépôt local et y ajouter un dossier widget […] si tu vois une meilleure méthode je te laisse faire preuve de diligence. »

@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, premier ajout : le widget Orchestriya (spec 18)
 type: spec
 version: 1.0.0
-statut: exécutée le 2026-11-02 — ARRÊT XAV : écouter le résultat (le son n'est pas vérifiable par l'agent), relire les textes du panneau
+statut: exécutée le 2026-11-02, validée par Xav (« c'est très bien j'adore ») ; retouche de mise en page le même jour (1.7.0) — reste à relire les textes du panneau
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude
@@ -62,6 +62,10 @@ Règles :
 - Portfolio : `tsc -b`, `oxlint` (0 remarque), 142 tests (136 + 6), `npm run build` : chunk `engine` séparé, bundle principal 409 → 419 Ko.
 - Rendu dans Chrome sur `vite preview` : voir le journal du 2026-11-02.
 - **Non vérifiable par l'agent : le son.** Le faux `AudioContext` attrape les erreurs Web Audio, pas la musique. Première écoute par Xav.
+
+## 4 bis. Retouche de Xav, même jour (1.7.0)
+
+« C'est très bien j'adore. » Puis : en plein écran, le haut du widget commence au niveau de la ligne « Consultant outils… » (grille `lg:items-start`, widget décalé de 7,5 rem = avatar `h-24` + `gap-6`) ; le bleu plein passe à « Qualifier votre besoin », « Voir mes projets » en contour. Vérifié dans Chrome en plein écran, thème sombre.
 
 ## 5. Hors scope
 
