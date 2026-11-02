@@ -4,6 +4,20 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, spec 20) — les serrures : la spec, pas encore le code
+
+Quatrième point de la note de la nuit. Xav a répondu aux cinq questions de l'agent (quelles fiches, ce qu'on voit, l'échec, l'accessibilité, la mémoire) ; ses réponses sont citées en tête de `specs/20_serrures-mini-jeux.md`. Huit fiches derrière trois jeux : QI et questions LLM repris du prototype TryMe (échauffement et « Bases IA », à sa demande), cryptex à molettes dont le mot se lit sur la carte avant de l'ouvrir — c'est aussi ce qui tient sa décision sur le lien TiO-idle (DETTE-73). Trois essais ratés ouvrent quand même (« On est sympa, voilà. »), lien d'ouverture pour les lecteurs d'écran, mémoire dans le `localStorage` sous le même régime que le thème, sans cookie. Les boutons de Jouer passent par la serrure tant que la fiche est fermée.
+
+**Écarts et choix de l'agent, à trancher par Xav** (§8 de la spec) : les deux énigmes spatiales du prototype écartées (indescriptibles pour un lecteur d'écran), les quatre mots des cryptex, le dosage des niveaux, le cadre RPG-v2 laissé jouable, `localStorage` plutôt que `sessionStorage`, le sort du déblocage « sympa » à la visite suivante.
+
+En l'écrivant : la page Mentions légales est en retard sur le stockage local (volume d'Orchestriya absent, réglage `simulator` d'un module retiré encore cité) — DETTE-75, à corriger avec la spec 20.
+
+**Pendant ce temps**, Xav relit les textes du site à la main (point 3 de sa liste) : cinq fichiers de `src/content/` sont modifiés dans sa copie de travail (`contact.ts`, `cv.ts`, `hero.ts`, `play.ts`, `projects.ts`), non commités, l'agent n'y touche pas. Attention : `cv.ts` change une ligne de l'en-tête du CV (« Autodidacte indépendant ») — le PDF ne suivra qu'après `npm run cv`.
+
+Aucun code pour cette spec ; rien de déployé. ARRÊT XAV.
+
+---
+
 ## 2026-11-02 (Phase 11, tri) — les projets dans l'ordre d'importance de Xav
 
 Deuxième point de la note de la nuit. Xav, plutôt que le critère proposé le 01/11 : « Je te donne l'ordre précis attendu (mon importance subjective) : Portfolio, La Base, Harness, RPGv2, RPGv4, TiO-idle, TryMe, Un Autre Monde, Audit sécu, miniCiel, Séquence d'intervention, Régie Maison, haTD, Bib Spec, Bib Auto. »
