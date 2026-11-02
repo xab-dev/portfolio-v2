@@ -2,8 +2,8 @@
 projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, le gardien : l'Agent de poche de retour en personnage (spec 22)
 type: spec
-version: 0.1.0
-statut: écrite le 2026-11-02, en attente du go de Xav — deuxième des trois specs du plan (21 → 22 → 23)
+version: 1.0.0
+statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 22, choix seulement, icône robot »), version 1.13.0, privé `1d06074` ; non déployée, ARRÊT XAV §7 (relire les répliques) — deuxième des trois specs du plan (21 → 22 → 23)
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude
@@ -65,3 +65,22 @@ La saisie libre ; un vrai modèle derrière (DETTE-58 et la ligne « Agent = scr
 Avant le code : le go, et deux choix — la saisie libre revient-elle (sinon choix seulement), et la bulle porte-t-elle l'avatar ou une autre icône ? Après : relire chaque réplique du graphe (§2), les routes et leurs liens.
 
 Version à l'exécution : 1.13.0.
+
+## 8. Exécution (2026-11-02)
+
+Le go de Xav, mot pour mot : « go spec 22, choix seulement, icone Robot: créer par Claude ou emoji en fonction de comment il aime etre représenté (son identité de gardien). » Les deux choix du §7 sont donc tranchés : pas de saisie libre ; pas l'avatar, un robot.
+
+**L'icône.** Dessinée par l'agent, au trait, en `currentColor` (elle suit le thème) : un robot à tête ronde, des yeux ronds, un demi-sourire, et une antenne en forme de clé — l'anneau en haut, une dent sur la tige — parce qu'ici son métier, ce sont les serrures. Un robot plutôt qu'un visage : il ne se fait pas passer pour quelqu'un. Pas d'emoji : son dessin change d'un système à l'autre (`src/components/gardien/GardienIcon.tsx`).
+
+Faite telle quelle, avec ces écarts à ratifier (détail dans `process/JOURNAL_DEV.md`) :
+
+- « Partout : Autre chose ? / Merci » : rendus sous les réponses, en petits liens, sur chaque nœud sauf l'entrée (où « Rien, je visite » ferme déjà). Les « deux à quatre boutons » du §2 sont les réponses propres au nœud ; un nœud de fin n'en a qu'une (« Prendre contact », « Y aller », « La voir »…) plus ces deux liens.
+- Recruteur : « Ce que je fais avec un agent de code » devient **« Le travail avec un agent de code »** — les réponses sont dans la bouche du visiteur, le « je » y parlait de lui.
+- « Disponible ? » : le gardien dit **la ligne de Contact** retouchée par Xav le 2026-11-02 (`availabilityNote`), lue dans `contact.ts`, plutôt que la réponse `dispo` de l'Agent de poche (qui promettait encore un délai de réponse que Xav a retiré de cette ligne).
+- Client : le formulaire ne sait pas recevoir de catégorie pré-choisie (le pré-remplissage venait du Simulateur, retiré) → « Qualifier votre besoin » mène à `#contact` sans catégorie. « Un outil sur mesure » a la même offre que « Automatiser » (« Une tâche automatisée »), comme dans le formulaire. Le prix est lu dans `offers.ts` (`priceLine`, la version en phrase, même source que `offerPricing`) et dans `siteQuoteTiers` pour le site. Ajout : « Lire la FAQ » (`#faq`) sous « Un site comme celui-ci ».
+- Curieux : « Les fiches qui se méritent » et « La musique » passent par une réplique, puis « Y aller » ; la première dit aussi où en est le visiteur (« Vous en avez ouvert 3 sur 8. »).
+- Serrures : plusieurs tombées depuis la dernière conversation → « Deux de prises. », « Trois de prises. »… ; « Une de prise. » pour une seule. À huit, « La voir » mène droit à la fiche secrète (`#projets/boites-a-outils`).
+- Le CV : le PDF se télécharge, le dialogue reste ouvert et répond « Le voilà : deux pages, la carte puis le détail. » (l'explorateur de la spec 23 prendra sa place).
+- La bulle et le formulaire : rien n'était caché sur Contact ; c'est la dernière ligne du **pied de page** (« Mentions légales ») que la bulle couvrait en bas de page sur téléphone. La marge basse est donc dans le `Footer` (sous `md` seulement), pas dans la section Contact.
+- En plus de la spec : la primitive `Modal` se déclare ouverte (la bulle s'efface pour toute modale, celle de la spec 23 comprise) et prévient quand son animation de fermeture est finie (le gardien emmène à ce moment-là) ; espaces insécables français au rendu (`frenchSpacing`) ; une entrée « Les répliques du gardien » dans la carte de la boîte à outils.
+- La passe `axe` prévue pour DETTE-72 est faite ici, sur la bulle et la modale : 0 violation (sombre et clair, 1 280 et 375 px, quatre états du dialogue).
