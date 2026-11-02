@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, le CV à explorer : la carte mentale du CV rendue jouable sur le site (spec 23)
 type: spec
 version: 1.0.0
-statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 23 : "CV interactif" ; "Bravo, …" »), version 1.14.0, privé `df205b3` et `d749c7b` ; non déployée, ARRÊT XAV §7 (explorer les six branches en ligne) — troisième et dernière des trois specs du plan (21 → 22 → 23)
+statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 23 : "CV interactif" ; "Bravo, …" »), version 1.14.0, privé `df205b3` et `d749c7b` ; validée par Xav (« tout est ok ») et publiée le même jour (public `24adb15`), ARRÊT XAV §7 levé, relecture détaillée de Xav à venir — troisième et dernière des trois specs du plan (21 → 22 → 23)
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude

@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, le gardien : l'Agent de poche de retour en personnage (spec 22)
 type: spec
 version: 1.0.0
-statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 22, choix seulement, icône robot »), version 1.13.0, privé `1d06074` ; non déployée, ARRÊT XAV §7 (relire les répliques) — deuxième des trois specs du plan (21 → 22 → 23)
+statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 22, choix seulement, icône robot »), version 1.13.0, privé `1d06074` ; validée par Xav avec la spec 23 (« tout est ok ») et publiée le même jour (public `24adb15`), ARRÊT XAV §7 levé, relecture détaillée de Xav à venir — deuxième des trois specs du plan (21 → 22 → 23)
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude

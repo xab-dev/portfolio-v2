@@ -34,6 +34,8 @@ Corrigé en vérifiant : au premier rendu, branches trop étroites (« Reconvers
 
 **ARRÊT XAV** (spec §7) : explorer les six branches en ligne, dire si les compétences ont leur place ainsi (une par une, dans le volet) et si l'étoile tient sur son écran ; relire les textes de `cvExplorer.ts` ; trancher « La suite » sans volet. Non déployé : Xav publie par la tuile « Publier ».
 
+**Validée et publiée** (specs 22 et 23) : Xav, « tout est ok, tu peux faire la publication et les push. je prendrais le temps de faire une review détaillée et noter les correctifs pour plus tard. merci <3 » Les ARRÊT XAV des deux specs sont levés tels quels (répliques du gardien, explorateur, place des compétences, textes, « La suite » sans volet) ; sa relecture détaillée viendra plus tard, en notes de correctifs. Chaîne faite par l'agent : `npm run deploy` (54 fichiers), CV publié comparé au texte (identique ; seule sa date de génération change), commit de `dist/` seul en noreply (`24adb15`), push du privé seul (`1d06074..d749c7b`), puis du public seul (`4d7ab08..24adb15`) ; workflow Pages vert ; en ligne vérifié par curl : bundle `index-BbNiistu.js` servi, avec « CV interactif », « Parler au gardien », « Le CV, à explorer », la ligne de Xav et « Formation Claude Max » ; chunk `CvExplorer-DUBYS-no.js` en 200 (31 075 octets) ; CV en 200 à la taille publiée.
+
 ---
 
 ## 2026-11-02 (Phase 11, spec 22) — le gardien
