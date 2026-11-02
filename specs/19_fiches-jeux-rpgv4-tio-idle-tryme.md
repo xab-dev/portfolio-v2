@@ -46,6 +46,8 @@ TryMe n'a ni version en ligne ni export web. Son prototype HTML (un fichier, « 
 
 Sous RPG-v2, un bloc « Mes autres jeux » : trois boutons (nouvel onglet), chacun suivi de son état et du lien vers sa fiche. Textes dans `play.ts`, adresses dans `site.ts` (`rpgv4Url`, `tioIdleUrl`, `trymeProtoPath`).
 
+> **Révisé le 2026-11-02 (1.9.0), à la relecture de Xav** : plus de bloc. Les trois boutons seuls, sur la ligne du titre, entre « Jouer » et la bulle « Comment ce site a été créé ? » ; ni état ni lien de fiche (l'état reste dans chaque fiche projet). Sous une certaine largeur la rangée replie sous le titre.
+
 ## 6. Captures
 
 Outil écrit pour l'occasion (scratchpad, pas dans le dépôt) : Chrome sans écran piloté par le client CDP du harnais d'audit, 1600 × 900. RPGv4 en 3D ne rend pas sans écran (noir) : la scène d'essai a été ouverte dans le Chrome de Xav en local, panneau de développement masqué par script, capture 1372 × 871. Les six images passent par `npm run images` (webp, 6 à 57 Ko).

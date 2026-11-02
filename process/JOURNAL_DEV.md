@@ -4,6 +4,23 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, spec 19, retouche) — les trois autres jeux sur la ligne du titre « Jouer »
+
+Reprise au matin. La note de la nuit (`notes/2026-11-02_0245.md` du dépôt privé) listait quatre points ; voici le premier. Réponses de Xav aux dettes ouvertes, en tête de session : DETTE-70 close (« Parcours » confirmé), DETTE-73 close (lien TiO-idle gardé : « ça révise un peu la décision », l'adresse est donnée « pour ceux qui cherchent bien, et qui passeront les mini-jeux à venir »), DETTE-72 « à la fin » de la refonte, DETTE-74 reprise par Xav à la main avec la boîte à outils. Son du widget validé (« soundIsOK »), module Orchestriya poussé par lui.
+
+Xav, sur le bloc « Mes autres jeux » : « j'aurais préféré n'avoir que les 3 boutons (sans le bloc) tels qu'ils sont maintenant, mais sans les autres informations. Les 3 boutons doivent être placés entre le titre Jouer et la bulle "comment ce site a été créé ?", il doit normalement y avoir la place. »
+
+**Livré** (privé `12e4a98`, version **1.9.0**) :
+- `Play.tsx` : le bloc sous le cadre RPG-v2 (titre, phrase d'intro, note d'état et lien « fiche projet » par jeu) est retiré. Les trois boutons passent dans l'action d'en-tête de la section, devant la bulle FAQ, à la taille de la bulle (`px-4 py-2 text-xs`), toujours en nouvel onglet avec l'indication aux lecteurs d'écran. La liste garde « Mes autres jeux » comme nom accessible (`aria-label`).
+- `play.ts` : `othersIntro`, les `note` et `projectHref` supprimés (plus rien ne les lit) ; l'état de chaque jeu reste dans sa fiche projet.
+- `SectionShell` : l'action d'en-tête n'est plus flottante en `absolute` à droite du titre (spec 10 : elle ne devait pas changer le retour à la ligne du titre). Avec quatre boutons elle recouvrait le titre sous 1 100 px environ ; elle est maintenant dans une ligne flex qui replie sous le titre quand la place manque, et la copie `md:hidden` pour mobile disparaît. « Jouer » est un mot, il ne replie jamais : le critère §7.1 de la spec 10 reste tenu. Seule `Play` passe une `headerAction`.
+
+**Vérifié** : `tsc`, `oxlint`, 147 tests, `npm run build` ; dans Chrome sur `vite preview` (sombre), mesures au DOM : à 1 424 px titre à gauche, les trois boutons puis la bulle sur la même ligne à droite ; à 804 px et à 500 px la rangée replie sous le titre, puis la bulle sous les trois boutons, sans débordement horizontal (`scrollWidth` < largeur). Les trois liens pointent vers RPGv4, TiO-idle et le prototype TryMe, `target="_blank"`.
+
+**Limites** : thème clair non regardé (mêmes composants que la bulle, déjà en place) ; 375 px non mesuré (le Chrome de Xav ne descend pas sous 500 px) ; pas d'audit axe (DETTE-72, reportée par Xav). Non déployé : Xav publie par la tuile « Publier ». La note de la nuit reste dans `notes/` tant que ses trois autres points (tri, relecture, chaos) ne sont pas traités.
+
+---
+
 ## 2026-11-02 (Phase 11, spec 19) — trois fiches de jeux : RPGv4, TiO-idle, TryMe ; « Mes autres jeux » dans la section Jouer
 
 Xav, devant l'inventaire des projets absents du site : « Livret A3, Boîte à outils, Tonieer, V3 : on ne fait rien. Idle, TryMe, V4 : méritent leur tuile dans projet. Prends ton temps pour chacune. Tu peux extraire des screenshots pour imager chaque tuile. Un lien vers le jeu en ligne (ou le prototype html, si disponible). Un bouton de renvoi dans la section Jouer. »
