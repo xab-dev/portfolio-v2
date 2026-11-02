@@ -32,6 +32,8 @@ Xav, après son /clear : « go spec 21 ». La note du midi (`notes/2026-11-02_11
 
 **ARRÊT XAV** (spec §8) : relire les dix phrases et la fiche secrète ; écouter la correspondance section → musique et dire si une case change ; dire si le compteur doit plutôt vivre dans la barre de navigation, et si « Suivre la visite » doit être éteint par défaut. En plus : la fiche Harness dit « La recette reste privée : cette fiche montre la preuve, pas le détail des consignes ni des outils », et la fiche secrète nomme les tuiles des boîtes (sans leur code) — à trancher. Non déployé : Xav publie par la tuile « Publier ».
 
+**Validée et publiée** : Xav, après relecture et écoute, « tout est ok de mon coté, tu peux faire la publication et les push » — l'ARRÊT XAV §8 est levé tel quel (phrases, fiche secrète, correspondance section → musique, compteur dans la grille, « Suivre la visite » allumé par défaut, fiche secrète gardée malgré la phrase de la fiche Harness). Chaîne faite par l'agent : `npm run deploy` (53 fichiers), CV publié comparé au texte (identique), commit de `dist/` seul en noreply (`be4dfea`), push du privé seul (`6638032..f7fb681`, avec la note du midi `a451afa`), puis du public seul (`ebd85c9..be4dfea`) ; workflow Pages vert ; en ligne vérifié par curl : bundle `index-ChRCXeSR.js` servi, « Suivre la visite », la fiche `boites-a-outils` et les répliques dedans, capture et CV en 200 à la taille publiée.
+
 ---
 
 ## 2026-11-02 (Phase 11, plan) — spec 20 validée en ligne ; specs 21, 22, 23 écrites, go attendu

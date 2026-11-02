@@ -3,11 +3,11 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, « un peu plus de chaos » : les serrures qui parlent, Orchestriya qui suit la visite, l'inventaire et la fiche secrète (spec 21)
 type: spec
 version: 1.0.0
-statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 21 »), version 1.12.0, privé `f7fb681` — ARRÊT XAV §8 dû (relire, écouter) ; première des trois specs du plan (21 → 22 → 23)
+statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 21 »), version 1.12.0, privé `f7fb681` ; validée telle quelle par Xav le même jour (« tout est ok de mon coté »), écarts du §9 compris, et publiée (public `be4dfea`) — première des trois specs du plan (21 → 22 → 23)
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude
-verifie_par: —
+verifie_par: xav
 ---
 
 # Portfolio v2 — SPEC : un peu plus de chaos (Phase 11, spec 21)
