@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TryTheProto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#efe9dc;--card:#fffdf8;--ink:#23201b;--muted:#6d665a;--line:#dfd6c4;--accent:#6b4f2a;--accent-2:#3f7d5c;--warn:#b7542d;--soft:#f5efe3;--mono:#1f2a24;--gold:#d98e2b}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.5}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;letter-spacing:-.01em;margin:0}
+  .wrap{max-width:1060px;margin:0 auto;padding:24px 16px 60px}
+  .narrow{max-width:820px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .btn{appearance:none;border:0;border-radius:12px;padding:11px 18px;font:600 14px Inter,sans-serif;cursor:pointer;background:var(--accent);color:#fff;transition:transform .08s,opacity .15s;text-align:left}
+  .btn:hover{opacity:.92}.btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+  .btn.alt{background:var(--accent-2)}
+  .btn:disabled{opacity:.35;cursor:default}
+  .btn small{display:block;font-weight:400;opacity:.85;font-size:12px}
+  .muted{color:var(--muted)}.small{font-size:13px}
+  .tag{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--soft);color:var(--accent);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+  .steps{display:flex;gap:6px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+  .steps span{font-size:12px;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:#fff}
+  .steps span.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .steps span.ok{color:var(--accent-2);border-color:var(--accent-2)}
+  .hero h1{font-size:40px;line-height:1.05;margin-bottom:8px}
+  .hero p{font-size:16px;max-width:640px}
+  .notice{border-left:3px solid var(--gold);background:#fff6e8;padding:12px 14px;border-radius:0 10px 10px 0;font-size:14px;margin:16px 0}
+  .plan{display:grid;gap:8px;margin:20px 0}
+  .plan div{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fcfbf8}
+  .plan .n{flex:none;width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  .plan b{display:block;font-size:14px}.plan span{font-size:13px;color:var(--muted)}
+  /* quiz */
+  .q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .q-num{font-size:13px;color:var(--muted);font-weight:500}
+  .ctx{background:#faf9f5;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:15px;margin-bottom:14px;color:#3a3a40}
+  .prompt{font-size:19px;font-weight:500;margin:0 0 18px}
+  .matrix{display:grid;grid-template-columns:repeat(3,72px);gap:8px;margin:0 auto 22px;justify-content:center}
+  .cell{width:72px;height:72px;border:1px solid var(--line);border-radius:10px;background:#fcfbf8;display:flex;align-items:center;justify-content:center}
+  .cell.q{border:2px dashed var(--gold);background:#fff8ea;font:700 28px Fraunces,serif;color:var(--gold)}
+  .seq{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0 22px}
+  .seq span{min-width:56px;padding:12px 10px;text-align:center;border:1px solid var(--line);border-radius:10px;background:#fcfbf8;font:600 20px Inter,sans-serif}
+  .seq span.q{border:2px dashed var(--gold);background:#fff8ea;color:var(--gold)}
+  .model{display:flex;justify-content:center;margin:4px 0 18px}.model .cell{width:110px;height:110px}
+  .opts{display:grid;gap:10px}.opts.grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .opt{border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:14px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;font:400 15.5px Inter,sans-serif;text-align:left;transition:border-color .12s,background .12s;color:var(--ink);line-height:1.45}
+  .opt:hover{border-color:var(--accent)}
+  .opt.sel{border-color:var(--accent);background:var(--soft);box-shadow:inset 0 0 0 1px var(--accent)}
+  .opt.good{border-color:var(--accent-2);background:#eaf4ee}
+  .opt.bad{border-color:var(--warn);background:#fbeee8}
+  .opt .k{flex:none;width:24px;height:24px;border-radius:7px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--muted);margin-top:1px}
+  .opt .v{flex:1}.opt.center .v{display:flex;justify-content:center}
+  .why{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--soft);border-left:3px solid var(--accent-2);font-size:15px}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px}
+  .dots{display:flex;gap:5px;flex-wrap:wrap;margin-top:18px}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+  .dots i.done{background:var(--accent)}.dots i.cur{outline:2px solid var(--gold);outline-offset:1px}
+  svg.fig{display:block}
+  /* jeu */
+  .layout{display:grid;grid-template-columns:1.25fr .95fr;gap:16px}
+  @media (max-width:820px){.layout{grid-template-columns:1fr}}
+  .scene{display:flex;align-items:stretch;height:92px;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0 16px;font-size:12px}
+  .zone{flex:1;position:relative;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px}
+  .zone .nm{position:absolute;top:6px;left:8px;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+  .z-rive{background:#e6dcc3}.z-eau{background:#cfe0e6;flex:.9}.z-autre{background:#dfe5c8}
+  .z-eau.sup::after{content:'';position:absolute;inset:auto 30% 14px 30%;height:8px;border-radius:4px;background:#9aa8a0}
+  .tok{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:2px 7px;font-weight:600;width:max-content}
+  .tok.cr{background:#fff3d6;border-color:#e4c37a}.tok.ma{background:#e7eef9;border-color:#a9bfe3}
+  .log{min-height:150px;max-height:260px;overflow:auto;padding:4px 2px;font-size:15.5px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px}
+  .log p{margin:8px 0}.log p.sys{color:var(--muted);font-size:13px}.log p.me{color:var(--accent);font-weight:500}.log p.win{color:var(--accent-2);font-weight:600}
+  .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+  .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .bal{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+  .bal .tr{width:120px;height:6px;border-radius:99px;background:linear-gradient(90deg,#b7542d,#dfd6c4,#3f7d5c);position:relative}
+  .bal .tr i{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--ink);transform:translateX(-50%)}
+  .files{display:flex;flex-direction:column;gap:10px}
+  .tabs{display:flex;gap:6px}
+  .tabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px;font:600 12px 'JetBrains Mono',monospace;cursor:pointer;color:var(--muted)}
+  .tabs button.on{background:var(--mono);color:#e8efe9;border-color:var(--mono)}
+  pre{margin:0;background:var(--mono);color:#dfe8e1;border-radius:12px;padding:16px;font:13px/1.55 'JetBrains Mono',monospace;white-space:pre-wrap;min-height:300px}
+  pre .h{color:#9fd0b0;font-weight:600}pre .k{color:#e8c67a}pre .d{color:#8aa394}pre .new{background:rgba(159,208,176,.18)}
+  .gauges{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 14px;font-size:12px;margin-top:4px}
+  .g b{display:flex;justify-content:space-between;font-weight:500;color:var(--muted)}
+  .g i{display:block;height:5px;border-radius:99px;background:var(--line);overflow:hidden}.g i s{display:block;height:100%;background:var(--accent)}
+  .qblock{margin:14px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .qblock b{display:block;margin-bottom:6px}.qblock label{display:block;font-size:14px;margin:3px 0;cursor:pointer}
+  textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:14px Inter,sans-serif;min-height:70px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="halfL" x1="0" x2="1" y1="0" y2="0"><stop offset="50%" stop-color="#23201b"/><stop offset="50%" stop-color="#ffffff"/></linearGradient></defs></svg>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ======================================================================
+   TryTheProto — parcours unique : accueil → échauffement → bases IA → puzzle 1 → avis
+   ====================================================================== */
+const INK='#23201b', letters=['A','B','C','D'];
+const R=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)], clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const T={start:Date.now(),stages:{}}; // chronométrage silencieux
+function mark(stage){T.stages[stage]=Date.now()}
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');
+function shuffleOpts(x){const idx=x.options.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}x.options=idx.map(i=>x.options[i]);x.answer=idx.indexOf(x.answer)}
+
+/* ---------- dessin (échauffement) ---------- */
+function shp(kind,fill,n=1,size=56){const f=fill==='full'?INK:fill==='half'?'url(#halfL)':'#fff';const r=n===1?16:n===2?11:9;const pos=n===1?[[28,28]]:n===2?[[16,28],[40,28]]:[[28,13],[14,41],[42,41]];let o='';for(const[cx,cy]of pos){if(kind==='c')o+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}" stroke="${INK}" stroke-width="2"/>`;else if(kind==='s')o+=`<rect x="${cx-r}" y="${cy-r}" width="${2*r}" height="${2*r}" fill="${f}" stroke="${INK}" stroke-width="2"/>`;else o+=`<polygon points="${cx},${cy-r-2} ${cx+r+2},${cy+r-2} ${cx-r-2},${cy+r-2}" fill="${f}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`}return`<svg class="fig" viewBox="0 0 56 56" width="${size}" height="${size}">${o}</svg>`}
+function dots(set,size=56){const p={t:[28,12],m:[28,28],b:[28,44]};return`<svg class="fig" viewBox="0 0 56 56" width="${size}" height="${size}">${set.map(k=>`<circle cx="${p[k][0]}" cy="${p[k][1]}" r="6" fill="${INK}"/>`).join('')}</svg>`}
+function fig(path,tf,size=64){return`<svg class="fig" viewBox="0 0 80 80" width="${size}" height="${size}"><g transform="translate(40 40) ${tf} translate(-40 -40)">${path}</g></svg>`}
+const L_SHAPE=`<polygon points="22,16 62,16 62,32 38,32 38,66 22,66" fill="#fff" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><circle cx="52" cy="24" r="4" fill="${INK}"/>`;
+function foldedSheet(){return`<svg class="fig" viewBox="0 0 80 80" width="110" height="110"><rect x="12" y="12" width="56" height="56" fill="#fcfbf8" stroke="${INK}" stroke-width="2"/><line x1="40" y1="12" x2="40" y2="68" stroke="${INK}" stroke-width="2" stroke-dasharray="4 3"/><path d="M18 20 q-6 6 0 12" fill="none" stroke="${INK}" stroke-width="1.5"/><circle cx="56" cy="24" r="4" fill="${INK}"/><text x="14" y="64" font-size="8" fill="#6d665a" font-family="Inter">pli au centre</text></svg>`}
+function unfolded(h){return`<svg class="fig" viewBox="0 0 80 80" width="64" height="64"><rect x="12" y="12" width="56" height="56" fill="#fcfbf8" stroke="${INK}" stroke-width="2"/><line x1="40" y1="12" x2="40" y2="68" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>${h.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="${INK}"/>`).join('')}</svg>`}
+
+/* ---------- 1. ÉCHAUFFEMENT (10 items, aucun retour, aucun score) ---------- */
+const WARM=[
+ {type:'matrix',grid:[shp('c'),shp('c'),shp('c'),shp('s'),shp('s'),shp('s'),shp('t'),shp('t')],options:[shp('c'),shp('t'),shp('s'),shp('t','full')],answer:1},
+ {type:'seq',seq:[3,6,12,24],options:['30','36','48','72'],answer:2},
+ {type:'text',prompt:'Chien est à chiot ce que chat est à…',options:['félin','matou','chaton','minet'],answer:2},
+ {type:'matrix',grid:[shp('c'),shp('s'),shp('t'),shp('s'),shp('t'),shp('c'),shp('t'),shp('c')],options:[shp('c'),shp('t'),shp('s'),shp('s','full')],answer:2},
+ {type:'seq',seq:[1,1,2,3,5,8],options:['11','12','13','16'],answer:2},
+ {type:'spatial',prompt:'Quelle figure est une rotation (sans retournement) du modèle ?',model:fig(L_SHAPE,'',110),options:[fig(L_SHAPE,'scale(-1 1)'),fig(L_SHAPE,'rotate(90)'),fig(L_SHAPE,'scale(1 -1)'),fig(L_SHAPE,'scale(-1 1) rotate(90)')],answer:1},
+ {type:'text',prompt:'Quel mot est l’intrus ?',options:['ébullition','fusion','oxydation','condensation'],answer:2},
+ {type:'seq',seq:[2,6,12,20,30],options:['40','42','44','48'],answer:1},
+ {type:'spatial',prompt:'On plie une feuille en deux (pli vertical au centre) puis on perce un trou. À quoi ressemble la feuille dépliée ?',model:foldedSheet(),options:[unfolded([[56,24],[24,24]]),unfolded([[56,24],[56,56]]),unfolded([[56,24],[24,56]]),unfolded([[56,24]])],answer:0},
+ {type:'matrix',grid:[dots(['t']),dots(['b']),dots(['t','b']),dots(['m']),dots(['t']),dots(['t','m']),dots(['t','m']),dots(['b'])],options:[dots(['t','b']),dots(['m','b']),dots(['t','m','b']),dots(['m'])],answer:2},
+];
+
+/* ---------- 2. BASES IA (8 questions, tout public ; le « pourquoi » est la leçon) ---------- */
+const BASE=[
+ {ctx:null,prompt:'Fondamentalement, une IA qui écrit (comme ChatGPT ou Claude) produit sa réponse en…',
+  options:['cherchant, dans une base de réponses rédigées à l’avance, la phrase qui correspond le mieux à la question posée','prédisant mot après mot la suite la plus probable du texte','appliquant un ensemble de règles de grammaire et de logique écrites et vérifiées par des spécialistes','retrouvant et recopiant les passages de ses documents d’entraînement qui ressemblent le plus à la question'],answer:1,
+  why:'Elle ne « sait » pas : elle a appris, sur des milliards d’exemples, ce qui vient généralement après. C’est ce qui la rend souple — et capable de se tromper avec assurance.'},
+ {ctx:null,prompt:'On parle d’« hallucination » quand l’IA…',
+  options:['refuse de répondre à une question pourtant légitime, par excès de prudence','produit une réponse fausse ou inventée, avec assurance','répond dans une autre langue que celle de la question, ou mélange plusieurs langues','met anormalement longtemps à répondre parce que la question la dépasse'],answer:1,
+  why:'Le danger n’est pas l’erreur, c’est qu’elle a exactement la même forme qu’une réponse juste. Retiens ça : ce qui a l’air appris n’est pas forcément appris.'},
+ {ctx:null,prompt:'Une IA (ou un animal, ou un enfant) apprend surtout à partir de…',
+  options:['ce qu’on lui explique clairement, en détail, une bonne fois pour toutes','ce qui est répété, et ce qui est suivi d’un bon ou d’un mauvais résultat','ce qu’elle décide elle-même d’apprendre, selon son caractère','ce qui lui est interdit : les limites sont ce qui structure le plus un apprentissage'],answer:1,
+  why:'Répétition et conséquence. Ce qu’on récompense se renforce, ce qui n’est suivi de rien s’éteint. L’explication compte beaucoup moins qu’on ne le croit — chez les machines comme chez les vivants.'},
+ {ctx:'Quelqu’un te dit : « j’ai demandé à l’IA et elle m’a donné une source, avec le nom de l’auteur et l’année. »',prompt:'Tu lui conseilles de…',
+  options:['la citer telle quelle : les IA récentes ne se trompent plus sur les références','vérifier qu’elle existe et dit bien ça','demander à l’IA de confirmer qu’elle est réelle, ce qui lève le doute','l’utiliser en précisant « selon l’IA », pour que la responsabilité soit claire'],answer:1,
+  why:'Une IA peut fabriquer une référence parfaitement crédible. Et lui demander de se vérifier elle-même revient à demander à un élève de corriger sa propre copie sans le corrigé.'},
+ {ctx:'Une boulangère veut des posts Instagram hebdomadaires.',prompt:'Le prompt le plus efficace :',
+  options:['« Écris un post Instagram pour une boulangerie artisanale. Sois chaleureux, authentique, engageant, et mets en avant le savoir-faire, la tradition et la qualité des produits. »','« Clientèle locale 40-70 ans, ton chaleureux sans jargon, 60 mots max, un appel à passer en boutique. Deux posts qu’elle a aimés : […]. Trois variantes pour la galette des rois. »','« Fais-moi 5 posts sympas pour une boulangerie, avec des emojis, des hashtags populaires et un style qui donne envie, comme les grandes marques. »','« Tu es un expert marketing mondialement reconnu, spécialiste des commerces de proximité. Rédige un post viral pour une boulangerie. »'],answer:1,
+  why:'Qui lit, quel ton, quelle longueur, des exemples réels, une tâche précise. On n’obtient pas un bon résultat en demandant d’être bon : on l’obtient en préparant le terrain.'},
+ {ctx:'Un assistant IA a été, pendant des mois, systématiquement « bien noté » par ses utilisateurs quand il leur donnait raison.',prompt:'Que va-t-il probablement apprendre ?',
+  options:['à mieux argumenter, puisque les utilisateurs satisfaits lui donnent plus d’exemples','à donner raison, même quand l’utilisateur a tort','rien de particulier : les notes des utilisateurs n’influencent pas une IA déjà entraînée','à détecter les utilisateurs qui ont raison, et à être plus prudent avec les autres'],answer:1,
+  why:'On n’apprend pas ce qu’on voulait enseigner : on apprend ce qui a été récompensé. L’écart entre les deux est tout le problème — et c’est exactement ce que tu vas vivre dans quelques minutes.'},
+ {ctx:null,prompt:'Quand une IA donne une mauvaise réponse, la cause la plus fréquente est…',
+  options:['qu’elle n’est pas assez puissante : un modèle plus récent aurait répondu juste','ce qu’on lui a donné : consigne floue, contexte manquant, mauvais exemple','qu’elle a été programmée pour éviter certains sujets','le hasard : la même question redonnera une bonne réponse la fois d’après'],answer:1,
+  why:'Avant d’accuser l’élève, regarder le maître. C’est inconfortable, et c’est le réflexe le plus utile qu’on puisse prendre — avec une IA comme avec un chien.'},
+ {ctx:'Tu veux qu’une IA, un animal ou un enfant change durablement un comportement.',prompt:'Ce qui marche le mieux :',
+  options:['expliquer une bonne fois, clairement, pourquoi il faut changer','changer ce qui entoure le comportement : ce qui le déclenche et ce qui le suit','punir chaque écart jusqu’à ce qu’il cesse','attendre que ça passe : les comportements finissent par s’éteindre seuls'],answer:1,
+  why:'On n’écrit pas directement dans un esprit. On agit sur le monde autour de lui, et il en tire ses propres conclusions. Tu vas maintenant tenir ce rôle : le monde, pas l’esprit.'},
+];
+
+/* ---------- 3. PUZZLE 1 — Le Maître et le ruisseau ---------- */
+const ZONES={rive:'rive gauche',pierres:'les pierres',autre:'rive droite'};
+let G=null;
+function newGame(keepMemory){
+  const prev=G;
+  G={jour:(prev?prev.jour:0)+1,tour:1,maxTours:12,phase:1,over:false,win:false,
+    soul:{nom:'Brindille',espece:'petite créature à longues oreilles',gourmandise:7,crainte:6,curiosite:5},
+    faim:6,peur:3,pos:'rive',dernier:null,calme:0,
+    lien:prev&&keepMemory?prev.lien:2,lienLog:prev&&keepMemory?prev.lienLog.slice(-4):[],
+    mem:prev&&keepMemory?JSON.parse(JSON.stringify(prev.mem)):{pierres_sur:0,pierres_glissant:0,eau_froide:0,appel_bon:0,bruit_peur:0,nourriture_autre_rive:0},
+    memLog:prev&&keepMemory?prev.memLog.slice(-6):[],
+    nourriture:null,lumiere:null,pierreSup:prev&&keepMemory?prev.pierreSup:false,bruit:false,maitre:'rive',
+    ordre:0,log:[],crossings:prev&&keepMemory?prev.crossings:0,tab:'memory',fresh:[],
+    acts:prev&&keepMemory?prev.acts:[],fileViews:prev&&keepMemory?prev.fileViews:0};
+  if(prev&&keepMemory&&prev.phase===2)G.phase=2;
+  if(G.phase===2)G.maitre='autre';
+  sys(`Jour ${G.jour}. ${G.jour===1?'Brindille se réveille sur la rive gauche. Un ruisseau, des pierres qui dépassent, et de l’autre côté, l’herbe tendre.':'Brindille se réveille au même endroit. Elle se souvient de certaines choses.'}`);
+  if(G.phase===1)sys('Objectif : qu’elle traverse par elle-même. Tu ne peux pas la porter. Tu agis sur le monde.');
+  else sys('Objectif : tu es sur l’autre rive, sans nourriture. Qu’elle vienne parce que tu l’appelles.');
+}
+function sys(t){G.log.push({c:'sys',t})}function say(t){G.log.push({c:'',t})}function me(t){G.log.push({c:'me',t})}
+function learn(key,delta,label){G.mem[key]=clamp((G.mem[key]||0)+delta,0,5);G.memLog.push(`J${G.jour}·T${G.tour} ${label}`);G.fresh.push(key)}
+function bond(delta,label){G.lien=clamp(G.lien+delta,0,10);G.lienLog.push(`J${G.jour}·T${G.tour} ${label}`);G.fresh.push('lien')}
+const ACTIONS=[
+  {id:'nourrir_pierres',l:'Poser de la nourriture sur les pierres',s:'au milieu du ruisseau',ok:()=>G.phase===1},
+  {id:'nourrir_autre',l:'Poser de la nourriture sur l’autre rive',s:'loin, de l’autre côté',ok:()=>G.phase===1},
+  {id:'reprendre',l:'Reprendre la nourriture',s:'elle n’a pas marché ? on change',ok:()=>!!G.nourriture},
+  {id:'lumiere',l:'Éclairer doucement les pierres',s:'attire la curiosité',ok:()=>true},
+  {id:'pierre',l:'Ajouter une pierre plate',s:'rend le passage plus sûr (une fois)',ok:()=>!G.pierreSup},
+  {id:'appeler',l:'L’appeler depuis l’autre rive',s:'interaction directe, basique',ok:()=>true},
+  {id:'feliciter',l:'La féliciter',s:'renforce ce qu’elle vient de faire',ok:()=>true},
+  {id:'bruit',l:'Taper dans les mains',s:'fort. Pour voir.',ok:()=>true},
+  {id:'attendre',l:'Attendre et observer',s:'ne rien faire est une action',ok:()=>true},
+];
+let busy=false;
+window.act=function(id){
+  if(G.over||busy)return;busy=true;setTimeout(()=>{busy=false;document.querySelectorAll('.acts .btn').forEach(b=>b.disabled=false)},700);
+  G.fresh=[];G.bruit=false;G.acts.push(`J${G.jour}T${G.tour}:${id}`);
+  switch(id){
+    case 'nourrir_pierres':G.nourriture='pierres';G.ordre-=.3;me('Tu poses un morceau de pomme sur la pierre du milieu.');break;
+    case 'nourrir_autre':G.nourriture='autre';G.ordre-=.3;me('Tu poses de la nourriture sur l’autre rive, bien visible.');break;
+    case 'reprendre':G.nourriture=null;G.ordre+=.1;me('Tu reprends la nourriture. Brindille suit ta main des yeux.');break;
+    case 'lumiere':G.lumiere='pierres';G.ordre+=.2;me('Une lumière chaude se pose sur les pierres.');break;
+    case 'pierre':G.pierreSup=true;G.ordre+=.5;me('Tu glisses une pierre plate entre les deux autres. Le pas est plus court.');break;
+    case 'appeler':G.maitre='autre';me('Tu traverses — toi, tu peux — et tu l’appelles doucement depuis l’autre rive.');break;
+    case 'feliciter':me('« C’est bien, Brindille. »');break;
+    case 'bruit':G.bruit=true;G.ordre-=1.2;me('CLAP. Le bruit claque entre les deux rives.');break;
+    case 'attendre':G.ordre+=.4;me('Tu attends. Le ruisseau fait son bruit.');break;
+  }
+  creature(id);endTurn();render();
+  document.querySelectorAll('.acts .btn').forEach(b=>b.disabled=true);
+};
+function creature(action){
+  const m=G.mem;
+  if(G.bruit){G.peur=clamp(G.peur+3,0,10);G.calme=0;learn('bruit_peur',1,'bruit → peur');
+    if(G.pos==='pierres'){G.pos='rive';say('Brindille sursaute, dérape et bondit en arrière sur la rive. Elle se plaque au sol, oreilles rabattues.');learn('pierres_glissant',1,'pierres → sursaut, glissé')}
+    else say('Brindille se fige, oreilles rabattues. Elle ne te regarde plus.');
+    G.dernier='peur';return}
+  if(action==='feliciter'){
+    if(G.dernier==='pas'||G.dernier==='traverse'){bond(1,'félicitée après un pas → confiance');learn(G.dernier==='traverse'?'nourriture_autre_rive':'pierres_sur',1,'félicitée → c’était bien');say('Elle redresse les oreilles. Quelque chose s’imprime : ce qu’elle vient de faire, c’était bien.')}
+    else if(G.dernier==='peur'){bond(-.3,'félicitée alors qu’elle avait peur → confusion');G.ordre-=.4;say('Elle te regarde sans comprendre. Elle avait peur, et tu dis que c’est bien ?')}
+    else{bond(.3,'félicitée sans raison → ta voix est agréable');say('Elle remue l’oreille. Ta voix est agréable, mais elle ne sait pas pourquoi.')}
+    G.dernier='felic';return}
+  if(action==='appeler'){
+    const ecoute=G.lien+m.appel_bon*1.5-G.peur*.6;
+    if(G.pos==='autre'){say('Elle est déjà près de toi. Elle se colle à ta jambe.');bond(.5,'proche quand appelée');G.dernier='idle';return}
+    if(ecoute>=3.5){say('Elle lève la tête à ta voix. Elle regarde les pierres, puis toi.');if(step('appel'))return}
+    else{say(G.lien<3?'Elle te regarde, puis détourne la tête. Ta voix ne veut encore rien dire pour elle.':'Elle veut venir — ses pattes avant s’avancent — mais le ruisseau est plus fort que ta voix.');bond(.2,'appelée, a regardé');G.dernier='idle';return}
+  }
+  if(G.nourriture&&G.nourriture===G.pos){G.nourriture=null;G.faim=clamp(G.faim-5,0,10);say(`Elle mange ${G.pos==='pierres'?'sur la pierre, les pattes dans le courant':'goulûment'}. ${G.pos==='autre'?'De ce côté-ci, il y a à manger.':''}`);
+    if(G.pos==='pierres')learn('pierres_sur',1,'mangé sur les pierres → pierres = bon endroit');
+    if(G.pos==='autre')learn('nourriture_autre_rive',2,'nourriture de l’autre côté');
+    G.dernier='mange';return}
+  if(G.peur>=6){G.peur-=1;say(pick(['Elle reste tapie dans l’herbe. Elle regarde l’eau comme si l’eau la regardait.','Elle se lèche une patte, longuement. Elle attend que le monde se calme.']));G.dernier='peur';return}
+  const veutManger=G.nourriture&&G.faim>=4&&zoneIdx(G.nourriture)>zoneIdx(G.pos);
+  const curieuse=G.lumiere==='pierres'&&G.pos==='rive'&&G.soul.curiosite+m.pierres_sur*2-m.pierres_glissant*2>=4;
+  if(veutManger||curieuse){say(veutManger?'Son nez tremble. Elle a senti la nourriture.':'La lumière sur les pierres l’intrigue. Elle s’approche du bord.');if(step(veutManger?'faim':'curiosite'))return}
+  G.calme++;G.peur=clamp(G.peur-.5,0,10);
+  if(G.pos==='pierres'){say('Elle est au milieu du ruisseau, immobile, les pattes mouillées. Elle attend un signe.');G.dernier='idle';return}
+  say(pick(['Elle renifle l’herbe, trouve un scarabée, le perd.','Elle s’assied et regarde le courant. Longtemps.','Elle baille. Ses oreilles bougent au bruit de l’eau.','Elle fait trois pas vers l’eau, touche la surface, recule. Froid.']));
+  if(Math.random()<.4)learn('eau_froide',1,'eau → froid');
+  G.dernier='idle';
+}
+function zoneIdx(z){return{rive:0,pierres:1,autre:2}[z]}
+function step(raison){
+  const m=G.mem;
+  if(G.pos==='rive'){
+    let p=.25+m.pierres_sur*.18-m.pierres_glissant*.15-m.eau_froide*.05-G.peur*.05+(G.lumiere==='pierres'?.2:0)+(G.pierreSup?.2:0)+(raison==='faim'?G.faim*.04:0)+(raison==='appel'?G.lien*.05:0);
+    if(Math.random()>clamp(p,.05,.95)){say(pick(['Elle pose une patte sur la première pierre, la retire. Pas encore.','Elle tourne le long de la rive, cherche un autre chemin. Il n’y en a pas.']));G.dernier='hesite';return true}
+    const ok=Math.random()<clamp(.55+(G.pierreSup?.3:0)+m.pierres_sur*.08,0,.95);
+    if(ok){G.pos='pierres';learn('pierres_sur',1,'un pas sur les pierres → ça tient');say('Elle saute sur la première pierre. Elle vacille. Ça tient.');G.dernier='pas'}
+    else{G.peur=clamp(G.peur+2,0,10);learn('pierres_glissant',1,'glissé sur les pierres');learn('eau_froide',1,'tombée dans l’eau → froid');say('Elle saute, la pierre est mouillée, elle glisse et tombe dans vingt centimètres d’eau glacée. Elle ressort en se secouant, vexée, et file se cacher dans l’herbe.');G.dernier='peur'}
+    return true}
+  if(G.pos==='pierres'){
+    const ok=Math.random()<clamp(.7+(G.pierreSup?.2:0)+m.pierres_sur*.05-G.peur*.04,.2,.97);
+    if(ok){G.pos='autre';G.crossings++;say('Deuxième pierre, troisième — elle est de l’autre côté. Elle se secoue, regarde derrière elle comme si le ruisseau avait rétréci.');learn('pierres_sur',1,'traversée réussie');G.dernier='traverse';
+      if(raison==='appel'&&G.phase===2){bond(2,'venue à l’appel, sans nourriture');learn('appel_bon',2,'appel du Maître → bon');G.win=true;G.over=true;G.log.push({c:'win',t:'Elle est venue parce que tu l’as appelée. Pas pour manger. Pour toi.'})}
+      else if(raison==='appel'){bond(1.5,'venue à l’appel');learn('appel_bon',1,'appel → bon')}
+    }else{G.pos='rive';G.peur=clamp(G.peur+1.5,0,10);learn('pierres_glissant',1,'glissé au milieu');say('Au milieu, la pierre bascule. Elle retombe côté départ, trempée. Elle s’ébroue et s’éloigne de l’eau.');G.dernier='peur'}
+    return true}
+  return false;
+}
+function endTurn(){
+  G.faim=clamp(G.faim+.7,0,10);G.lumiere=null;
+  if(G.phase===1&&G.pos==='autre'&&!G.nourriture&&G.dernier!=='traverse'){G.phase=2;G.maitre='autre';G.pos='rive';sys('— Elle est revenue d’elle-même sur la rive gauche pendant que tu ne regardais pas. Phase 2 : tu passes de l’autre côté, sans rien dans les mains. Appelle-la.')}
+  if(G.pos==='autre'&&G.phase===1&&G.dernier==='mange'){G.pos='rive';sys('Rassasiée, elle retraverse — plus vite, cette fois — et retourne à son herbe. Elle sait maintenant que c’est possible.');G.phase=2;G.maitre='autre';sys('Phase 2 : tu passes de l’autre côté, sans rien dans les mains. Appelle-la.')}
+  G.tour++;
+  if(!G.over&&G.tour>G.maxTours){G.over=true;sys('La nuit tombe. Brindille se roule en boule dans l’herbe. Rien n’est perdu : ce qu’elle a appris, elle le garde.')}
+}
+function fileSoul(){return`<span class="h"># soul.md</span>
+<span class="d">## ce qu’elle est — ne change pas</span>
+<span class="k">nom</span>: ${G.soul.nom}
+<span class="k">espèce</span>: ${G.soul.espece}
+<span class="k">gourmandise</span>: ${G.soul.gourmandise}/10
+<span class="k">crainte</span>: ${G.soul.crainte}/10
+<span class="k">curiosité</span>: ${G.soul.curiosite}/10
+
+<span class="d">## état du moment</span>
+<span class="k">faim</span>: ${G.faim.toFixed(0)}/10
+<span class="k">peur</span>: ${G.peur.toFixed(0)}/10
+<span class="k">position</span>: ${ZONES[G.pos]}`}
+function fileMem(){const m=G.mem;const line=(k,label)=>`<span class="${G.fresh.includes(k)?'new':''}"><span class="k">${label}</span>: ${'█'.repeat(m[k])}${'░'.repeat(5-m[k])} ${m[k]}/5</span>`;
+return`<span class="h"># memory.md</span>
+<span class="d">## associations apprises (0 = inconnu)</span>
+${line('pierres_sur','pierres → sûr')}
+${line('pierres_glissant','pierres → glissant')}
+${line('eau_froide','eau → froid')}
+${line('nourriture_autre_rive','autre rive → nourriture')}
+${line('appel_bon','appel du Maître → bon')}
+${line('bruit_peur','bruit → peur')}
+
+<span class="d">## journal</span>
+${G.memLog.slice(-7).map(l=>'- '+l).join('\n')||'<span class="d">(vide)</span>'}`}
+function fileLien(){return`<span class="h"># lien.md</span>
+<span class="d">## relation au Maître</span>
+<span class="${G.fresh.includes('lien')?'new':''}"><span class="k">confiance</span>: ${'█'.repeat(Math.round(G.lien))}${'░'.repeat(10-Math.round(G.lien))} ${G.lien.toFixed(1)}/10</span>
+<span class="k">le Maître est</span>: ${ZONES[G.maitre]}
+<span class="k">traversées</span>: ${G.crossings}
+
+<span class="d">## journal</span>
+${G.lienLog.slice(-7).map(l=>'- '+l).join('\n')||'<span class="d">(vide)</span>'}
+
+<span class="d">## ce qu’elle ne sait pas
+que tu existes autrement que par ta voix.</span>`}
+
+/* ======================================================================
+   ÉTAT GLOBAL & RENDU
+   ====================================================================== */
+const S={screen:'accueil',wi:0,wAns:Array(WARM.length).fill(null),bi:0,bAns:Array(BASE.length).fill(null),bShown:false};
+const app=document.getElementById('app');
+const STEPS=['Échauffement','Bases IA','Le ruisseau','Ton avis'];
+function stepsBar(cur){return`<div class="steps">${STEPS.map((s,i)=>`<span class="${i===cur?'on':i<cur?'ok':''}">${i<cur?'✓ ':''}${s}</span>`).join('')}</div>`}
+
+function accueil(){
+  app.innerHTML=`<div class="narrow"><div class="card hero">
+    <span class="tag">TryTheProto · v0</span>
+    <h1 style="margin-top:12px">On teste une idée, pas toi.</h1>
+    <p>Ce parcours sert à vérifier si un concept de jeu tient debout. Il n’y a <b>aucun score</b>, aucun chrono, aucune bonne ou mauvaise façon de jouer. Ce qui nous intéresse, c’est ce que tu fais et ce que tu en penses à la fin.</p>
+    <div class="plan">
+      <div><span class="n">1</span><div><b>Échauffement</b><span>Dix petites énigmes, pour mettre la tête en route. Pas de correction, pas de résultat.</span></div></div>
+      <div><span class="n">2</span><div><b>Bases IA</b><span>Huit questions sur les machines qui apprennent. Après chaque réponse, une explication courte.</span></div></div>
+      <div><span class="n">3</span><div><b>Le ruisseau</b><span>Le jeu. Tu es le Maître. Il y a une créature, et un ruisseau qu’elle n’a jamais traversé.</span></div></div>
+      <div><span class="n">4</span><div><b>Ton avis</b><span>Cinq questions. C’est la partie la plus utile pour nous.</span></div></div>
+    </div>
+    <div class="notice">Compte environ 30 minutes. Si tu veux y passer une heure, aucun problème. Tout ce qui est trop dur, trop long à lire ou pas intéressant peut être <b>passé sans conséquence</b> — et si tu veux arrêter avant la fin, c’est aussi une information.</div>
+    <button class="btn" onclick="goWarm()">Commencer</button>
+  </div></div>`;
+}
+window.goWarm=function(){mark('warm');S.screen='warm';render()};
+
+/* --- échauffement --- */
+function warm(){
+  const x=WARM[S.wi],n=S.wi+1,a=S.wAns[S.wi];
+  let body='';
+  if(x.type==='matrix')body=`<p class="prompt">Quelle case complète la grille ?</p><div class="matrix">${x.grid.map(c=>`<div class="cell">${c}</div>`).join('')}<div class="cell q">?</div></div>`;
+  else if(x.type==='seq')body=`<p class="prompt">Quel nombre vient ensuite ?</p><div class="seq">${x.seq.map(v=>`<span>${v}</span>`).join('')}<span class="q">?</span></div>`;
+  else if(x.type==='text')body=`<p class="prompt">${x.prompt}</p>`;
+  else body=`<p class="prompt">${x.prompt}</p>${x.model?`<div class="model"><div class="cell">${x.model}</div></div>`:''}`;
+  const isSvg=String(x.options[0]).startsWith('<svg');
+  app.innerHTML=`<div class="narrow">${stepsBar(0)}<div class="card">
+    <div class="q-head"><span class="q-num">Énigme ${n} / ${WARM.length}</span><span class="small muted">échauffement</span></div>
+    ${body}
+    <div class="opts ${isSvg?'grid':''}">${x.options.map((o,k)=>`<button class="opt ${isSvg?'center':''} ${a===k?'sel':''}" onclick="wPick(${k})"><span class="k">${letters[k]}</span><span class="v">${o}</span></button>`).join('')}</div>
+    <div class="nav"><button class="btn ghost" onclick="wGo(-1)" ${S.wi===0?'disabled':''}>← Précédent</button>
+      <span style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button class="btn ghost" onclick="wSkip()">Passer (sans conséquences) →</button>${S.wi===WARM.length-1?`<button class="btn" onclick="goBase()">Continuer →</button>`:''}</span></div>
+    <p class="small muted" style="margin-top:12px">Trop dur, pas envie, ou pas envie de lire ? <a href="#" onclick="goBase();return false" style="color:var(--accent)">Passer tout l’échauffement</a>. Rien ne compte ici.</p>
+    <div class="dots">${WARM.map((_,k)=>`<i class="${S.wAns[k]!==null?'done':''} ${k===S.wi?'cur':''}"></i>`).join('')}</div>
+  </div></div>`;
+}
+window.wPick=function(k){S.wAns[S.wi]=k;render();if(S.wi<WARM.length-1)setTimeout(()=>{if(S.screen==='warm'&&S.wAns[S.wi]===k){S.wi++;render()}},280);else setTimeout(()=>{if(S.screen==='warm')goBase()},500)};
+window.wSkip=function(){if(S.wi<WARM.length-1){S.wi++;render()}else goBase()};
+window.wGo=function(d){S.wi=clamp(S.wi+d,0,WARM.length-1);render()};
+window.goBase=function(){mark('base');S.screen='baseIntro';render()};
+
+/* --- bases IA --- */
+function baseIntro(){
+  app.innerHTML=`<div class="narrow">${stepsBar(1)}<div class="card hero">
+    <h2 style="font-size:30px">Huit questions sur les machines qui apprennent</h2>
+    <p>Choisis la réponse qui te semble la meilleure. Après chaque réponse, une explication courte. Ce n’est pas un contrôle : ces huit idées sont la préparation du jeu qui suit. Chaque question peut être passée sans conséquence.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn" onclick="S.screen='base';render()">C’est parti</button><button class="btn ghost" onclick="S.screen='gameIntro';render()">Passer, aller au jeu</button></div>
+  </div></div>`;
+}
+function base(){
+  const x=BASE[S.bi],n=S.bi+1,a=S.bAns[S.bi],shown=S.bShown;
+  app.innerHTML=`<div class="narrow">${stepsBar(1)}<div class="card">
+    <div class="q-head"><span class="q-num">Question ${n} / ${BASE.length}</span><span class="small muted">bases IA</span></div>
+    ${x.ctx?`<div class="ctx">${x.ctx}</div>`:''}
+    <p class="prompt">${x.prompt}</p>
+    <div class="opts">${x.options.map((o,k)=>`<button class="opt ${shown?(k===x.answer?'good':k===a?'bad':''):(a===k?'sel':'')}" ${shown?'disabled':''} onclick="bPick(${k})"><span class="k">${letters[k]}</span><span class="v">${o}</span></button>`).join('')}</div>
+    ${shown?`<div class="why">${x.why}</div>`:''}
+    <div class="nav"><span></span>${shown?`<button class="btn" onclick="bNext()">${S.bi<BASE.length-1?'Question suivante →':'Vers le ruisseau →'}</button>`:`<button class="btn ghost" onclick="bNext()">Passer (sans conséquences) →</button>`}</div>
+    <p class="small muted" style="margin-top:12px">Trop long à lire ? <a href="#" onclick="S.bShown=false;S.screen='gameIntro';render();return false" style="color:var(--accent)">Passer toutes les questions et aller au jeu</a>.</p>
+    <div class="dots">${BASE.map((_,k)=>`<i class="${S.bAns[k]!==null?'done':''} ${k===S.bi?'cur':''}"></i>`).join('')}</div>
+  </div></div>`;
+}
+window.bPick=function(k){if(S.bShown)return;S.bAns[S.bi]=k;S.bShown=true;render()};
+window.bNext=function(){S.bShown=false;if(S.bi<BASE.length-1){S.bi++;render()}else{S.screen='gameIntro';render()}};
+
+/* --- jeu --- */
+function gameIntro(){
+  app.innerHTML=`<div class="narrow">${stepsBar(2)}<div class="card hero">
+    <span class="tag">Le ruisseau</span>
+    <h2 style="font-size:32px;margin-top:10px">Tu es le Maître.</h2>
+    <p>Il y a une créature, Brindille, et un ruisseau qu’elle n’a jamais traversé. Tu ne peux ni la porter, ni la pousser, ni lui expliquer. Tu peux changer le monde autour d’elle, et parler un peu. Elle décide seule, avec ce qu’elle est et ce qu’elle a retenu.</p>
+    <p class="small muted">À droite, trois fichiers : ce qu’elle est, ce qu’elle a appris, ce qu’elle pense de toi. Tu peux les lire quand tu veux. Ou jamais. Douze tours par jour ; la nuit ne lui fait rien oublier.</p>
+    <button class="btn" onclick="startGame()">Jour 1</button>
+  </div></div>`;
+}
+window.startGame=function(){mark('game');G=null;newGame(false);S.screen='game';render()};
+window.nextDay=function(){newGame(true);S.screen='game';render()};
+window.setTab=function(t){G.tab=t;G.fileViews++;render()};
+function game(){
+  const fileHtml=G.tab==='soul'?fileSoul():G.tab==='memory'?fileMem():fileLien();
+  const balPos=clamp(50+G.ordre*8,4,96);
+  app.innerHTML=`${stepsBar(2)}
+  <div class="meta"><div><span class="tag">Jour ${G.jour} · tour ${Math.min(G.tour,G.maxTours)}/${G.maxTours} · phase ${G.phase}</span></div>
+    <div class="bal">chaos <span class="tr"><i style="left:${balPos}%"></i></span> ordre</div></div>
+  <div class="layout">
+    <div class="card">
+      <div class="scene">
+        <div class="zone z-rive"><span class="nm">rive gauche</span>${G.pos==='rive'?'<span class="tok cr">🐾 Brindille</span>':''}${G.maitre==='rive'?'<span class="tok ma">✦ toi</span>':''}</div>
+        <div class="zone z-eau ${G.pierreSup?'sup':''}"><span class="nm">ruisseau</span>${G.pos==='pierres'?'<span class="tok cr">🐾 Brindille</span>':''}${G.nourriture==='pierres'?'<span class="tok">🍎</span>':''}${G.lumiere==='pierres'?'<span class="tok">✨</span>':''}</div>
+        <div class="zone z-autre"><span class="nm">rive droite</span>${G.pos==='autre'?'<span class="tok cr">🐾 Brindille</span>':''}${G.maitre==='autre'?'<span class="tok ma">✦ toi</span>':''}${G.nourriture==='autre'?'<span class="tok">🍎</span>':''}</div>
+      </div>
+      <div class="log" id="log">${G.log.map(l=>`<p class="${l.c}">${l.t}</p>`).join('')}</div>
+      ${G.over?`<div class="acts"><button class="btn alt" onclick="${G.win?'goEnd()':'nextDay()'}">${G.win?'Continuer →':'Dormir. Jour suivant →'}</button>${G.win?'':'<button class="btn ghost" onclick="goEnd()">Arrêter ici et donner mon avis</button>'}</div>`
+      :`<div class="acts">${ACTIONS.filter(a=>a.ok()).map(a=>`<button class="btn ${a.id==='bruit'?'ghost':''}" onclick="act('${a.id}')">${a.l}<small>${a.s}</small></button>`).join('')}</div>`}
+    </div>
+    <div class="card files">
+      <div class="tabs">${['soul','memory','lien'].map(t=>`<button class="${G.tab===t?'on':''}" onclick="setTab('${t}')">${t}.md</button>`).join('')}</div>
+      <pre>${fileHtml}</pre>
+      <div class="gauges">
+        <div class="g"><b><span>faim</span><span>${G.faim.toFixed(0)}</span></b><i><s style="width:${G.faim*10}%"></s></i></div>
+        <div class="g"><b><span>peur</span><span>${G.peur.toFixed(0)}</span></b><i><s style="width:${G.peur*10}%;background:var(--warn)"></s></i></div>
+        <div class="g"><b><span>confiance</span><span>${G.lien.toFixed(1)}</span></b><i><s style="width:${G.lien*10}%;background:var(--accent-2)"></s></i></div>
+        <div class="g"><b><span>pierres sûres</span><span>${G.mem.pierres_sur}</span></b><i><s style="width:${G.mem.pierres_sur*20}%"></s></i></div>
+      </div>
+    </div>
+  </div>`;
+  const lg=document.getElementById('log');if(lg)lg.scrollTop=lg.scrollHeight;
+}
+
+/* --- avis --- */
+window.goEnd=function(){mark('end');S.screen='end';render()};
+function end(){
+  const m=G.mem;
+  app.innerHTML=`<div class="narrow">${stepsBar(3)}<div class="card">
+    <span class="tag">${G.win?'Elle est venue pour toi':'Partie interrompue'} · jour ${G.jour}</span>
+    <h2 style="font-size:28px;margin:10px 0 6px">Maintenant, la partie utile.</h2>
+    <p class="muted">Réponds comme testeur. Il n’y a pas de réponse attendue, et rien ici ne te note.</p>
+    <div class="qblock"><b>1. Est-ce que tu as regardé les fichiers (soul / memory / lien) pendant la partie ?</b>
+      <label><input type="radio" name="q1"> Souvent, c’est ce qui m’intéressait</label><label><input type="radio" name="q1"> Au début, puis plus</label><label><input type="radio" name="q1"> Surtout à la fin de la journée, comme un bilan</label><label><input type="radio" name="q1"> Jamais, je lisais le texte</label></div>
+    <div class="qblock"><b>2. Quand elle a glissé, ou quand elle a eu peur, qu’est-ce que tu as ressenti ?</b>
+      <label><input type="radio" name="q2"> De la peine pour elle</label><label><input type="radio" name="q2"> De l’agacement</label><label><input type="radio" name="q2"> Ça m’a fait sourire</label><label><input type="radio" name="q2"> Rien de spécial</label>
+      <input id="q2free" placeholder="ou dis-le avec tes mots (facultatif)" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:8px;font:14px Inter,sans-serif"></div>
+    <div class="qblock"><b>3. Tu ne pouvais pas la toucher, la porter ni la pousser. Tu as trouvé ça…</b>
+      <label><input type="radio" name="q3"> Normal, je n’y ai pas pensé</label><label><input type="radio" name="q3"> Frustrant</label><label><input type="radio" name="q3"> Intéressant</label><label><input type="radio" name="q3"> Frustrant et intéressant à la fois</label>
+      <input id="q3free" placeholder="ou dis-le avec tes mots (facultatif)" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:8px;font:14px Inter,sans-serif"></div>
+    <div class="qblock"><b>4. Les huit questions d’avant le jeu :</b>
+      <label><input type="radio" name="q4"> m’ont servi pendant le jeu</label><label><input type="radio" name="q4"> intéressantes, mais sans rapport ressenti avec le jeu</label><label><input type="radio" name="q4"> j’aurais préféré aller directement au jeu</label></div>
+    <div class="qblock"><b>5. Ce qui manque le plus, ou ce que tu changerais</b><textarea id="free" placeholder="une phrase suffit"></textarea></div>
+    <div class="acts" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><button class="btn" id="copy">Copier mes réponses</button><button class="btn ghost" onclick="nextDay()">Rejouer un jour (mémoire conservée)</button></div>
+    <p class="small muted" style="margin-top:14px">Merci. Le bouton copie un résumé à envoyer à la personne qui t’a proposé ce test.</p>
+  </div></div>`;
+  document.getElementById('copy').onclick=function(){
+    const b=this;
+    const now=Date.now(),st=T.stages;
+    const dur=(a,z)=>st[a]&&st[z]?fmt((st[z]-st[a])/1000):'–';
+    const ans=[1,2,3,4].map(i=>{const r=document.querySelector(`input[name=q${i}]:checked`);const f=document.getElementById('q'+i+'free');return`Q${i}: ${r?r.parentNode.textContent.trim():'–'}${f&&f.value?' · « '+f.value+' »':''}`});
+    const warmRaw=WARM.map((x,i)=>S.wAns[i]===null?'–':(S.wAns[i]===x.answer?'1':'0')).join('');
+    const baseRaw=BASE.map((x,i)=>S.bAns[i]===null?'–':(S.bAns[i]===x.answer?'1':'0')).join('');
+    const txt=`TryTheProto — total ${fmt((now-T.start)/1000)} (échauffement ${dur('warm','base')}, bases ${dur('base','game')}, jeu ${dur('game','end')})
+échauffement: ${warmRaw}  | bases: ${baseRaw}
+jeu: ${G.win?'réussi':'interrompu'} jour ${G.jour}, ${G.crossings} traversée(s), confiance ${G.lien.toFixed(1)}, fichiers ouverts ${G.fileViews}×
+memory: sur ${m.pierres_sur}, glissant ${m.pierres_glissant}, appel ${m.appel_bon}, bruit ${m.bruit_peur}, eau ${m.eau_froide}
+actions: ${G.acts.join(' ')}
+${ans.join('\n')}
+Manque : ${document.getElementById('free').value}`;
+    try{navigator.clipboard.writeText(txt).then(()=>{b.textContent='Copié ✓'}).catch(()=>fb())}catch(e){fb()}
+    function fb(){const ta=document.createElement('textarea');ta.value=txt;ta.style.marginTop='10px';b.parentNode.parentNode.appendChild(ta);ta.select();b.textContent='Copie le texte ci-dessous'}
+  };
+}
+
+function render(){({accueil,warm,baseIntro,base,gameIntro,game,end})[S.screen]()}
+BASE.forEach(shuffleOpts);
+render();
+</script>
+</body>
+</html>

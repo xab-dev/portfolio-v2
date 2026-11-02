@@ -1,0 +1,3 @@
+Prototype HTML de TryMe (TryTheProto, v0), copie servie par le portfolio.
+Origine : dépôt TryMe (privé), prototypes/canvas/TryTheProto.html, commit f2ebb22.
+Copié le 2026-11-02 par npm run tryme:sync. Ne pas modifier ici.
