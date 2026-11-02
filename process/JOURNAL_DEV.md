@@ -12,9 +12,9 @@ Quatrième point de la note de la nuit. Xav a répondu aux cinq questions de l'a
 
 En l'écrivant : la page Mentions légales est en retard sur le stockage local (volume d'Orchestriya absent, réglage `simulator` d'un module retiré encore cité) — DETTE-75, à corriger avec la spec 20.
 
-**Pendant ce temps**, Xav relit les textes du site à la main (point 3 de sa liste) : cinq fichiers de `src/content/` sont modifiés dans sa copie de travail (`contact.ts`, `cv.ts`, `hero.ts`, `play.ts`, `projects.ts`), non commités, l'agent n'y touche pas. Attention : `cv.ts` change une ligne de l'en-tête du CV (« Autodidacte indépendant ») — le PDF ne suivra qu'après `npm run cv`.
+**Pendant ce temps**, Xav relit les textes du site à la main (point 3 de sa liste) : cinq fichiers de `src/content/` sont modifiés dans sa copie de travail (`contact.ts`, `cv.ts`, `hero.ts`, `play.ts`, `projects.ts`), non commités, l'agent n'y touche pas. `cv.ts` change une ligne de l'en-tête du CV (« Autodidacte indépendant ») ; la tuile « Publier » reconstruit le PDF, qui a suivi. Pendant la rédaction de la spec, Xav a publié deux fois 1.10.0 par la boîte (public `d7daeea` « reorder », `7202008` « modif handmade », poussés) : le tri, les boutons et ses retouches de texte sont en ligne. Ses retouches restent à commiter dans le dépôt privé.
 
-Aucun code pour cette spec ; rien de déployé. ARRÊT XAV.
+Aucun code pour cette spec. ARRÊT XAV.
 
 ---
 
