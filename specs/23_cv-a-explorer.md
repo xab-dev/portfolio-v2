@@ -2,8 +2,8 @@
 projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, le CV à explorer : la carte mentale du CV rendue jouable sur le site (spec 23)
 type: spec
-version: 0.1.0
-statut: écrite le 2026-11-02, en attente du go de Xav — troisième des trois specs du plan (21 → 22 → 23), la plus grosse
+version: 1.0.0
+statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 23 : "CV interactif" ; "Bravo, …" »), version 1.14.0, privé `df205b3` et `d749c7b` ; non déployée, ARRÊT XAV §7 (explorer les six branches en ligne) — troisième et dernière des trois specs du plan (21 → 22 → 23)
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude
@@ -64,3 +64,18 @@ Le PDF (hors refonte) ; la page 2 ; un rendu en « pièces à traverser » faço
 Avant le code : le go, le libellé du bouton (« Explorer le CV » ?), et la dernière ligne à dicter. Après : explorer les six branches en ligne, dire si les compétences ont leur place ainsi, et si l'étoile tient sur son écran.
 
 Version à l'exécution : 1.14.0.
+
+## 8. Exécution (2026-11-02)
+
+Le go de Xav, mot pour mot : « go spec 23 : "CV interactif" ; "Bravo, vous pouvez désormais continuer votre visite ou me contacter pour aller vers un autre monde" ». Les deux points du §7 d'avant le code sont donc tranchés : le lien s'appelle **« CV interactif »** (pas « Explorer le CV ») ; la dernière ligne est la sienne, l'agent n'a ajouté que le point final.
+
+Faite telle quelle, avec ces écarts à ratifier (détail dans `process/JOURNAL_DEV.md`) :
+
+- **Le modèle.** `sanitizeForPdf` reste au PDF : le modèle partagé (`src/lib/cv/buildCvMapModel.ts`) prend une option `sanitize`, que le relais `scripts/cv/buildCvMapModel.ts` passe. Chaque feuille porte désormais sa source (`source` : projet, compétence, jalon, étape d'avant 2026, intitulé de « La suite »), que le PDF ignore. Les entrées sont assemblées par une seule fonction pour les deux (`src/lib/cv/cvMapInput.ts`).
+- **« Formation Claude Max ».** Pour qu'elle soit sur la carte du site, l'étape passe `onMap: true` ; `onCv: false` l'écarte toujours des PDF avant la carte. Le garde-fou de `story.test.ts` compte désormais les six étapes au plus de la carte imprimée seulement.
+- **Jouer.** Plusieurs branches peuvent être ouvertes à la fois : la carte entière se déplie, comme la page du PDF. Flèches dans l'ordre du temps (droite ou bas : la suivante, gauche ou haut : la précédente, en tournant), Début et Fin. Échap referme la branche où se trouve le focus, puis l'explorateur.
+- **Le volet d'une compétence** montre, sous sa note, la définition de son niveau (`LEVEL_SCALE` de `skills.ts`) ; pour une compétence sans note (« Diagnostic structuré », « Python »), c'est sa seule phrase. Il porte le nom complet de la compétence, la feuille garde l'intitulé court de la carte.
+- **« La suite » n'a pas de volet** : `story.ts` n'a pour ses feuilles que leurs intitulés, et les paragraphes de « La suite » ont quitté le site le 2026-11-01 ; ils ne reviennent pas sans Xav.
+- **Où s'ouvre le volet** : à droite à partir de 1 280 px, sous l'étoile de 768 à 1 279 px, sous sa feuille en dessous de 768 px.
+- **En plus de la spec** : « Télécharger le CV (PDF) » dans l'en-tête de l'explorateur ; deux boutons après la dernière ligne, « Continuer la visite » (ferme) et « Me contacter » (mène à Contact, focus sur son titre) — textes de l'agent ; la carte et la progression tiennent le temps de la page (fermer puis rouvrir, ou revenir d'une fiche par Retour, retrouve les branches ouvertes et le focus sur la feuille quittée) ; le gardien mène à l'explorateur au lieu du PDF, comme la spec 22 le prévoyait ; « Les textes du CV interactif » dans la carte de la boîte à outils ; un test vérifie que les couleurs des traits sont celles du PDF.
+- La passe `axe` prévue pour DETTE-72 est faite ici, sur l'explorateur ouvert (six branches, un volet) : 0 violation, sombre et clair, 1 440 et 500 px. Le contraste reste « à vérifier » pour axe sur 30 éléments en grand écran : il ne sait pas lire le fond sous le calque des traits ; tous les textes sont sur les couleurs de texte existantes.
