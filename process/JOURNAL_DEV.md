@@ -4,6 +4,31 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, spec 19) — trois fiches de jeux : RPGv4, TiO-idle, TryMe ; « Mes autres jeux » dans la section Jouer
+
+Xav, devant l'inventaire des projets absents du site : « Livret A3, Boîte à outils, Tonieer, V3 : on ne fait rien. Idle, TryMe, V4 : méritent leur tuile dans projet. Prends ton temps pour chacune. Tu peux extraire des screenshots pour imager chaque tuile. Un lien vers le jeu en ligne (ou le prototype html, si disponible). Un bouton de renvoi dans la section Jouer. »
+
+**Méthode** : trois inventaires en lecture seule des dépôts (README, `CLAUDE.md`, cadrage, feuille de route, suivi de dette, git), délégués à trois agents en parallèle avec la consigne, pour TiO-idle, de ne rien lire ni rapporter du contenu du jeu. Fiches écrites depuis ces faits, métriques comptées (méthode en commentaire dans `projects.ts`). Rien ne vient des fiches de la base de Xav (`public: false`).
+
+**Livré** (privé `391cf22`, version **1.8.0**) :
+- Trois fiches après RPG-v2 dans `projects.ts` : RPGv4 (en développement, en pause), TiO-idle (en ligne, en pause, « rien du contenu » gardé par un test), TryMe (cadrage, verdict le 15/11). Toutes « Jeu » : hors CV condensé ; le CV deux pages a sa liste explicite ; PDF reconstruit comparé page à page au publié : identique.
+- Six images par `npm run images` : TiO-idle, première double page au texte flouté et panneau des réglages ; RPGv4, sortie de la Grotte et écran « Ton héros » ; TryMe, « Le ruisseau » et l'accueil du prototype.
+- Liens : RPGv4 et TiO-idle (GitHub Pages). TryMe n'a pas de version en ligne : son prototype HTML v0 est copié dans `public/jeux/tryme/` par `npm run tryme:sync` (origine dans `SOURCE.txt`, garde-fous chemin / e-mail / clé avant copie ; le premier essai a été refusé à tort sur un fragment d'URL de police, « wght@9..144 », la garde demande maintenant un domaine en lettres).
+- Section Jouer : bloc « Mes autres jeux », un bouton par jeu (nouvel onglet) et le lien vers la fiche ; adresses dans `site.ts`.
+- Trois tests de plus (garde anti-fuite étendue aux trois fiches, contenu de TiO-idle absent, prototype copié et propre) : 147.
+
+**Captures** : outil CDP écrit dans le scratchpad (Chrome sans écran, 1600 × 900). Le 3D de RPGv4 reste noir sans écran ; la scène d'essai a été ouverte dans le Chrome de Xav sur le serveur de développement local, panneau masqué par script. Les captures du dépôt RPGv4 (`notes/`) montraient toutes le panneau de développement ou étaient trop petites.
+
+**Vérifié** : `tsc`, `oxlint`, 147 tests, build ; modale RPGv4 et bloc « Mes autres jeux » dans Chrome sur `vite preview` ; prototype servi (200) ; CV identique.
+
+**Limites** :
+- Textes de l'agent à la première personne : à relire par Xav (ARRÊT XAV de la spec 19).
+- **TiO-idle** : son adresse « se donne, elle ne se trouve pas » (son `index.html`) ; la fiche et la section Jouer la publient. Décision de Xav (DETTE-73).
+- Le prototype TryMe est une copie figée (commit `f2ebb22` de TryMe) ; à resynchroniser quand il change. Les métriques datent du 2026-11-02 et vieilliront (DETTE-74).
+- Non déployé.
+
+---
+
 ## 2026-11-02 (Phase 11, spec 18, retouche) — Hero : widget aligné sur « Consultant… », le plein sur « Qualifier votre besoin »
 
 Xav, après avoir écouté : « c'est très bien j'adore ». Puis deux retouches : en plein écran, le haut du widget doit commencer au niveau de « Consultant outils… » ; et c'est « Qualifier votre besoin » qui reçoit le bleu plein, pas « Voir mes projets ».
