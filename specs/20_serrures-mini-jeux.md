@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, « ajouter du chaos » : des mini-jeux comme serrures de fiches (spec 20)
 type: spec
 version: 1.0.0
-statut: validée par Xav le 2026-11-02 (« OK pour les 6 points, SECU à la place de lecture ») et exécutée le même jour (privé 6e77409, 1.11.0) — ARRÊT XAV : jouer les huit serrures en ligne, relire les textes de locks.ts
+statut: validée par Xav le 2026-11-02 (« OK pour les 6 points, SECU à la place de lecture ») et exécutée le même jour (privé 6e77409, 1.11.0) — ARRÊT XAV levé le 2026-11-02 : « serrures testées en ligne, c'est validé »
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude
@@ -128,3 +128,5 @@ Version à l'exécution : 1.11.0 (contenu visible demandé par Xav).
 Exécutée le même jour, privé `6e77409`, version 1.11.0 : fichiers du §5 tels quels, plus `src/lib/locks/useLock.ts` (le hook) et une clé par fiche sur le corps de la modale. Tests : 170. Vérification du §6 faite dans Chrome, sauf la passe `axe` (DETTE-72, « à la fin ») et 375 px (le Chrome de Xav ne descend pas sous 500 px). Détail dans `process/JOURNAL_DEV.md`.
 
 **ARRÊT XAV** : jouer les huit serrures en ligne après publication (une réussite, trois fautes, le rechargement), relire les textes de `src/content/locks.ts` (consignes, énigmes des cryptex, « On est sympa, voilà. »), dire si un niveau est trop facile ou trop dur.
+
+**Levé le 2026-11-02** : « serrures testées en ligne, c'est validé, on continue ». Les phrases des serrures évoluent dans la spec 21.

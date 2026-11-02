@@ -4,6 +4,18 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, plan) — spec 20 validée en ligne ; specs 21, 22, 23 écrites, go attendu
+
+Xav : « serrures testées en ligne, c'est validé, on continue : qu'est-ce que tu proposes pour ajouter encore un peu plus de "chaos" et de personnalisation ? » Dix propositions de l'agent ; ses réponses : les serrures qui parlent et Orchestriya qui suit la visite (« oui oui oui !! »), l'inventaire avec pour récompense « LES boîtes à outils », le gardien et le CV à explorer (« ok »), pas de thème caché venu des jeux (« non »). « On ne fait pas tout en une seule fois si c'est trop gros, prépare un plan et les specs, puis demande-moi mon go (après un clear donc fais en sorte de ne pas en perdre une miette). »
+
+Quatre questions posées avant d'écrire, ses réponses : une fiche secrète unique « Les boîtes à outils » ; le gardien en bulle flottante en bas à droite ; toute la carte du CV, « sous un bouton à côté de "Télécharger le CV" » ; les phrases des serrures rédigées par l'agent, relues par lui.
+
+**Écrit, aucun code** : `specs/21_chaos-serrures-orchestriya-inventaire.md` (1.12.0), `specs/22_le-gardien.md` (1.13.0), `specs/23_cv-a-explorer.md` (1.14.0) ; le plan dans la ROADMAP (Phase 11) ; une note pour la prochaine session dans `notes/` du dépôt privé (`2026-11-02_1150.md`) avec ce qu'il faut de Xav au go ; statut de la spec 20 : ARRÊT XAV levé.
+
+Points de vigilance notés dans les specs : la fiche de la base sur sa propre boîte est `public: false`, la fiche secrète n'en dira que ce que la fiche publique du HUD dit déjà ; le CV PDF reste hors refonte, l'explorateur partage son modèle sans le changer ; les couleurs `ochre`, `cyan`, `slate` du PDF n'habillent que des traits, jamais du texte.
+
+---
+
 ## 2026-11-02 (Phase 11, spec 20) — les serrures, exécutées
 
 Xav, sur la spec : « OK pour les 6 points, "SECU" à la place de "lecture". tu peux coder la spec 20 ». Les six réponses sont reportées dans la spec (§8) ; le mot de l'audit sécurité est `SECU`, son énigme « Le titre de la fiche, en quatre lettres et sans accent. »
