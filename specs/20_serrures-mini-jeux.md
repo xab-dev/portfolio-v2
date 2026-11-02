@@ -2,12 +2,12 @@
 projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, « ajouter du chaos » : des mini-jeux comme serrures de fiches (spec 20)
 type: spec
-version: 0.1.0
-statut: à relire par Xav avant tout code — ARRÊT XAV §8 (mots des cryptex, niveaux, cadre RPG-v2, mémoire)
+version: 1.0.0
+statut: validée par Xav le 2026-11-02 (« OK pour les 6 points, SECU à la place de lecture ») et exécutée le même jour (privé 6e77409, 1.11.0) — ARRÊT XAV : jouer les huit serrures en ligne, relire les textes de locks.ts
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude
-verifie_par: —
+verifie_par: xav
 ---
 
 # Portfolio v2 — SPEC : les serrures (Phase 11, premier pas « jeu + CV interactif »)
@@ -77,10 +77,10 @@ La règle du jeu, cohérente avec la réponse de DETTE-73 : **le mot se trouve s
 |---|---|---|---|
 | miniCiel (facile) | `USB` | « Trois lettres sur la clé qui porte tout le kit. » | le titre de la carte |
 | La base (difficile) | `MEMOIRE` | « Ce que la base me donne, et qu'une session neuve n'a jamais. » | l'accroche : « Une mémoire long terme que je possède » |
-| Audit sécurité (difficile) | `LECTURE` | « Pendant l'audit, l'agent n'a qu'un droit. Lequel ? » | l'accroche : « un agent IA en lecture seule » |
+| Audit sécurité (difficile) | `SECU` (Xav ; l'agent proposait `LECTURE`) | « Le titre de la fiche, en quatre lettres et sans accent. » | le titre : « Audit sécurité… » |
 | TryMe (difficile) | `ESPRIT` | « Dans TryMe, on élève quoi, sans jamais écrire dedans ? » | le titre : « élever un esprit » |
 
-Facile = 3 molettes, énigme littérale. Difficile = 6 ou 7 molettes, énigme qui oblige à relire la carte. Un seul mot par fiche, fixe.
+Facile = 3 molettes, énigme littérale. Difficile = 4 à 7 molettes, énigme qui oblige à relire la carte. Un seul mot par fiche, fixe.
 
 ## 4. Le comportement commun
 
@@ -120,3 +120,11 @@ D'autres serrures (une par type suffit), un chronomètre, un score, un classemen
 6. Les deux énigmes spatiales écartées du QI : d'accord, ou les garder pour les voyants avec le lien d'ouverture comme seule alternative ?
 
 Version à l'exécution : 1.11.0 (contenu visible demandé par Xav).
+
+## 9. Réponses de Xav et exécution (2026-11-02)
+
+« OK pour les 6 points, "SECU" à la place de "lecture". tu peux coder la spec 20. » Donc : mots gardés sauf l'audit (`SECU`) ; niveaux tels quels ; le cadre RPG-v2 reste jouable ; `localStorage` ; le déblocage « sympa » compte comme une réussite mémorisée ; les deux énigmes spatiales restent écartées.
+
+Exécutée le même jour, privé `6e77409`, version 1.11.0 : fichiers du §5 tels quels, plus `src/lib/locks/useLock.ts` (le hook) et une clé par fiche sur le corps de la modale. Tests : 170. Vérification du §6 faite dans Chrome, sauf la passe `axe` (DETTE-72, « à la fin ») et 375 px (le Chrome de Xav ne descend pas sous 500 px). Détail dans `process/JOURNAL_DEV.md`.
+
+**ARRÊT XAV** : jouer les huit serrures en ligne après publication (une réussite, trois fautes, le rechargement), relire les textes de `src/content/locks.ts` (consignes, énigmes des cryptex, « On est sympa, voilà. »), dire si un niveau est trop facile ou trop dur.

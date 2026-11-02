@@ -4,6 +4,27 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, spec 20) — les serrures, exécutées
+
+Xav, sur la spec : « OK pour les 6 points, "SECU" à la place de "lecture". tu peux coder la spec 20 ». Les six réponses sont reportées dans la spec (§8) ; le mot de l'audit sécurité est `SECU`, son énigme « Le titre de la fiche, en quatre lettres et sans accent. »
+
+**Livré** (privé `6e77409`, version **1.11.0**) :
+- `src/content/locks.ts` : la table des huit serrures, les 8 énigmes QI et les 8 questions « Bases IA » reprises du prototype TryMe (origine en commentaire), les quatre mots de cryptex, tous les textes.
+- `src/lib/locks/gate.ts` : la logique sans React (essais, étapes, tirages, mélange des options qui suit la bonne réponse) ; `lockStore.ts` : les fiches ouvertes, instantané stable, `localStorage` sous `portfolio:locks`, fabrique injectable pour les tests ; `useLock.ts` : `useSyncExternalStore`.
+- `src/components/locks/` : `LockGate` (choisit le jeu, compte, annonce dans une zone `role="status"`, bouton « Ouvrir la fiche sans jouer » hors écran révélé au focus ; chaque manche est un composant à clé, le tirage se fait au montage), `QiLock` (grille 3 × 3 avec la case manquante, suite, mots ; figures SVG en `currentColor` avec texte équivalent généré : « un triangle vide »), `LlmLock` (le « pourquoi » après chaque réponse, juste ou fausse, puis « Continuer »), `CryptexLock` (molettes `spinbutton`, ▲ ▼, flèches, lettre tapée, mot comparé en entier).
+- `ProjectModal` : le corps est la serrure tant que la fiche est fermée ; à l'ouverture, le détail prend sa place, la phrase (« Ouvert. » ou « On est sympa, voilà. ») reste en tête et reçoit le focus. Le corps est à clé par fiche : l'état repart à zéro d'une fiche à l'autre.
+- `Play.tsx` : les trois boutons mènent à `#projets/<id>` tant que la fiche est fermée, au jeu (nouvel onglet) ensuite.
+- Mentions légales : section stockage local réécrite (`perf` seul en session ; `theme`, `orchestriya:volume`, `portfolio:locks` persistants), date de mise à jour 2026-11-02 — DETTE-75 close.
+- Tests : 170 (147 + 23) — table, mots, énigmes et questions bien formées, textes équivalents, garde « rien de TiO-idle », réducteur (trois fautes ouvrent, parcours à deux étapes, serrure ouverte immuable), tirages par niveau sur vingt graines, magasin (persistance, instantané stable, abonnés, sans stockage).
+
+**Vérifié dans Chrome sur `vite preview`** (sombre à 1 440 px, puis 500 px, puis clair) : miniCiel, trois mots faux → « Faux. Essai 1 sur 3. », « … 2 sur 3. », puis « On est sympa, voilà. » et le détail, `portfolio:locks` = `["miniciel"]`, rechargement → détail direct ; audit sécurité, S-E-C-U tapés au clavier sur les molettes → « Ouvert. » ; RPG-v2, la bonne case → « Ouvert. » ; TiO-idle, la bonne réponse, le « pourquoi » affiché, options figées, « Continuer » → « Ouvert. » ; Harness, question 1 sur 2 juste avec son pourquoi ; RPGv4, grille lue dans le DOM avec ses huit textes équivalents et les quatre réponses nommées ; boutons de Jouer : RPGv4 et TryMe → `#projets/…`, TiO-idle ouvert → le jeu en nouvel onglet ; base privée à 500 px : sept molettes sur une ligne, pas de débordement ; bouton « Ouvrir la fiche sans jouer » visible au focus ; thème clair lisible. `tsc`, `oxlint`, build (bundle 429 → 451 Ko). CV deux pages reconstruit : identique au publié.
+
+**Limites** : pas de passe `axe` sur la modale (outil non injectable à chaud ici ; DETTE-72, « à la fin » pour Xav) ; 375 px non mesuré (sept molettes replieraient sur deux lignes) ; le compteur d'essais vit en mémoire de la page, recharger redonne trois essais (spec §4) ; la mémoire ne se vide que par les réglages du navigateur. Non déployé : Xav publie.
+
+Les cinq fichiers de contenu retouchés par Xav restent non commités dans sa copie de travail (le commit de l'agent ne prend que ses propres fichiers).
+
+---
+
 ## 2026-11-02 (Phase 11, spec 20) — les serrures : la spec, pas encore le code
 
 Quatrième point de la note de la nuit. Xav a répondu aux cinq questions de l'agent (quelles fiches, ce qu'on voit, l'échec, l'accessibilité, la mémoire) ; ses réponses sont citées en tête de `specs/20_serrures-mini-jeux.md`. Huit fiches derrière trois jeux : QI et questions LLM repris du prototype TryMe (échauffement et « Bases IA », à sa demande), cryptex à molettes dont le mot se lit sur la carte avant de l'ouvrir — c'est aussi ce qui tient sa décision sur le lien TiO-idle (DETTE-73). Trois essais ratés ouvrent quand même (« On est sympa, voilà. »), lien d'ouverture pour les lecteurs d'écran, mémoire dans le `localStorage` sous le même régime que le thème, sans cookie. Les boutons de Jouer passent par la serrure tant que la fiche est fermée.
