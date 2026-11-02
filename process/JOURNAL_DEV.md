@@ -25,7 +25,9 @@ Xav, devant l'inventaire des projets absents du site : « Livret A3, Boîte à o
 - Textes de l'agent à la première personne : à relire par Xav (ARRÊT XAV de la spec 19).
 - **TiO-idle** : son adresse « se donne, elle ne se trouve pas » (son `index.html`) ; la fiche et la section Jouer la publient. Décision de Xav (DETTE-73).
 - Le prototype TryMe est une copie figée (commit `f2ebb22` de TryMe) ; à resynchroniser quand il change. Les métriques datent du 2026-11-02 et vieilliront (DETTE-74).
-- Non déployé.
+- ~~Non déployé.~~ Relu « en diagonale » par Xav dans la nuit (« c'est très bien »), publié à sa demande : déploiement 1.8.0 dans le commit `dist/` qui suit, push des deux dépôts.
+
+**Pour la prochaine session** (liste de Xav avant de dormir, déposée aussi dans `notes/` du dépôt privé) : correctif de la position du bloc « Mes autres jeux » ; tri des projets par importance ; relecture fine des textes par Xav ; « ajouter du chaos » — des mini-jeux comme serrures de certaines fiches (test de QI façon captcha, cryptex pour les fiches techniques). Le dernier point est le premier vrai pas « jeu + CV interactif » : spec 20 à écrire et à faire relire avant le code.
 
 ---
 
