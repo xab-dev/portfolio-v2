@@ -2,8 +2,8 @@
 projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, « un peu plus de chaos » : les serrures qui parlent, Orchestriya qui suit la visite, l'inventaire et la fiche secrète (spec 21)
 type: spec
-version: 0.1.0
-statut: écrite le 2026-11-02, en attente du go de Xav (après son /clear) — première des trois specs du plan (21 → 22 → 23)
+version: 1.0.0
+statut: exécutée le 2026-11-02 sur le go de Xav (« go spec 21 »), version 1.12.0, privé `f7fb681` — ARRÊT XAV §8 dû (relire, écouter) ; première des trois specs du plan (21 → 22 → 23)
 catégorie: Spec
 date: 2026-11-02
 genere_par: claude
@@ -99,3 +99,14 @@ Le gardien (spec 22) ; le CV à explorer (spec 23) ; une mémoire du bouton « S
 Avant le code : le go. Après : relire les dix phrases (§2) et la fiche secrète (§4), écouter la correspondance section → musique (§3) et dire si une case change, dire si le compteur doit plutôt vivre dans la barre de navigation, et si « Suivre la visite » doit être éteint par défaut.
 
 Version à l'exécution : 1.12.0.
+
+## 9. Exécution (2026-11-02)
+
+Faite telle quelle, avec ces écarts à ratifier (détail dans `process/JOURNAL_DEV.md`) :
+
+- « Nuance inchangée » lu comme « la nuance du visiteur » (son dernier choix, mezzo forte au départ) : sinon Jouer, « un cran au-dessus », montait d'un cran de plus à chaque passage.
+- Roulement et cymbale suivent aussi le bouton « Suivre la visite », et ne jouent que si l'orchestre tourne. À la huitième serrure : roulement et cymbale ensemble.
+- Compteur à côté du nombre de projets, avec une clé, en bleu.
+- §4, « le motif est né dans RPG-v2 » : la forme vient de la fenêtre de Régie Maison (spec 24 de RPG-v2, capture envoyée par Xav le 28/09) ; RPG-v2 a la première boîte. La fiche le dit ainsi.
+- Pas de capture de la boîte de RPG-v2 (ses tuiles nomment des scènes d'essai d'un dépôt privé). Hors de la fiche : le dossier `nuage` de RPGv4 (en ligne, pas local), la liste des boîtes du README de TryMe (nom interne du HUD), les testeurs de TryMe.
+- À trancher en plus : la fiche Harness dit que la recette des outils reste privée ; la fiche secrète nomme les tuiles des boîtes, sans leur code.
