@@ -4,6 +4,20 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-02 (Phase 11, tri) — les projets dans l'ordre d'importance de Xav
+
+Deuxième point de la note de la nuit. Xav, plutôt que le critère proposé le 01/11 : « Je te donne l'ordre précis attendu (mon importance subjective) : Portfolio, La Base, Harness, RPGv2, RPGv4, TiO-idle, TryMe, Un Autre Monde, Audit sécu, miniCiel, Séquence d'intervention, Régie Maison, haTD, Bib Spec, Bib Auto. »
+
+**Décision de mise en œuvre** : le tableau `projects` de `projects.ts` n'est pas réordonné. Le CV condensé (`npm run cv:condense`, jamais publié) lit ce tableau dans l'ordre, et le CV reste hors refonte (décision de Xav du 01/11). L'ordre du site vit à part : `siteProjectOrder`, une liste d'ids dans l'ordre dicté, et `siteProjects` qui en découle ; la section Projets lit `siteProjects`. Un test impose que la liste couvre chaque fiche une fois, sans id inconnu : une nouvelle fiche sans place dictée fait échouer les tests, au lieu de se glisser quelque part. Le CV deux pages a déjà sa liste explicite dans `cvMap.ts` (ordre de relecture du 04/10) : non touché.
+
+**Livré** (privé `d9f1d57`, version **1.10.0**) : `siteProjectOrder` et `siteProjects` dans `projects.ts`, `Portfolio.tsx` branché dessus, un test de plus (148). La carte « Votre projet ? » reste en fin de grille, les filtres gardent l'ordre (vu avec « Jeu » : RPG-v2, RPGv4, TiO-idle, TryMe, haTD).
+
+**Vérifié** : `tsc`, `oxlint`, 148 tests, build ; dans Chrome sur `vite preview` à 1 440 px, les 16 titres lus dans le DOM sont dans l'ordre dicté, puis « Votre projet ? ». CV : les deux PDF reconstruits et comparés au texte, page à page — le CV deux pages identique à celui publié dans `dist/`, le condensé identique à celui reconstruit depuis `HEAD` avant la modification (la copie de `out/` datait du 15/10 et différait déjà pour d'autres raisons, sans rapport).
+
+**Limites** : rien de visuel ne change hors l'ordre ; pas d'audit (DETTE-72, à la fin). Non déployé.
+
+---
+
 ## 2026-11-02 (Phase 11, spec 19, retouche) — les trois autres jeux sur la ligne du titre « Jouer »
 
 Reprise au matin. La note de la nuit (`notes/2026-11-02_0245.md` du dépôt privé) listait quatre points ; voici le premier. Réponses de Xav aux dettes ouvertes, en tête de session : DETTE-70 close (« Parcours » confirmé), DETTE-73 close (lien TiO-idle gardé : « ça révise un peu la décision », l'adresse est donnée « pour ceux qui cherchent bien, et qui passeront les mini-jeux à venir »), DETTE-72 « à la fin » de la refonte, DETTE-74 reprise par Xav à la main avec la boîte à outils. Son du widget validé (« soundIsOK »), module Orchestriya poussé par lui.
