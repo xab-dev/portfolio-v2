@@ -4,6 +4,36 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-04 (Phase 11, spec 24, exécution) — Orchestriya dans toute la visite
+
+Xav, au go : « 5 : uniquement dans le gardien (pas dans le widget simplifié). go ». Les choix 1 à 4 du §10 ratifiés par le go ; la nouvelle aide de « Suivre la visite » ne vit que dans le gardien (réplique « curieux-musique » : « … la musique suit la section que vous lisez ; vos clics et la molette jouent avec. »), plus du tout dans le widget, même hors écran. Version 1.15.0, privé `e703c6b`.
+
+**Livré** (dépôt privé) :
+- `orchestriyaStore` : le moteur sort du Hero, vit autant que l'onglet ; le widget, la pastille et le chef d'orchestre lisent le même état (`useSyncExternalStore`). `act` pour les commandes de l'orchestre, `react` pour les réactions du site (rien si l'orchestre est arrêté ou le suivi éteint ; muettes pour la ligne de statut, sauf le suivi de phase et les serrures).
+- `conductor` (+ `siteConductor`, `OrchestriyaConductor`) : la vue (section, Mentions légales, CV), une demi-mesure avant de suivre, plus de progression décidée par une vue, roulement d'annonce calé sur la mesure qui précède le changement (`announceDecision`), un seul roulement par deux mesures, une cymbale par temps ; écouteurs passifs du document (clic, molette, touches de défilement, glissé au doigt), aucun `preventDefault`. `OrchestriyaSectionReporter` monté avec les sections (le piège de l'abonné permanent).
+- `gestures` : un pas par geste (temps calme de 250 ms), touches retenues ou non selon le focus (champ, commande à flèches, Espace sur un bouton, `data-orchestriya-ignore`), glissé au-delà de 30 px, son propre d'un clic.
+- `OrchestriyaPill` : en bas à gauche, lecture/arrêt, muet, quatre points ; dans l'en-tête du CV quand il est ouvert. Navbar : roulement au clic. CV : une note par branche, roulement et cymbale à six sur six.
+- Widget allégé : titre, Lancer/Arrêter, bouton de phase (sa couleur dit la phase), seize traits inchangés, nuances, ◀ progression ▶ avec l'accord joué allumé, muet et volume, « Suivre la visite » ; étiquettes et ligne de statut hors écran. Hero : `lg:items-center`, le décalage de 7,5 rem retiré.
+- `sectionMusic` sans progression, deux vues de plus (Mentions légales et CV : break, piano) ; `cvBranchNotes`, `ficheNote`.
+
+**Trouvé en vérifiant, corrigé** :
+- Le moteur n'appelle pas `onChange` quand son séquenceur applique un drop ou une progression en attente : l'état ne bougeait qu'à l'action suivante. Le widget de la 1.14.0 avait déjà ce défaut (« Annuler » affiché bien après le drop), jamais vu ; avec la spec 24, le roulement d'annonce serait tombé une mesure trop tard. Le magasin relit l'état du moteur à chaque pas entendu (test). **DETTE-77** pour le correctif propre, dans Orchestriya.
+- À 500 px, la pastille n'apparaissait pas : un liseré de 16 px du widget, caché sous la barre collante, comptait comme « à l'écran ». Le widget compte désormais avec un quart de sa hauteur visible sous la barre (`rootMargin` −64 px).
+
+**Vérifié** : `tsc`, `oxlint` (0 remarque), **294 tests** (256 + 38 : magasin avec le vrai moteur et le faux AudioContext, chef d'orchestre avec un faux magasin, gestes, table des vues et notes du CV), `npm run build`. Le chunk du moteur garde son empreinte (`engine-DMXQ9X-V.js`, 13,5 Ko) ; bundle principal 471,8 → 477,1 Ko (152,6 → 154,6 Ko compressé).
+
+Dans Chrome headless (l'extension n'était pas connectée ; repli CDP habituel, vrais événements souris, clavier et tactile) sur `vite preview`, état lu dans la page :
+- 1 440 px sombre : widget sans aucun des textes retirés, centre aligné sur la colonne de gauche (écart 0 px) ; lancer d'un vrai clic ; un clic sur le titre ne fait pas parler la ligne de statut ; vingt événements de molette = un seul pas (Sombre → Andalouse, en gris puis joué) ; Projets : rien à 0,3 s, drop posé à 1,2 s ; Projets → Contact par la barre : une seule phrase (« Retour au break à la mesure suivante. ») ; Page ↑ : un pas ; flèche sur le curseur de volume : aucun ; Mentions légales : la pastille, la lecture continue ; retour au site : toujours en jeu, piano juste au retour, mezzo forte de Contact 1,5 s plus tard ; CV : pastille dans l'en-tête et pas de pastille flottante, branche ouverte et molette sans un mot à la ligne de statut (seul « Nuance p. » de la vue CV) ; suivi éteint : la molette ne change rien ; la pastille arrête l'orchestre.
+- 500 px (émulation tactile), sombre et clair : un toucher lance, un toucher ailleurs ne parle pas, un glissé fait un pas, un toucher non ; pastille (16–162 px) et gardien (428–484 px) sans chevauchement.
+- `axe` (WCAG 2.1 A et AA) : **0 violation** sur l'accueil sombre et clair à 1 440 px, l'accueil et la pastille en clair à 500 px, les Mentions légales avec la pastille, le CV interactif. Aucune erreur dans la console.
+- En fin de session, l'extension connectée (Xav : « ChromeIsON ») : passe courte dans son Chrome — lancer, la pastille à Parcours, la lecture qui continue sur les Mentions légales, l'arrêt par la pastille.
+
+**Limites** : **le son n'est pas vérifié** — le calage du roulement d'annonce, la cymbale au clic, les notes des branches et les deux nouvelles musiques sont prouvés par les tests et lus dans l'état, pas écoutés : c'est Xav. Aucun vrai lecteur d'écran (DETTE-63), pas de vrai téléphone (Galaxy A04). Le maintien d'une touche (un seul geste) n'est vérifié que par le test. Non déployée : Xav publie avec la tuile « Publier ».
+
+**ARRÊT XAV** (spec §10) : écouter les Mentions légales et le CV, la cymbale au clic, le roulement d'annonce, les notes des branches ; dire si la musique bouge trop, ou pas assez, pendant la visite.
+
+---
+
 ## 2026-11-04 (Phase 11, spec 24) — Orchestriya dans toute la visite : la spec, pas encore le code
 
 Xav : « j'aimerais que l'on améliore l'intégration de Orchestriya dans le portfolio, pas le module, mais la manière dont il interagit avec la navigation du visiteur. » Pistes : garder la lecture dans les Mentions légales, plus d'interaction (clic, molette), sans casser les mesures, y compris pendant le CV interactif. Aucune note en attente dans la boîte en début de session.

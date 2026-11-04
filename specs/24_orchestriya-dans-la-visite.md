@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, Orchestriya dans toute la visite : un seul orchestre pour le site, des mesures qui ne cassent plus, le clic et la molette pendant la visite, et un widget allégé (spec 24)
 type: spec
 version: 1.1.0
-statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée : clic et molette sur toute la page, les seize traits restent), go attendu — aucun code
+statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée), exécutée le même jour sur son go (« 5 : uniquement dans le gardien (pas dans le widget simplifié). go »), version 1.15.0, privé `e703c6b` — non déployée, ARRÊT XAV §10 dû (écoute)
 catégorie: Spec
 date: 2026-11-04
 genere_par: claude
@@ -129,7 +129,7 @@ Xav : « pendant la navigation : un clic joue la cymbale, la molette change la p
 
 **Ce qui part de l'écran** : le sous-titre (« Orchestre drum and bass · 160 BPM »), l'introduction, le conseil pendant le jeu, la ligne de crédit, l'aide de « Suivre la visite », la note « … à la mesure suivante », la pastille de phase (la couleur de la barre et le libellé du bouton disent déjà la phase), les étiquettes « Nuance », « Progression », « Volume ».
 
-**Ce qui reste pour les lecteurs d'écran**, hors écran (`sr-only`) : les étiquettes des trois groupes, la ligne de statut du moteur (`role="status"`, filtrée comme dit au §5), l'aide de « Suivre la visite » (description du bouton), qui dit désormais aussi que les clics et la molette jouent. Le message d'erreur « Votre navigateur ne sait pas jouer de son » reste visible : ce n'est pas une explication, c'est une panne. Les textes retirés restent dans `orchestriya.ts` quand ils servent ailleurs (le gardien cite `followHint`) ; les autres sont supprimés.
+**Ce qui reste pour les lecteurs d'écran**, hors écran (`sr-only`) : les étiquettes des trois groupes, la ligne de statut du moteur (`role="status"`, filtrée comme dit au §5), et rien d'autre : l'aide de « Suivre la visite » n'est plus dans le widget, même hors écran (Xav, au go : « uniquement dans le gardien »). Le message d'erreur « Votre navigateur ne sait pas jouer de son » reste visible : ce n'est pas une explication, c'est une panne. Les textes retirés restent dans `orchestriya.ts` quand ils servent ailleurs (le gardien cite `followHint`) ; les autres sont supprimés.
 
 **Le centrage.** En grand écran, la grille du Hero passe de `lg:items-start` à `lg:items-center` et le décalage `lg:mt-[7.5rem]` part : le centre du widget s'aligne sur le centre de la colonne de gauche, ni collé en haut ni en bas. Cela remplace l'alignement sur la ligne « Consultant… » demandé par Xav le 2026-11-02 (spec 18 §4 bis). En petit écran, rien ne change (le widget sous le texte).
 
@@ -139,7 +139,7 @@ Xav : « pendant la navigation : un clic joue la cymbale, la molette change la p
 - `src/lib/orchestriya/conductor.ts` (+ test) : délai d'une demi-mesure, `fillTiming`, regroupement des roulements, vue → musique ; `follow.ts` perd la progression (phase et nuance seulement), ses tests suivent.
 - `src/lib/orchestriya/gestures.ts` (+ test) : clic retenu ou non, une cymbale par temps, geste de molette, touches de défilement, glissé au doigt.
 - `src/components/orchestriya/OrchestriyaWidget.tsx` (allégé, branché au magasin), `OrchestriyaConductor.tsx` (dont les écouteurs passifs du document), `OrchestriyaPill.tsx`.
-- `src/content/orchestriya.ts` : `sectionMusic` sans progression, entrées `mentions-legales` et `cv`, notes des branches du CV, textes retirés, noms de la pastille, nouvelle aide de « Suivre la visite » (proposée : « La musique suit la section que vous lisez ; vos clics et la molette jouent avec. », **à relire par Xav** — le gardien la cite, sa réplique « curieux-musique » change avec).
+- `src/content/orchestriya.ts` : `sectionMusic` sans progression, entrées `mentions-legales` et `cv`, notes des branches du CV, textes retirés, noms de la pastille, nouvelle aide de « Suivre la visite » (« La musique suit la section que vous lisez ; vos clics et la molette jouent avec. »), **dans le gardien seulement** (réplique « curieux-musique »), plus dans le widget (Xav, au go).
 - `src/App.tsx` (chef d'orchestre, pastille), `src/sections/Hero.tsx` (centrage), `src/components/layout/Navbar.tsx` (roulement au clic), `src/components/cv/CvExplorer.tsx` (pastille dans l'en-tête, notes des branches, roulement et cymbale à six sur six), les molettes du cryptex (`data-orchestriya-ignore` si besoin).
 - Pas de nouvelle clé dans le navigateur : la page Mentions légales ne change pas.
 - Version 1.15.0.
@@ -169,13 +169,24 @@ Toute retouche du moteur (dont une cymbale calée sur le premier temps, ou une p
 
 Ratifiés par Xav le 2026-11-04 (« ok ») : la pastille sans bouton de retour au widget ; la pastille de phase et les étiquettes retirées de l'écran ; le roulement d'annonce pour tous les changements de progression. Le choix « clic sur la baguette = cymbale » est tombé avec la baguette.
 
-Avant le code : **le go**, et ratifier les choix de l'agent nés de la seconde version :
+Go de Xav le 2026-11-04 : « 5 : uniquement dans le gardien (pas dans le widget simplifié). go » — les choix 1 à 4 ci-dessous ratifiés par le go, le 5 précisé. Les choix de l'agent nés de la seconde version :
 - la molette décide seule de la progression : les vues ne gardent que la phase et la nuance (§3) ;
 - un clic qui a déjà son son (lien de navigation, fiche, branche du CV) ne joue pas la cymbale en plus ; une cymbale par temps au plus ;
 - au clavier, les touches de défilement comptent comme la molette, et au doigt un glissé vertical ;
 - les messages du moteur nés des clics et de la molette ne sont pas lus aux lecteurs d'écran ;
-- la nouvelle aide de « Suivre la visite » (§7), que le gardien cite.
+- la nouvelle aide de « Suivre la visite » (§7) : dans le gardien seulement.
 
 Après : écouter les Mentions légales et le CV, la cymbale au clic, le roulement d'annonce, les notes des branches ; dire si la musique bouge trop, ou pas assez, pendant la visite.
 
 Version à l'exécution : 1.15.0.
+
+## 11. Exécution (2026-11-04)
+
+Faite telle quelle, version 1.15.0, privé `e703c6b`. Écarts et trouvailles (détail dans `process/JOURNAL_DEV.md`) :
+
+- **Le moteur ne prévient pas quand son séquenceur applique un changement.** Un drop ou une progression en attente prend effet au début de la mesure, mais `onChange` ne part qu'à l'action suivante : le widget de la 1.14.0 affichait donc « Annuler » ou l'ancienne progression longtemps après le changement (défaut déjà là, jamais vu), et le roulement d'annonce serait tombé une mesure trop tard. Corrigé côté portfolio, sans toucher au moteur : le magasin relit l'état du moteur à chaque pas entendu (test). Le correctif propre est dans Orchestriya (**DETTE-77**).
+- **La pastille et la barre de navigation.** À 500 px, un liseré de 16 px du widget, caché sous la barre collante, le faisait compter « à l'écran » : la pastille n'apparaissait pas. Le widget ne compte plus qu'avec un quart de sa hauteur visible sous la barre.
+- **Messages muets.** Clics, molette, notes du CV et roulements d'annonce ne parlent pas à la ligne de statut ; le suivi de phase et les serrures parlent, comme dans la spec 21.
+- **La progression qui attend son tour**, dans le widget : son nom en gris et ses quatre accords, éteints jusqu'à ce qu'elle joue ; ensuite, l'accord joué s'allume. Pas de zone vivante sur ce nom (la molette parlerait à chaque geste) ; les boutons ◀ ▶ passent par la ligne de statut.
+- **Une fiche qui s'ouvre** se reconnaît au hash `#projets/<id>` d'une fiche connue ; un clic garde son son propre s'il se déclare dans les 60 ms (le `hashchange` d'une fiche arrive juste après le clic).
+- Le faux AudioContext des tests sort de `engine.test.ts` dans `src/lib/orchestriya/testing/fakeAudio.ts`, partagé avec le test du magasin.
