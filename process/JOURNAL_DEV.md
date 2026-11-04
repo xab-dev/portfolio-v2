@@ -16,6 +16,8 @@ Réponses de Xav aux propositions puis aux neuf points à trancher : une pastill
 
 Points de vigilance notés dans la spec : le moteur n'est pas touché (DETTE-71) ; `activeSectionStore` ne doit pas recevoir d'abonné permanent, sinon il n'observe plus les sections remontées au retour des Mentions légales ; pendant le CV, la pastille vit dans l'en-tête de sa fenêtre, qui garde le clavier ; le calage du roulement tient compte de l'avance du moteur (0,2 s, deux doubles-croches) ; le son reste à l'oreille de Xav.
 
+**Révision le même jour (spec 1.1.0).** Xav : « ok sauf pour la baguette qui remplace la barre des 16 traits. Les 16 traits restent affichés ; pendant la navigation : un clic joue la cymbale, la molette change la progression, tout se fait aussi au clavier. » Les quatre choix du §10 sont ratifiés, sauf celui de la baguette, tombé avec elle. La spec est réécrite en conséquence : plus de zone dédiée ni de brillance ; des écouteurs passifs sur toute la page (jamais de `preventDefault`) ; un clic, un toucher ou Entrée sur un lien joue la cymbale (une par temps, pas sur les commandes de l'orchestre, pas quand le clic a déjà son son) ; un geste de molette, une touche de défilement ou un glissé au doigt fait un pas de progression. Conséquence notée : la molette décide seule de la progression, les vues ne gardent que phase et nuance, sinon elles se battraient. Cinq nouveaux choix de l'agent à ratifier au go (§10), dont la nouvelle aide de « Suivre la visite » que le gardien cite.
+
 ---
 
 ## 2026-11-02 (Phase 11, spec 23) — le CV interactif
