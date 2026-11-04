@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, Orchestriya dans toute la visite : un seul orchestre pour le site, des mesures qui ne cassent plus, le clic et la molette pendant la visite, et un widget allégé (spec 24)
 type: spec
 version: 1.1.0
-statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée), exécutée le même jour sur son go (« 5 : uniquement dans le gardien (pas dans le widget simplifié). go »), version 1.15.0, privé `e703c6b` ; écoutée par Xav (« c'est très bon, juste trop de roulement ») et retouchée en 1.16.0, privé `36cd761` : plus de roulement d'annonce entre les progressions ; puis 1.17.0, privé `1b07122` : le drop ne se coupe qu'en fin de phrase, widget sur moins de lignes, haut du widget sur la deuxième ligne du titre — non déployée
+statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée), exécutée le même jour sur son go (« 5 : uniquement dans le gardien (pas dans le widget simplifié). go »), version 1.15.0, privé `e703c6b` ; écoutée par Xav (« c'est très bon, juste trop de roulement ») et retouchée en 1.16.0, privé `36cd761` : plus de roulement d'annonce entre les progressions ; puis 1.17.0, privé `1b07122` : le drop ne se coupe qu'en fin de phrase, widget sur moins de lignes, haut du widget sur la deuxième ligne du titre ; **validée par Xav** (« merci, j'adore »), ARRÊT XAV §10 levé — publication et push en attente (incident GitHub en cours, Xav attend)
 catégorie: Spec
 date: 2026-11-04
 genere_par: claude

@@ -4,6 +4,12 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-04 (Phase 11, spec 24, validation) — validée, push en attente
+
+Xav, sur la 1.17.0 : « merci, j'adore. Pour le push je dois attendre, GitHub is still fixing issue. » ARRÊT XAV de la spec 24 levé. Rien n'est poussé ni publié : privé jusqu'à `1b07122`, public jusqu'à ce commit ; Xav publie et pousse quand GitHub est rétabli. Banc d'essai rangé (serveur `vite preview` du port 4174 arrêté).
+
+---
+
 ## 2026-11-04 (Phase 11, spec 24, retouches) — le drop en fin de phrase, un widget plus compact et mieux placé
 
 Xav : « ok, c'est bon, quelques correctifs : le drop ne se coupe qu'à la fin des 8 mesures (jamais en plein milieu). Optimise l'espace libre des boutons du widget, en plein écran, certains peuvent être mis sur les mêmes lignes. Puis aligne le haut du widget à la ligne "elle résout un vrai" du Hero. » Version 1.17.0, privé `1b07122`.
