@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, Orchestriya dans toute la visite : un seul orchestre pour le site, des mesures qui ne cassent plus, le clic et la molette pendant la visite, et un widget allégé (spec 24)
 type: spec
 version: 1.1.0
-statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée), exécutée le même jour sur son go (« 5 : uniquement dans le gardien (pas dans le widget simplifié). go »), version 1.15.0, privé `e703c6b` ; écoutée par Xav (« c'est très bon, juste trop de roulement ») et retouchée en 1.16.0, privé `36cd761` : plus de roulement d'annonce entre les progressions — non déployée
+statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée), exécutée le même jour sur son go (« 5 : uniquement dans le gardien (pas dans le widget simplifié). go »), version 1.15.0, privé `e703c6b` ; écoutée par Xav (« c'est très bon, juste trop de roulement ») et retouchée en 1.16.0, privé `36cd761` : plus de roulement d'annonce entre les progressions ; puis 1.17.0, privé `1b07122` : le drop ne se coupe qu'en fin de phrase, widget sur moins de lignes, haut du widget sur la deuxième ligne du titre — non déployée
 catégorie: Spec
 date: 2026-11-04
 genere_par: claude
@@ -131,7 +131,7 @@ Xav : « pendant la navigation : un clic joue la cymbale, la molette change la p
 
 **Ce qui reste pour les lecteurs d'écran**, hors écran (`sr-only`) : les étiquettes des trois groupes, la ligne de statut du moteur (`role="status"`, filtrée comme dit au §5), et rien d'autre : l'aide de « Suivre la visite » n'est plus dans le widget, même hors écran (Xav, au go : « uniquement dans le gardien »). Le message d'erreur « Votre navigateur ne sait pas jouer de son » reste visible : ce n'est pas une explication, c'est une panne. Les textes retirés restent dans `orchestriya.ts` quand ils servent ailleurs (le gardien cite `followHint`) ; les autres sont supprimés.
 
-**Le centrage.** En grand écran, la grille du Hero passe de `lg:items-start` à `lg:items-center` et le décalage `lg:mt-[7.5rem]` part : le centre du widget s'aligne sur le centre de la colonne de gauche, ni collé en haut ni en bas. Cela remplace l'alignement sur la ligne « Consultant… » demandé par Xav le 2026-11-02 (spec 18 §4 bis). En petit écran, rien ne change (le widget sous le texte).
+**Le centrage** — *remplacé en 1.17.0 par l'alignement sur la deuxième ligne du titre, voir §13.* En grand écran, la grille du Hero passe de `lg:items-start` à `lg:items-center` et le décalage `lg:mt-[7.5rem]` part : le centre du widget s'aligne sur le centre de la colonne de gauche, ni collé en haut ni en bas. Cela remplace l'alignement sur la ligne « Consultant… » demandé par Xav le 2026-11-02 (spec 18 §4 bis). En petit écran, rien ne change (le widget sous le texte).
 
 ## 7. Fichiers
 
@@ -196,3 +196,11 @@ Faite telle quelle, version 1.15.0, privé `e703c6b`. Écarts et trouvailles (d�
 Xav, après écoute de la 1.15.0 : « c'est très bon, juste trop de roulement. On enlève ceux entre chaque progression d'accord. »
 
 Le roulement d'annonce du §4 (2a) est retiré : un changement de progression, à la molette ou aux boutons ◀ ▶, n'en lance plus. Restent les roulements de la barre de navigation, des serrures (spec 21) et des six branches du CV explorées, toujours regroupés (jamais deux à moins de deux mesures). L'accord joué reste allumé dans le widget et la pastille (2b). La relecture de l'état du moteur à chaque pas (§11, DETTE-77) reste : elle sert l'affichage. Privé `36cd761`.
+
+## 13. Retouches de Xav (2026-11-04, 1.17.0)
+
+Xav : « ok, c'est bon, quelques correctifs : le drop ne se coupe qu'à la fin des 8 mesures (jamais en plein milieu). Optimise l'espace libre des boutons du widget, en plein écran, certains peuvent être mis sur les mêmes lignes. Puis aligne le haut du widget à la ligne "elle résout un vrai" du Hero. »
+
+- **Le drop ne se coupe qu'en fin de phrase.** Une phrase, ce sont huit mesures : le cycle des quatre accords. Le moteur change de phase à la mesure suivante ; le portfolio retient donc tout retour au break (suivi de la visite ou bouton « Revenir au break ») et ne l'envoie au moteur que dans la huitième mesure de la phrase, assez tôt (double-croche entendue ≤ 10, le moteur programmant 0,2 s d'avance) pour que le break tombe sur le premier temps de la phrase suivante. Pendant l'attente, le bouton dit « Annuler » et la ligne de statut « Retour au break à la fin des huit mesures. » ; une vue qui veut de nouveau le drop annule l'attente, sans coupure. L'entrée dans le drop reste à la mesure suivante. L'attente peut aller jusqu'à une phrase entière (12 s à 160 BPM). Test avec le vrai moteur : la première double-croche jouée en break est le premier temps d'une mesure multiple de huit.
+- **Le widget sur moins de lignes.** En-tête : le titre et, à droite, le muet et le volume ; ligne 1 : Lancer, le bouton de phase et « Suivre la visite » poussé à droite ; ligne 2 : les seize traits ; ligne 3 : les nuances et la progression côte à côte. Tout passe à la ligne de soi-même sur un écran étroit. Hauteur à 1 440 px : 342 → 214 px. L'ordre au clavier suit l'ordre visuel (le volume vient donc juste après le titre).
+- **Le haut du widget sur la deuxième ligne du titre.** Mesuré dans la page (`offsetTop` du premier mot de la deuxième ligne, insensible au fondu des mots), une fois les polices chargées et à chaque changement de taille du titre, avant la première peinture. À 1 440 et 1 280 px, la deuxième ligne est « elle résout un vrai » ; à 1 024 px, le titre se coupe autrement (« que si elle résout un ») et le widget suit cette deuxième ligne. Sous 1 024 px, le widget est sous le texte, comme avant.

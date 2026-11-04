@@ -4,6 +4,23 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-04 (Phase 11, spec 24, retouches) — le drop en fin de phrase, un widget plus compact et mieux placé
+
+Xav : « ok, c'est bon, quelques correctifs : le drop ne se coupe qu'à la fin des 8 mesures (jamais en plein milieu). Optimise l'espace libre des boutons du widget, en plein écran, certains peuvent être mis sur les mêmes lignes. Puis aligne le haut du widget à la ligne "elle résout un vrai" du Hero. » Version 1.17.0, privé `1b07122`.
+
+**Fait** :
+- `orchestriyaStore` : `breakHeld`, `holdBreak`, `cancelBreak`, `togglePhase` (le bouton de phase y passe) ; à chaque pas entendu, un retour au break retenu part au moteur dans la huitième mesure de la phrase (`releaseBreakNow` : mesure ≡ 7 mod 8, double-croche ≤ 10) ; l'arrêt de l'orchestre ou une phase changée autrement efface l'attente. Le chef d'orchestre ne quitte plus le drop par `toggleDrop` : il retient (`holdBreak`), et annule l'attente si la vue revient au drop. Textes : « Retour au break à la fin des huit mesures. », « Changement annulé. ».
+- Widget : volume dans l'en-tête, « Suivre la visite » sur la ligne du transport, nuances et progression côte à côte (`flex-wrap`).
+- Hero : `lg:items-start` et une marge haute mesurée (`useSecondLineOffset`) qui pose le haut du widget sur le premier mot de la deuxième ligne du titre.
+
+**Vérifié** : `tsc`, `oxlint` (0), **294 tests** (+5 : fin de phrase avec le vrai moteur, annulation, moment du lâcher, retenue par le chef d'orchestre, entrée dans le drop inchangée), build (chunk du moteur inchangé). Chrome headless : à 1 440, 1 280 et 1 024 px, le haut du widget est au pixel près sur la deuxième ligne du titre (388 px) ; à 900 px, sous le texte ; widget 342 → 214 px de haut à 1 440 px ; le retour au break demandé au bouton reste « Annuler » ~10 s puis tombe en fin de phrase (relevé à la seconde : bascule entre 11,6 et 12,6 s après le lancement, soit la mesure 8) ; le parcours complet et le parcours au doigt à 500 px rejoués ; `axe` : 0 violation sur les six vues ; aucune erreur de console. **Le son reste à l'oreille de Xav.**
+
+**À savoir** : l'attente d'un retour au break peut durer jusqu'à une phrase entière (12 s à 160 BPM) — c'est le prix de « jamais en plein milieu ».
+
+Non déployée : Xav publie avec la tuile « Publier ».
+
+---
+
 ## 2026-11-04 (Phase 11, spec 24, retouche) — moins de roulements
 
 Xav, à l'écoute de la 1.15.0 : « c'est très bon, juste trop de roulement. On enlève ceux entre chaque progression d'accord. » Version 1.16.0, privé `36cd761`.
