@@ -4,6 +4,20 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-04 (Phase 11, spec 24) — Orchestriya dans toute la visite : la spec, pas encore le code
+
+Xav : « j'aimerais que l'on améliore l'intégration de Orchestriya dans le portfolio, pas le module, mais la manière dont il interagit avec la navigation du visiteur. » Pistes : garder la lecture dans les Mentions légales, plus d'interaction (clic, molette), sans casser les mesures, y compris pendant le CV interactif. Aucune note en attente dans la boîte en début de session.
+
+Constat de l'agent, lu dans le code : le moteur vit dans le Hero, la page légale le démonte et `dispose()` coupe la musique en pleine mesure (tout est perdu au retour, sauf le volume) ; hors de l'accueil, rien pour arrêter le son ; un clic de navigation traverse plusieurs sections, qui envoient chacune leurs ordres (drop posé puis annulé, montée abandonnée) ; le changement de progression s'entend peu, car le moteur garde sa place dans le cycle et les trois progressions partagent des accords (La mineur en tête, Fa et Mi en fin pour Andalouse et Cinéma).
+
+Réponses de Xav aux propositions puis aux neuf points à trancher : une pastille, « le minimum » ; pas de tempo, la molette fait évoluer la progression ; cymbale à la double-croche, ok ; pas de filtre au défilement ; une seule spec ; roulement d'annonce et accord en cours visible (2a + b) ; une demi-mesure d'attente ; baguette « seulement en appuyant » ; le reste comme proposé. En plus : widget allégé (titre, boutons, barre) et centré dans le Hero.
+
+**Écrit, aucun code** : `specs/24_orchestriya-dans-la-visite.md` (1.15.0). Quatre choix de l'agent à ratifier au go (§10) : pastille sans bouton de retour au widget, pastille de phase et étiquettes retirées de l'écran (gardées hors écran), clic sur la baguette = cymbale, roulement d'annonce pour tous les changements de progression.
+
+Points de vigilance notés dans la spec : le moteur n'est pas touché (DETTE-71) ; `activeSectionStore` ne doit pas recevoir d'abonné permanent, sinon il n'observe plus les sections remontées au retour des Mentions légales ; pendant le CV, la pastille vit dans l'en-tête de sa fenêtre, qui garde le clavier ; le calage du roulement tient compte de l'avance du moteur (0,2 s, deux doubles-croches) ; le son reste à l'oreille de Xav.
+
+---
+
 ## 2026-11-02 (Phase 11, spec 23) — le CV interactif
 
 Xav, après son /clear : « go spec 23 : "CV interactif" ; "Bravo, vous pouvez désormais continuer votre visite ou me contacter pour aller vers un autre monde" ». Le libellé du lien et la dernière ligne sont les siens (seul le point final est de l'agent). Aucune note en attente dans la boîte en début de session.
