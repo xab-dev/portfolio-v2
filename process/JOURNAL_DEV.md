@@ -4,6 +4,18 @@ Journal tenu par l'agent (Claude Code). Une entrée par session, la plus récent
 
 ---
 
+## 2026-11-04 (Phase 11, spec 24, retouche) — moins de roulements
+
+Xav, à l'écoute de la 1.15.0 : « c'est très bon, juste trop de roulement. On enlève ceux entre chaque progression d'accord. » Version 1.16.0, privé `36cd761`.
+
+**Fait** : le roulement d'annonce (spec 24 §4, 2a) est retiré du chef d'orchestre (`announceDecision` et son suivi des progressions en attente supprimés) ; un changement de progression, à la molette ou aux boutons, ne lance plus rien. Restent les roulements de la barre de navigation, des serrures et des six branches du CV, regroupés comme avant. La relecture de l'état du moteur à chaque pas reste (affichage, DETTE-77). Spec : §4 annoté, §12 ajouté.
+
+**Vérifié** : `tsc`, `oxlint` (0), **289 tests** (8 tests d'annonce retirés, 3 ajoutés : la molette et les boutons ne lancent plus de roulement, navigation et serrure toujours regroupées), build (chunk du moteur inchangé). Parcours headless rejoué à 1 440 px : mêmes résultats que pour la 1.15.0, 0 violation `axe`, aucune erreur de console. **Le son, encore une fois, c'est l'oreille de Xav.**
+
+Non déployée : Xav publie avec la tuile « Publier ».
+
+---
+
 ## 2026-11-04 (Phase 11, spec 24, exécution) — Orchestriya dans toute la visite
 
 Xav, au go : « 5 : uniquement dans le gardien (pas dans le widget simplifié). go ». Les choix 1 à 4 du §10 ratifiés par le go ; la nouvelle aide de « Suivre la visite » ne vit que dans le gardien (réplique « curieux-musique » : « … la musique suit la section que vous lisez ; vos clics et la molette jouent avec. »), plus du tout dans le widget, même hors écran. Version 1.15.0, privé `e703c6b`.

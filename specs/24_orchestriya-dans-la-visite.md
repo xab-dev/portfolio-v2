@@ -3,7 +3,7 @@ projet: portfolio-v2
 episode/session: Phase 11 — Refonte jeu / CV interactif, Orchestriya dans toute la visite : un seul orchestre pour le site, des mesures qui ne cassent plus, le clic et la molette pendant la visite, et un widget allégé (spec 24)
 type: spec
 version: 1.1.0
-statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée), exécutée le même jour sur son go (« 5 : uniquement dans le gardien (pas dans le widget simplifié). go »), version 1.15.0, privé `e703c6b` — non déployée, ARRÊT XAV §10 dû (écoute)
+statut: écrite le 2026-11-04 d'après les réponses de Xav, révisée le même jour (la baguette écartée), exécutée le même jour sur son go (« 5 : uniquement dans le gardien (pas dans le widget simplifié). go »), version 1.15.0, privé `e703c6b` ; écoutée par Xav (« c'est très bon, juste trop de roulement ») et retouchée en 1.16.0, privé `36cd761` : plus de roulement d'annonce entre les progressions — non déployée
 catégorie: Spec
 date: 2026-11-04
 genere_par: claude
@@ -78,7 +78,7 @@ Elle apparaît quand l'orchestre a été lancé au moins une fois dans la visite
 
 **Seulement des actions déjà calées.** Les réactions du site n'utilisent que ce que le moteur cale lui-même : roulement (à la demi-mesure), drop (à la mesure), progression (à l'accord). La cymbale tombe à la double-croche suivante (accepté par Xav). Les notes de piano partent tout de suite, comme un soliste (§5).
 
-**Le roulement qui annonce la progression (2a).** À chaque changement de progression, qu'il vienne de la molette (§5) ou des boutons ◀ ▶, un roulement de caisse claire l'annonce. Le moteur joue le roulement dans la seconde moitié de la mesure en cours (ou de la suivante, passé la moitié), et change d'accord au début des mesures paires. Le chef d'orchestre appelle donc `fill()` au moment où le roulement tombera dans la mesure qui précède le changement ; trop tard pour celle-là, il tombe dans la mesure du changement. Le moment se lit dans les pas livrés par `onStep`, avec la marge de l'avance du moteur (il programme 0,2 s à l'avance, deux doubles-croches). Fonction pure `fillTiming(mesure, pas)`, testée.
+**Le roulement qui annonce la progression (2a)** — *retiré à l'écoute en 1.16.0, voir §12.* À chaque changement de progression, qu'il vienne de la molette (§5) ou des boutons ◀ ▶, un roulement de caisse claire l'annonce. Le moteur joue le roulement dans la seconde moitié de la mesure en cours (ou de la suivante, passé la moitié), et change d'accord au début des mesures paires. Le chef d'orchestre appelle donc `fill()` au moment où le roulement tombera dans la mesure qui précède le changement ; trop tard pour celle-là, il tombe dans la mesure du changement. Le moment se lit dans les pas livrés par `onStep`, avec la marge de l'avance du moteur (il programme 0,2 s à l'avance, deux doubles-croches). Fonction pure `fillTiming(mesure, pas)`, testée.
 
 **Jamais deux roulements dans le même accord.** Les roulements du clic de navigation (§5), des serrures (spec 21) et des progressions se regroupent : un seul par fenêtre de deux mesures.
 
@@ -190,3 +190,9 @@ Faite telle quelle, version 1.15.0, privé `e703c6b`. Écarts et trouvailles (d�
 - **La progression qui attend son tour**, dans le widget : son nom en gris et ses quatre accords, éteints jusqu'à ce qu'elle joue ; ensuite, l'accord joué s'allume. Pas de zone vivante sur ce nom (la molette parlerait à chaque geste) ; les boutons ◀ ▶ passent par la ligne de statut.
 - **Une fiche qui s'ouvre** se reconnaît au hash `#projets/<id>` d'une fiche connue ; un clic garde son son propre s'il se déclare dans les 60 ms (le `hashchange` d'une fiche arrive juste après le clic).
 - Le faux AudioContext des tests sort de `engine.test.ts` dans `src/lib/orchestriya/testing/fakeAudio.ts`, partagé avec le test du magasin.
+
+## 12. Retouche à l'écoute (2026-11-04, 1.16.0)
+
+Xav, après écoute de la 1.15.0 : « c'est très bon, juste trop de roulement. On enlève ceux entre chaque progression d'accord. »
+
+Le roulement d'annonce du §4 (2a) est retiré : un changement de progression, à la molette ou aux boutons ◀ ▶, n'en lance plus. Restent les roulements de la barre de navigation, des serrures (spec 21) et des six branches du CV explorées, toujours regroupés (jamais deux à moins de deux mesures). L'accord joué reste allumé dans le widget et la pastille (2b). La relecture de l'état du moteur à chaque pas (§11, DETTE-77) reste : elle sert l'affichage. Privé `36cd761`.
